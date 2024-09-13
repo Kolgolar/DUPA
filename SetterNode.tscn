@@ -1,0 +1,96 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://DefaultNode.tscn" type="PackedScene" id=1]
+[ext_resource path="res://SetterNode.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=4]
+content_margin_top = 30.0
+bg_color = Color( 0.0627451, 0.117647, 0.203922, 1 )
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+expand_margin_left = 15.0
+expand_margin_right = 15.0
+expand_margin_top = 15.0
+expand_margin_bottom = 15.0
+shadow_color = Color( 0, 0.298039, 1, 1 )
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id=3]
+content_margin_top = 30.0
+bg_color = Color( 0.145098, 0.243137, 0.403922, 1 )
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+expand_margin_left = 15.0
+expand_margin_right = 15.0
+expand_margin_top = 15.0
+expand_margin_bottom = 15.0
+shadow_color = Color( 0, 0.298039, 1, 1 )
+shadow_size = 12
+
+[node name="SetterNode" instance=ExtResource( 1 )]
+margin_bottom = 146.0
+custom_styles/frame = SubResource( 4 )
+custom_styles/selectedframe = SubResource( 3 )
+title = "SETTER:"
+script = ExtResource( 2 )
+
+[node name="HBoxContainer" parent="." index="0"]
+margin_left = 0.0
+margin_right = 380.0
+margin_bottom = 146.0
+
+[node name="MainColumn" parent="HBoxContainer" index="0"]
+margin_bottom = 116.0
+
+[node name="Comment" parent="HBoxContainer/MainColumn" index="1"]
+margin_top = 42.0
+margin_right = 500.0
+margin_bottom = 142.0
+
+[node name="Label" parent="HBoxContainer/MainColumn/Comment" index="0"]
+margin_top = 39.0
+margin_bottom = 60.0
+
+[node name="Var" type="HBoxContainer" parent="HBoxContainer/MainColumn" index="2"]
+margin_top = 42.0
+margin_right = 380.0
+margin_bottom = 74.0
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="HBoxContainer/MainColumn/Var" index="0"]
+margin_right = 120.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 120, 32 )
+text = "Var name"
+valign = 1
+
+[node name="Var" type="LineEdit" parent="HBoxContainer/MainColumn/Var" index="1"]
+margin_left = 130.0
+margin_right = 380.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 250, 32 )
+placeholder_text = "e.g. is_item_sold"
+
+[node name="Value" type="HBoxContainer" parent="HBoxContainer/MainColumn" index="3"]
+margin_top = 84.0
+margin_right = 380.0
+margin_bottom = 116.0
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="HBoxContainer/MainColumn/Value" index="0"]
+margin_right = 120.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 120, 32 )
+text = "Var value"
+valign = 1
+
+[node name="Value" type="LineEdit" parent="HBoxContainer/MainColumn/Value" index="1"]
+margin_left = 130.0
+margin_right = 380.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 250, 32 )
+placeholder_text = "INT or BOOL only!"
