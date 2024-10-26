@@ -27,7 +27,3 @@ func gen_data(graph_edit : GraphEdit) -> Dictionary:
 	
 	data["go_to"] = _arrange_go_to(graph_edit)
 	return data
-
-
-func _on_IsPlayerLine_toggled(button_pressed):
-	pass # Replace with function body.

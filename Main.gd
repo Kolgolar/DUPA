@@ -123,7 +123,7 @@ func _validation() -> int:
 		err = ERR_DOES_NOT_EXIST
 	for node in get_tree().get_nodes_in_group("graph_nodes"):
 		match node.type:
-			"LINE":
+			"LINE", "DYNAMIC_LINE":
 				pass
 			"CONDITION":
 				if node.condition_var.text.empty():
@@ -213,14 +213,12 @@ func load_save(path, fn):
 		var node_scene_path
 		match timeline[graph_node]["type"]:
 			"LINE":
-				if timeline[graph_node].has("line_var_name"):
-#					if _lite_line_nodes:
-					node_scene_path = "res://DynamicLineNodeLite.tscn"
+				if _lite_line_nodes:
+					node_scene_path = "res://LineNodeLite.tscn"
 				else:
-					if _lite_line_nodes:
-						node_scene_path = "res://LineNodeLite.tscn"
-					else:
-						node_scene_path = "res://LineNode.tscn"
+					node_scene_path = "res://LineNode.tscn"
+			"DYNAMIC_LINE":
+				node_scene_path = "res://DynamicLineNodeLite.tscn"
 			"CONDITION":
 				node_scene_path = "res://ConditionNode.tscn"
 			"START":

@@ -61,5 +61,3 @@ text = "Player speaking"
 margin_left = 131.0
 margin_right = 209.0
 margin_bottom = 38.0
-
-[connection signal="toggled" from="HBoxContainer/MainColumn/IsPlayer/IsPlayerLine" to="." method="_on_IsPlayerLine_toggled"]
