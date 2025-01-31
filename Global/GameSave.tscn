@@ -1,40 +1,35 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dygsvpggog2on"]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id="1"]
 script/source = "extends Node2D
 
-export(Dictionary) var skills = {
+@export var skills: Dictionary = {
 	\"Charisma\": 0,
 	\"Intellect\": 0,
 	\"Endurance\": 0,
 	\"Dexterity\": 0
 }
 
-export(Dictionary) var variables = {
+@export var variables: Dictionary = {
 	\"happy\": false,
 	\"sad\": false,
 	\"angry\": false
 }
 
-export(Dictionary) var visited = {
+@export var visited: Dictionary = {
 	\"Node 0\": 0,
 	\"Node 1\": 0,
 	\"Node 2\": 0,
 	\"Node 3\": 0,
 }
 
-export(Dictionary) var brownies = {
+@export var brownies: Dictionary = {
 	\"Letty\": 0,
 	\"Raymond\": 0
 }
 
-export(Dictionary) var character
+@export var character: Dictionary
 "
 
 [node name="GameSave" type="Node2D"]
-script = SubResource( 1 )
-variables = {
-"angry": false,
-"happy": false,
-"sad": false
-}
+script = SubResource("1")

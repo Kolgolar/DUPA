@@ -1,20 +1,25 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://brww61hhufjeh"]
 
-[ext_resource path="res://Main.gd" type="Script" id=1]
-[ext_resource path="res://Assets/GreenTheme.tres" type="Theme" id=2]
-[ext_resource path="res://SaveAs.gd" type="Script" id=3]
-[ext_resource path="res://DialoguesSearcher.gd" type="Script" id=4]
-[ext_resource path="res://Assets/Clean.tres" type="DynamicFont" id=5]
+[ext_resource type="Script" path="res://Main.gd" id="1"]
+[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://Assets/GreenTheme.tres" id="2"]
+[ext_resource type="Script" path="res://SaveAs.gd" id="3"]
+[ext_resource type="Script" path="res://DialoguesSearcher.gd" id="4"]
+[ext_resource type="FontFile" path="res://Assets/Clean.tres" id="5"]
 
-[node name="Main" type="Control"]
+[node name="Main" type="Control" node_paths=PackedStringArray("_mouse_popup")]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 2 )
-script = ExtResource( 1 )
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
 _mouse_popup = NodePath("MousePopup")
 _lite_line_nodes = true
 
 [node name="GraphEdit" type="GraphEdit" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 right_disconnects = true
@@ -24,100 +29,79 @@ zoom_step = 1.05
 show_zoom_label = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 8.0
-margin_top = 75.0
-margin_right = 693.0
-margin_bottom = 115.0
-custom_constants/separation = 20
+layout_mode = 0
+offset_left = 8.0
+offset_top = 75.0
+offset_right = 693.0
+offset_bottom = 115.0
+theme_override_constants/separation = 20
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 685.0
-margin_bottom = 35.0
-custom_constants/separation = 10
+layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="OpenNew" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_right = 125.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "OPEN FILE"
 
 [node name="Save" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 135.0
-margin_right = 260.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SAVE"
 
 [node name="SaveAs" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 270.0
-margin_right = 395.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SAVE AS"
 
 [node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
-margin_left = 405.0
-margin_right = 415.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 10, 0 )
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
 
 [node name="Clear" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 425.0
-margin_right = 550.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CLEAR ALL"
 
 [node name="Notification" type="Label" parent="VBoxContainer/HBoxContainer"]
 visible = false
-margin_left = 540.0
-margin_top = 5.0
-margin_right = 606.0
-margin_bottom = 30.0
+layout_mode = 2
 text = "SAVED!"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 55.0
-margin_right = 685.0
-margin_bottom = 55.0
-custom_constants/separation = 10
+layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="NewNode" type="Button" parent="VBoxContainer/HBoxContainer2"]
 visible = false
-margin_right = 125.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "+ NODE"
 
 [node name="NewOption" type="Button" parent="VBoxContainer/HBoxContainer2"]
 visible = false
-margin_left = 135.0
-margin_right = 260.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "+ OPTION"
 
 [node name="Feature" type="Button" parent="VBoxContainer/HBoxContainer2"]
 visible = false
-margin_left = 270.0
-margin_right = 395.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "+ FEATURE"
 
 [node name="NewRoll" type="Button" parent="VBoxContainer/HBoxContainer2"]
 visible = false
-margin_left = 405.0
-margin_right = 530.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 125, 35 )
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "+DICE ROLL"
 
@@ -125,159 +109,128 @@ text = "+DICE ROLL"
 wait_time = 3.0
 one_shot = true
 
-[node name="DialoguesSearcher" type="WindowDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -346.0
-margin_top = -200.0
-margin_right = 346.0
-margin_bottom = 200.0
-script = ExtResource( 4 )
+[node name="DialoguesSearcher" type="Window" parent="."]
+position = Vector2i(0, 36)
+size = Vector2i(600, 500)
+visible = false
+script = ExtResource("4")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DialoguesSearcher"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 15.0
-margin_top = 15.0
-margin_right = -15.0
-margin_bottom = -15.0
-custom_constants/separation = 25
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+theme_override_constants/separation = 25
 
 [node name="HBoxContainer" type="HBoxContainer" parent="DialoguesSearcher/VBoxContainer"]
-margin_right = 662.0
-margin_bottom = 27.0
-custom_constants/separation = 30
+layout_mode = 2
+theme_override_constants/separation = 30
 
 [node name="LineEdit" type="LineEdit" parent="DialoguesSearcher/VBoxContainer/HBoxContainer"]
-margin_right = 551.0
-margin_bottom = 27.0
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Dialogues folder path"
 
 [node name="Search" type="Button" parent="DialoguesSearcher/VBoxContainer/HBoxContainer"]
-margin_left = 581.0
-margin_right = 662.0
-margin_bottom = 27.0
+layout_mode = 2
 text = "REFRESH"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="DialoguesSearcher/VBoxContainer"]
-margin_top = 52.0
-margin_right = 662.0
-margin_bottom = 370.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Dialogues" type="VBoxContainer" parent="DialoguesSearcher/VBoxContainer/ScrollContainer"]
-margin_right = 662.0
-margin_bottom = 318.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FileName" type="Label" parent="."]
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -20.0
-margin_top = 10.0
-margin_right = 20.0
-margin_bottom = 25.0
+offset_left = -20.0
+offset_top = 10.0
+offset_right = 20.0
+offset_bottom = 25.0
 grow_horizontal = 2
-align = 1
+horizontal_alignment = 1
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -255.0
-margin_top = -70.5
-margin_right = 255.0
-margin_bottom = 70.5
-window_title = "Save as..."
-script = ExtResource( 3 )
+script = ExtResource("3")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationDialog"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.0
-margin_bottom = -43.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -43.0
 
 [node name="LineEdit" type="LineEdit" parent="ConfirmationDialog/VBoxContainer"]
-margin_right = 494.0
-margin_bottom = 21.0
+layout_mode = 2
 placeholder_text = "File name"
 
 [node name="Deletion" type="ConfirmationDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -174.0
-margin_top = -36.0
-margin_right = 174.0
-margin_bottom = 36.0
-window_title = "Подтверждение..."
 dialog_text = "Are you sure you want to delete all nodes?"
 
 [node name="TextureRect" type="TextureRect" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="MousePopup" type="PopupMenu" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -10.0
-margin_top = -10.0
-margin_right = 10.0
-margin_bottom = 10.0
-items = [ "+ START", null, 0, false, false, 0, 0, null, "", false, "+ Line", null, 0, false, false, 1, 0, null, "", false, "+ Condition", null, 0, false, false, 2, 0, null, "", false, "+ Setter", null, 0, false, false, 3, 0, null, "", false, "+ Caller", null, 0, false, false, 4, 0, null, "", false, "+ Dynamic Line", null, 0, false, false, 5, 0, null, "", false ]
+size = Vector2i(126, 158)
+item_count = 6
+item_0/text = "+ START"
+item_1/text = "+ Line"
+item_1/id = 1
+item_2/text = "+ Condition"
+item_2/id = 2
+item_3/text = "+ Setter"
+item_3/id = 3
+item_4/text = "+ Caller"
+item_4/id = 4
+item_5/text = "+ Dynamic Line"
+item_5/id = 5
 
 [node name="Error" type="AcceptDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -300.0
-margin_top = -125.0
-margin_right = 300.0
-margin_bottom = 125.0
-rect_min_size = Vector2( 600, 250 )
-window_title = "ЁКАРНЫЙ БАБАЙ"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Error"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 8.0
-margin_top = 8.0
-margin_right = -8.0
-margin_bottom = -43.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -43.0
 text = "Произошла залупа. Чекай логи."
 
 [node name="V" type="CanvasLayer" parent="."]
 
 [node name="Label" type="Label" parent="V"]
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -221.0
-margin_top = 11.0
-margin_right = -23.0
-margin_bottom = 32.0
+offset_left = -221.0
+offset_top = 11.0
+offset_right = -23.0
+offset_bottom = 32.0
 grow_horizontal = 0
-custom_fonts/font = ExtResource( 5 )
-text = "Dialog Universal Professional Asset (BETA 3)"
+theme_override_fonts/font = ExtResource("5")
+text = "Dialog Universal Professional Asset (BETA 4)"
 
 [connection signal="connection_from_empty" from="GraphEdit" to="." method="_on_GraphEdit_connection_from_empty"]
 [connection signal="connection_request" from="GraphEdit" to="." method="_on_GraphEdit_connection_request"]
 [connection signal="connection_to_empty" from="GraphEdit" to="." method="_on_GraphEdit_connection_to_empty"]
 [connection signal="disconnection_request" from="GraphEdit" to="." method="_on_GraphEdit_disconnection_request"]
 [connection signal="gui_input" from="GraphEdit" to="." method="_on_GraphEdit_gui_input"]
+[connection signal="node_deselected" from="GraphEdit" to="." method="_on_GraphEdit_node_unselected"]
 [connection signal="node_selected" from="GraphEdit" to="." method="_on_GraphEdit_node_selected"]
-[connection signal="node_unselected" from="GraphEdit" to="." method="_on_GraphEdit_node_unselected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/OpenNew" to="." method="_on_OpenNew_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveAs" to="." method="_on_SaveAs_pressed"]
@@ -286,7 +239,8 @@ text = "Dialog Universal Professional Asset (BETA 3)"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/NewOption" to="." method="_on_NewOption_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/Feature" to="." method="_on_feature_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer2/NewRoll" to="." method="_on_NewRoll_pressed"]
-[connection signal="about_to_show" from="DialoguesSearcher" to="DialoguesSearcher" method="_on_DialoguesSearcher_about_to_show"]
+[connection signal="about_to_popup" from="DialoguesSearcher" to="DialoguesSearcher" method="_on_DialoguesSearcher_about_to_show"]
+[connection signal="close_requested" from="DialoguesSearcher" to="DialoguesSearcher" method="_on_close_requested"]
 [connection signal="directory_updated" from="DialoguesSearcher" to="." method="_on_DialoguesSearcher_directory_updated"]
 [connection signal="load_dialog" from="DialoguesSearcher" to="." method="load_save"]
 [connection signal="pressed" from="DialoguesSearcher/VBoxContainer/HBoxContainer/Search" to="DialoguesSearcher" method="_on_Refresh_pressed"]

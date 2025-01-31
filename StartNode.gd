@@ -4,7 +4,7 @@ class_name StartNode
 
 signal on_delete
 
-onready var source := $HBoxContainer/MainColumn/Source/Var
+@onready var source := $HBoxContainer/MainColumn/Source/Var
 
 
 func _ready():

@@ -2,11 +2,11 @@ extends GraphNode
 
 class_name DefaultNode
 
-onready var main = $HBoxContainer/MainColumn
-onready var node_title =  $HBoxContainer/MainColumn/Title/Title
-onready var comment_box = $HBoxContainer/MainColumn/Comment
+@onready var main = $HBoxContainer/MainColumn
+@onready var node_title =  $HBoxContainer/MainColumn/Title/Title
+@onready var comment_box = $HBoxContainer/MainColumn/Comment
 
-onready var type := "DEFAULT"
+@onready var type := "DEFAULT"
 
 var id : int
 var short_title := ""
@@ -21,8 +21,8 @@ func _ready():
 
 func set_base_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
 	id = int(id_name)
-	offset.x  = data["offset_x"]
-	offset.y = data["offset_y"]
+	position_offset.x  = data["offset_x"]
+	position_offset.y = data["offset_y"]
 	type = data["type"]
 	_update_title_text(data["title"])
 
@@ -32,8 +32,8 @@ func gen_base_data() -> Dictionary:
 	# data["id"] = id
 	data["type"] = type
 	data["title"] = short_title
-	data["offset_x"] = offset.x
-	data["offset_y"] = offset.y
+	data["offset_x"] = position_offset.x
+	data["offset_y"] = position_offset.y
 	return {str(id) : data}
 
 
@@ -78,7 +78,7 @@ func _on_Title_text_changed(new_text : String):
 
 
 func _on_GraphNode_resize_request(new_minsize):
-	rect_size = new_minsize
+	size = new_minsize
 
 
 func _on_GraphNode_close_request():

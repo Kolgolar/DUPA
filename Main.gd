@@ -1,8 +1,8 @@
 extends Control
 
-export (NodePath) onready var _mouse_popup = get_node(_mouse_popup) as PopupMenu
+@export var _mouse_popup: PopupMenu
 
-export var _lite_line_nodes := false
+@export var _lite_line_nodes := false
 
 var dialog = {}
 var dialog_for_localisation = []
@@ -19,10 +19,10 @@ var from_empty_to_node : String
 var slot_to_connect : int
 var from_node_to_empty : String
 
-onready var error_popup = $Error
-onready var error_popup_label = $Error/RichTextLabel
-onready var graph_edit = $GraphEdit
-onready var timer = $Timer
+@onready var error_popup = $Error
+@onready var error_popup_label = $Error/RichTextLabel
+@onready var graph_edit = $GraphEdit
+@onready var timer = $Timer
 
 
 func _ready():
@@ -36,7 +36,7 @@ func _on_NewNode_pressed():
 	
 # SAVE 
 func _on_Save_pressed(): 
-	if file_name.empty():
+	if file_name.is_empty():
 		$ConfirmationDialog.popup()
 		return
 	
@@ -81,20 +81,20 @@ func _on_GraphEdit_node_unselected(node):
 
 
 func _create_graph_node(scene : String, pos := Vector2.ZERO, _is_start_node := false, set_to_defaults := true) -> GraphNode:
-	var node = load(scene).instance()
+	var node = load(scene).instantiate()
 	graph_edit.add_child(node)
 	if node is StartNode:
 		$MousePopup.set_item_disabled(0, true)
-		node.connect("on_delete", self, "_on_StartNode_delete")
-		node.connect("focus_entered", self, "_on_graph_node_focus_entered")
-		node.connect("focus_exited", self, "_on_graph_node_focus_exited")
+		node.connect("on_delete", Callable(self, "_on_StartNode_delete"))
+		node.connect("focus_entered", Callable(self, "_on_graph_node_focus_entered"))
+		node.connect("focus_exited", Callable(self, "_on_graph_node_focus_exited"))
 		start_node = node
 	if set_to_defaults:
 		_set_new_node_params(node, pos, _is_start_node)
-	if not from_empty_to_node.empty():
+	if not from_empty_to_node.is_empty():
 		graph_edit.connect_node(node.name, 0, from_empty_to_node, slot_to_connect)
 		from_empty_to_node = ""
-	elif not from_node_to_empty.empty():
+	elif not from_node_to_empty.is_empty():
 		graph_edit.connect_node(from_node_to_empty, slot_to_connect, node.name, 0)
 		from_node_to_empty = ""
 	slot_to_connect = -1
@@ -108,9 +108,9 @@ func _set_new_node_params(node : GraphNode, pos : Vector2, _is_start_node := fal
 	else:
 		max_id += 1
 		node.id = max_id
-	var real_size = graph_edit.rect_size / graph_edit.zoom
+	var real_size = graph_edit.size / graph_edit.zoom
 	var offset = graph_edit.scroll_offset
-	node.offset = (pos + graph_edit.scroll_offset) / graph_edit.zoom - Vector2(0, node.rect_size.y / 2)
+	node.offset = (pos + graph_edit.scroll_offset) / graph_edit.zoom - Vector2(0, node.size.y / 2)
 	initial_pos = node.offset
 
 
@@ -126,7 +126,7 @@ func _validation() -> int:
 			"LINE", "DYNAMIC_LINE":
 				pass
 			"CONDITION":
-				if node.condition_var.text.empty():
+				if node.condition_var.text.is_empty():
 					err = ERR_INVALID_DATA
 					show_popup_error("No condition variable at node '" + node.title + "'")
 			"START":
@@ -140,11 +140,11 @@ func _validation() -> int:
 					show_popup_error("Start node should have at least 1 connection!")
 					err = ERR_DOES_NOT_EXIST
 			"SETTER":
-				if node.var_name.text.empty() or node.var_value.text.empty():
+				if node.var_name.text.is_empty() or node.var_value.text.is_empty():
 					show_popup_error("Setter node '" + node.title + "' has empty parameters!")
 					err = ERR_INVALID_DATA
 			"CALLER":
-				if node.var_name.text.empty():
+				if node.var_name.text.is_empty():
 					show_popup_error("Caller node '" + node.title + "' has empty function name!")
 					err = ERR_INVALID_DATA
 			_:
@@ -154,7 +154,7 @@ func _validation() -> int:
 
 
 func show_popup_error(error_text : String) -> void:
-	var time = OS.get_time()
+	var time = Time.get_time_dict_from_system()
 	error_popup_label.text += "\n[{0}:{1}:{2}".format([time["hour"], time["minute"], time["second"]]) + "]  " + error_text
 	error_popup.popup()
 
@@ -162,10 +162,9 @@ func show_popup_error(error_text : String) -> void:
 func save_dialog(path, fn):	
 	# save file
 	var err = _validation()
-	if fn.empty():
+	if fn.is_empty():
 		# printerr("File name is empty!")
 		return
-	var file = File.new()
 	# file_path = file_path
 	if not ".json" in fn:
 		fn += ".json"
@@ -173,8 +172,8 @@ func save_dialog(path, fn):
 	var data = {}
 	data["CONFIG"] = {"max_id" : max_id}
 	data["TIMELINE"] = dialog
-	file.open(path + fn, File.WRITE)
-	file.store_line(to_json(data))
+	var file = FileAccess.open(path + fn, FileAccess.WRITE)
+	file.store_line(JSON.new().stringify(data))
 	
 	file.close()
 	# $FileName.text = fn
@@ -186,21 +185,22 @@ func save_dialog(path, fn):
 
 	$VBoxContainer/HBoxContainer/Notification.visible = true
 	timer.start()
-	yield(timer, "timeout")
+	await timer.timeout
 	$VBoxContainer/HBoxContainer/Notification.visible = false
 	
 
 func load_save(path, fn):
-	if path.empty() or fn.empty():
+	if path.is_empty() or fn.is_empty():
 		print("File not found!")
 		return
 
 	_clear()
 	_set_filename(fn)
-	var file = File.new()
 
-	file.open(path + fn, File.READ)
-	var data = parse_json(file.get_as_text())
+	var file = FileAccess.open(path + fn, FileAccess.READ)
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(file.get_as_text())
+	var data = test_json_conv.get_data()
 	file.close()
 	var timeline = data["TIMELINE"]
 	var config = data["CONFIG"]
@@ -269,7 +269,7 @@ func _clear() -> void:
 
 
 func _call_mouse_popup() -> void:
-	_mouse_popup.rect_global_position = get_global_mouse_position()
+	_mouse_popup.global_position = get_global_mouse_position()
 	_mouse_popup.popup()
 
 
@@ -287,11 +287,11 @@ func _on_GraphEdit_gui_input(event):
 	
 
 func _on_OpenNew_pressed():
-	$DialoguesSearcher.popup()
+	$DialoguesSearcher.popup_centered()
 
 
 func _on_SaveAs_pressed():
-	$ConfirmationDialog.popup()
+	$ConfirmationDialog.popup_centered()
 
 
 func _on_ConfirmationDialog_save_dialog_as(fn : String):
@@ -311,20 +311,20 @@ func _on_Clear_pressed():
 func _on_MousePopup_id_pressed(id:int):
 	match id:
 		0:
-			_create_graph_node("res://StartNode.tscn", _mouse_popup.rect_global_position, true)
+			_create_graph_node("res://StartNode.tscn", _mouse_popup.global_position, true)
 		1:
 			if _lite_line_nodes:
-				_create_graph_node("res://LineNodeLite.tscn", _mouse_popup.rect_global_position)
+				_create_graph_node("res://LineNodeLite.tscn", _mouse_popup.global_position)
 			else:
-				_create_graph_node("res://LineNode.tscn", _mouse_popup.rect_global_position)
+				_create_graph_node("res://LineNode.tscn", _mouse_popup.global_position)
 		2:
-			_create_graph_node("res://ConditionNode.tscn", _mouse_popup.rect_global_position)
+			_create_graph_node("res://ConditionNode.tscn", _mouse_popup.global_position)
 		3:
-			_create_graph_node("res://SetterNode.tscn", _mouse_popup.rect_global_position)
+			_create_graph_node("res://SetterNode.tscn", _mouse_popup.global_position)
 		4:
-			_create_graph_node("res://CallerNode.tscn", _mouse_popup.rect_global_position)
+			_create_graph_node("res://CallerNode.tscn", _mouse_popup.global_position)
 		5:
-			_create_graph_node("res://DynamicLineNodeLite.tscn", _mouse_popup.rect_global_position)
+			_create_graph_node("res://DynamicLineNodeLite.tscn", _mouse_popup.global_position)
 		_:
 			printerr("Unknown id!")
 

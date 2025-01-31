@@ -19,17 +19,18 @@ func _ready():
 
 func load_data() -> void:
 	var loaded_data
-	var file = File.new()
-	print_debug("Поиск файла сохранений")
-	if file.file_exists(_SAVE_PATH):
-		var error = file.open(_SAVE_PATH, File.READ)
-#		var error = file.open_encrypted_with_pass(_SAVE_PATH, File.READ, "P@paB3ar6969")
-		if error == OK:
-			loaded_data = file.get_var()
-			file.close()
-		else:
-			printerr("Ошибка загрузки сохранения! Код ошибки: " + str(error))
-	
+	var file = FileAccess.open(_SAVE_PATH, FileAccess.READ)
+	print_debug("Поиск файла диалога")
+	var err = file.get_open_error()
+	if err == OK:
+		loaded_data = file.get_var()
+	elif err == ERR_FILE_NOT_FOUND:
+		print_debug("Файл диалога не найден.")
+		return
+	else:
+		printerr("Ошибка загрузки диалога! Код ошибки: " + str(err))
+		return
+		
 		for key in loaded_data.keys():
 			if get(key) != null:
 				set(key, loaded_data[key])
@@ -38,8 +39,6 @@ func load_data() -> void:
 				printerr("Error on data loading! The variable '" + key + "' does not exist!")
 				print_debug("Save file keys: " + str(loaded_data.keys()))
 		print_debug("Загрузка завершена!")
-	else:
-		print_debug("Файл сохранений не найден.")
 
 
 func save_data() -> void:
@@ -48,13 +47,15 @@ func save_data() -> void:
 	for key in _VARS_TO_SAVE:
 		data_to_save[key] = get(key)
 	
-	var dir = Directory.new()
-	if not dir.dir_exists(_SAVE_DIR):
-		dir.make_dir_recursive(_SAVE_DIR)
-	var file = File.new()
-	var error = file.open(_SAVE_PATH, File.WRITE)
-#	var error = file.open_encrypted_with_pass(_SAVE_PATH, File.WRITE, "P@paB3ar6969")
-	if error == OK:
+	if !DirAccess.dir_exists_absolute(_SAVE_DIR):
+		DirAccess.make_dir_absolute(_SAVE_DIR)
+	var file := FileAccess.open(_SAVE_PATH, FileAccess.WRITE)
+	var err := file.get_open_error()
+	if err == OK:
 		file.store_var(data_to_save)
 		file.close()
+	elif err == ERR_FILE_NOT_FOUND:
+		printerr("Файл диалога не найден!")
+	else:
+		printerr("Ошибка открытия файла диалога! Код ошибки: " + str(err))
 	print_debug("Данные сохранены!")

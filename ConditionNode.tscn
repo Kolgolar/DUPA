@@ -32,10 +32,10 @@ shadow_color = Color( 1, 0.937255, 0, 1 )
 shadow_size = 12
 
 [node name="ConditionNode" instance=ExtResource( 1 )]
-margin_bottom = 139.0
-custom_constants/separation = 15
-custom_styles/frame = SubResource( 1 )
-custom_styles/selectedframe = SubResource( 2 )
+offset_bottom = 139.0
+theme_override_constants/separation = 15
+theme_override_styles/frame = SubResource( 1 )
+theme_override_styles/selected_frame = SubResource( 2 )
 title = "CONDITION:"
 slot/0/left_enabled = false
 slot/0/right_enabled = false
@@ -60,40 +60,40 @@ slot/3/right_color = Color( 1, 0.156863, 0.117647, 1 )
 script = ExtResource( 2 )
 
 [node name="HBoxContainer" parent="." index="0"]
-margin_left = 0.0
-margin_right = 380.0
+offset_left = 0.0
+offset_right = 380.0
 
 [node name="Comment" parent="HBoxContainer/MainColumn" index="1"]
-margin_top = 58.0
-margin_right = 532.0
-margin_bottom = 158.0
+offset_top = 58.0
+offset_right = 532.0
+offset_bottom = 158.0
 
 [node name="True" type="Control" parent="." index="1"]
-margin_top = 77.0
-margin_right = 380.0
-margin_bottom = 77.0
+offset_top = 77.0
+offset_right = 380.0
+offset_bottom = 77.0
 
 [node name="ConditionVar" type="HBoxContainer" parent="." index="2"]
-margin_top = 92.0
-margin_right = 380.0
-margin_bottom = 124.0
-custom_constants/separation = 10
+offset_top = 92.0
+offset_right = 380.0
+offset_bottom = 124.0
+theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="ConditionVar" index="0"]
-margin_right = 120.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 120, 32 )
+offset_right = 120.0
+offset_bottom = 32.0
+custom_minimum_size = Vector2( 120, 32 )
 text = "Condition var"
 valign = 1
 
 [node name="ConditionVar" type="LineEdit" parent="ConditionVar" index="1"]
-margin_left = 130.0
-margin_right = 380.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 250, 32 )
+offset_left = 130.0
+offset_right = 380.0
+offset_bottom = 32.0
+custom_minimum_size = Vector2( 250, 32 )
 placeholder_text = "BOOL only!"
 
 [node name="False" type="Control" parent="." index="3"]
-margin_top = 139.0
-margin_right = 380.0
-margin_bottom = 139.0
+offset_top = 139.0
+offset_right = 380.0
+offset_bottom = 139.0

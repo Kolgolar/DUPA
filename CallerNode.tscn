@@ -1,53 +1,35 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://5ih2pyrkujur"]
 
-[ext_resource path="res://SetterNode.tscn" type="PackedScene" id=1]
-[ext_resource path="res://CallerNode.gd" type="Script" id=2]
+[ext_resource type="PackedScene" path="res://SetterNode.tscn" id="1"]
+[ext_resource type="Script" path="res://CallerNode.gd" id="2"]
 
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_top = 30.0
-bg_color = Color( 0.0627451, 0.117647, 0.203922, 1 )
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-expand_margin_left = 15.0
-expand_margin_right = 15.0
-expand_margin_top = 15.0
-expand_margin_bottom = 15.0
-shadow_color = Color( 0, 1, 0.905882, 1 )
-shadow_size = 12
-
-[sub_resource type="StyleBoxFlat" id=3]
-content_margin_top = 30.0
-bg_color = Color( 0.145098, 0.243137, 0.403922, 1 )
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-expand_margin_left = 15.0
-expand_margin_right = 15.0
-expand_margin_top = 15.0
-expand_margin_bottom = 15.0
-shadow_color = Color( 0, 1, 0.905882, 1 )
-shadow_size = 12
-
-[node name="CallerNode" instance=ExtResource( 1 )]
-custom_styles/frame = SubResource( 2 )
-custom_styles/selectedframe = SubResource( 3 )
+[node name="CallerNode" instance=ExtResource("1")]
 title = "CALLER:"
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="Title" parent="HBoxContainer/MainColumn/Title" index="1"]
 placeholder_text = ""
 
+[node name="Var" parent="HBoxContainer/MainColumn" index="2"]
+layout_mode = 2
+
 [node name="Label" parent="HBoxContainer/MainColumn/Var" index="0"]
+layout_mode = 2
 text = "Func name"
+vertical_alignment = 1
 
 [node name="Var" parent="HBoxContainer/MainColumn/Var" index="1"]
+layout_mode = 2
 placeholder_text = "e.g. open_door"
 
+[node name="Value" parent="HBoxContainer/MainColumn" index="3"]
+layout_mode = 2
+
 [node name="Label" parent="HBoxContainer/MainColumn/Value" index="0"]
+layout_mode = 2
 text = "Args"
+vertical_alignment = 1
 
 [node name="Value" parent="HBoxContainer/MainColumn/Value" index="1"]
+layout_mode = 2
 placeholder_text = "a,b,c... (can be empty)"

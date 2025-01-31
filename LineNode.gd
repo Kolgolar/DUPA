@@ -2,11 +2,11 @@ extends DefaultNode
 
 class_name LineNode
 
-onready var text = $HBoxContainer/MainColumn/Text/Text
-onready var localization_id = $HBoxContainer/MainColumn/Title/LocalizationLine
-onready var choice_name = $HBoxContainer/MainColumn/Choice/ChoiceName
-onready var custom_char_name = $HBoxContainer/MainColumn/Character/CustomCharName
-onready var character_drop = $HBoxContainer/MainColumn/Character/CharacterDrop
+@onready var text = $HBoxContainer/MainColumn/Text/Text
+@onready var localization_id = $HBoxContainer/MainColumn/Title/LocalizationLine
+@onready var choice_name = $HBoxContainer/MainColumn/Choice/ChoiceName
+@onready var custom_char_name = $HBoxContainer/MainColumn/Character/CustomCharName
+@onready var character_drop = $HBoxContainer/MainColumn/Character/CharacterDrop
 
 var characters = [
 	"Player",
@@ -45,11 +45,11 @@ func gen_data(graph_edit : GraphEdit) -> Dictionary:
 	data["go_to"] = []
 	data["character"] = character_drop.text
 	data["text"] = text.text
-	if not choice_name.text.empty():
+	if not choice_name.text.is_empty():
 		data["choice_name"] = choice_name.text
-	if not localization_id.text.empty():
+	if not localization_id.text.is_empty():
 		data["localization_id"] = localization_id.text
-	if not custom_char_name.text.empty():
+	if not custom_char_name.text.is_empty():
 		data["custom_char_name"] = custom_char_name.text
 	
 	data["go_to"] = _arrange_go_to(graph_edit)

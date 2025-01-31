@@ -1,6 +1,6 @@
 extends DefaultNode
 
-onready var condition_var = $ConditionVar/ConditionVar
+@onready var condition_var = $ConditionVar/ConditionVar
 
 const TRUE_PORT_ID = 0
 const FALSE_PORT_ID = 1

@@ -2,10 +2,10 @@ extends DefaultNode
 
 class_name DynamicLineNode
 
-onready var is_player_line = $HBoxContainer/MainColumn/IsPlayer/IsPlayerLine
-onready var _from = $HBoxContainer/MainColumn/From/Var
-onready var _to = $HBoxContainer/MainColumn/To/Var
-onready var _base = $HBoxContainer/MainColumn/Base/Var
+@onready var is_player_line = $HBoxContainer/MainColumn/IsPlayer/IsPlayerLine
+@onready var _from = $HBoxContainer/MainColumn/From/Var
+@onready var _to = $HBoxContainer/MainColumn/To/Var
+@onready var _base = $HBoxContainer/MainColumn/Base/Var
 
 
 func _ready():
@@ -21,7 +21,7 @@ func _update_title_text(new_text : String, update_node_text := true) -> void:
 
 func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
 	if "is_player" in data:
-		is_player_line.pressed = data["is_player"]
+		is_player_line.button_pressed = data["is_player"]
 	if "base" in data:
 		_base.text = data["base"]
 	if "from" in data:

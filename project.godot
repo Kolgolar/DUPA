@@ -6,101 +6,57 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "SetterNode",
-"class": "CallerNode",
-"language": "GDScript",
-"path": "res://CallerNode.gd"
-}, {
-"base": "GraphNode",
-"class": "DefaultNode",
-"language": "GDScript",
-"path": "res://DefaultNode.gd"
-}, {
-"base": "DefaultNode",
-"class": "DynamicLineNode",
-"language": "GDScript",
-"path": "res://DynamicLineNodeLite.gd"
-}, {
-"base": "DefaultNode",
-"class": "LineNode",
-"language": "GDScript",
-"path": "res://LineNode.gd"
-}, {
-"base": "DefaultNode",
-"class": "LineNodeLite",
-"language": "GDScript",
-"path": "res://LineNodeLite.gd"
-}, {
-"base": "DefaultNode",
-"class": "SetterNode",
-"language": "GDScript",
-"path": "res://SetterNode.gd"
-}, {
-"base": "DefaultNode",
-"class": "StartNode",
-"language": "GDScript",
-"path": "res://StartNode.gd"
-} ]
-_global_script_class_icons={
-"CallerNode": "",
-"DefaultNode": "",
-"DynamicLineNode": "",
-"LineNode": "",
-"LineNodeLite": "",
-"SetterNode": "",
-"StartNode": ""
-}
+config_version=5
 
 [application]
 
 config/name="DUPA"
 run/main_scene="res://Main.tscn"
+config/features=PackedStringArray("4.3")
+boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="res://Assets/hamez_team_logo.png"
-boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
 
 [autoload]
 
-CharacterProfiles="*res://Global/CharacterProfiles.gd"
-GameSave="*res://Global/GameSave.gd"
 SaS="*res://Global/save_system.gd"
 
 [display]
 
 window/size/width=1600
 window/size/height=960
-window/dpi/allow_hidpi=true
+
+[gui]
+
+theme/custom="res://Assets/GreenTheme.tres"
 
 [input]
 
 right_click={
 "deadzone": 0.5,
-"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
- ]
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":2,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
 }
 save={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":true,"command":true,"pressed":false,"scancode":83,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":false,"command":true,"pressed":false,"scancode":83,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 new_option={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":true,"control":false,"meta":false,"command":false,"pressed":false,"scancode":79,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 duplicate={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":false,"command":true,"pressed":false,"scancode":68,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 delete={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777224,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 
 [mono]

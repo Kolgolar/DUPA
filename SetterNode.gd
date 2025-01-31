@@ -2,8 +2,8 @@ extends DefaultNode
 
 class_name SetterNode
 
-onready var var_name = $HBoxContainer/MainColumn/Var/Var
-onready var var_value = $HBoxContainer/MainColumn/Value/Value
+@onready var var_name = $HBoxContainer/MainColumn/Var/Var
+@onready var var_value = $HBoxContainer/MainColumn/Value/Value
 
 
 func _ready():
