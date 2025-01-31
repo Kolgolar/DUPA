@@ -269,7 +269,7 @@ margin_right = -23.0
 margin_bottom = 32.0
 grow_horizontal = 0
 custom_fonts/font = ExtResource( 5 )
-text = "Dialog Universal Professional Asset (BETA 2)"
+text = "Dialog Universal Professional Asset (BETA 3)"
 
 [connection signal="connection_from_empty" from="GraphEdit" to="." method="_on_GraphEdit_connection_from_empty"]
 [connection signal="connection_request" from="GraphEdit" to="." method="_on_GraphEdit_connection_request"]
