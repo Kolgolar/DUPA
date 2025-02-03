@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://5ih2pyrkujur"]
+
+[ext_resource type="PackedScene" uid="uid://bqkoq1ojeoxox" path="res://project/nodes/node_setter.tscn" id="1_e7suo"]
+[ext_resource type="Script" path="res://project/nodes/node_caller.gd" id="2_b8i13"]
+
+[node name="CallerNode" instance=ExtResource("1_e7suo")]
+offset_top = 0.0
+offset_right = 380.0
+title = "CALLER:"
+script = ExtResource("2_b8i13")
+
+[node name="Label" parent="HBoxContainer/MainColumn/Title" index="0"]
+visible = true
+text = "Title"
+
+[node name="Title" parent="HBoxContainer/MainColumn/Title" index="1"]
+placeholder_text = ""
+
+[node name="HSeparator" parent="." index="2"]
+theme_override_constants/separation = 10
+
+[connection signal="text_changed" from="HBoxContainer/MainColumn/Title/Title" to="." method="_on_Title_text_changed"]

@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=3 uid="uid://nytw3aaj0cds"]
+
+[ext_resource type="Script" path="res://project/nodes/node_default.gd" id="1"]
+[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://project/assets/dupa.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://rg1h5xqoefkq" path="res://project/assets/cross.png" id="3_8jflf"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_4djmp"]
+color = Color(1, 1, 1, 1)
+grow_begin = -7.0
+grow_end = -7.0
+thickness = 4
+
+[node name="DefaultNode" type="GraphNode" node_paths=PackedStringArray("node_title") groups=["graph_nodes"]]
+offset_top = 8.0
+offset_right = 432.0
+offset_bottom = 125.0
+theme = ExtResource("2")
+resizable = true
+title = "NEW"
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+slot/1/left_enabled = true
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = true
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+script = ExtResource("1")
+node_title = NodePath("HBoxContainer/MainColumn/Title/Title")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="MainColumn" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Title" type="HBoxContainer" parent="HBoxContainer/MainColumn"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="HBoxContainer/MainColumn/Title"]
+visible = false
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+text = "Description"
+vertical_alignment = 1
+
+[node name="Title" type="TextEdit" parent="HBoxContainer/MainColumn/Title"]
+custom_minimum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "(No description)"
+scroll_fit_content_height = true
+
+[node name="Delete" type="Button" parent="HBoxContainer/MainColumn/Title"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+icon = ExtResource("3_8jflf")
+
+[node name="Comment" type="HBoxContainer" parent="HBoxContainer/MainColumn"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="HBoxContainer/MainColumn/Comment"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "Comment"
+
+[node name="Comment" type="TextEdit" parent="HBoxContainer/MainColumn/Comment"]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 2
+caret_blink = true
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_4djmp")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="resize_request" from="." to="." method="_on_GraphNode_resize_request"]
+[connection signal="text_changed" from="HBoxContainer/MainColumn/Title/Title" to="." method="_on_title_text_changed"]
+[connection signal="pressed" from="HBoxContainer/MainColumn/Title/Delete" to="." method="_on_delete_pressed"]
