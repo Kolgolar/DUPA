@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://d27yly1pgog0"]
+
+[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1_4b34c"]
+[ext_resource type="Script" path="res://addons/dupa/project/nodes/node_line_lite.gd" id="2_g0s0d"]
+
+[node name="LineNodeLite" node_paths=PackedStringArray("localization_id", "is_player_line") instance=ExtResource("1_4b34c")]
+offset_right = 384.0
+offset_bottom = 106.0
+title = "LINE"
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
+script = ExtResource("2_g0s0d")
+localization_id = NodePath("VBoxContainer/Text/LocalizationLine")
+is_player_line = NodePath("VBoxContainer/IsPlayer/IsPlayerLine")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="3"]
+layout_mode = 2
+
+[node name="Text" type="HBoxContainer" parent="VBoxContainer" index="0"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/Text" index="0"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Text"
+
+[node name="LocalizationLine" type="LineEdit" parent="VBoxContainer/Text" index="1"]
+custom_minimum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "Localization ID only!"
+
+[node name="IsPlayer" type="HBoxContainer" parent="VBoxContainer" index="1"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/IsPlayer" index="0"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Force player
+speaking"
+
+[node name="IsPlayerLine" type="CheckButton" parent="VBoxContainer/IsPlayer" index="1"]
+layout_mode = 2
