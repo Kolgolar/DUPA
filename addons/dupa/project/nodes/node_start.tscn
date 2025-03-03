@@ -8,22 +8,22 @@ offset_right = 266.0
 offset_bottom = 82.0
 title = ">>>>>>>>>>>> START >>>>>>>>>>>>"
 slot/1/left_enabled = false
-slot/2/left_enabled = false
-slot/2/left_type = 0
-slot/2/left_color = Color(1, 1, 1, 1)
-slot/2/left_icon = null
-slot/2/right_enabled = false
-slot/2/right_type = 0
-slot/2/right_color = Color(1, 1, 1, 1)
-slot/2/right_icon = null
-slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
 script = ExtResource("2")
 source = NodePath("VBoxContainer/Source/Var")
 
 [node name="Title" parent="HBoxContainer/MainColumn" index="0"]
 visible = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." index="3"]
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="4"]
 layout_mode = 2
 
 [node name="Source" type="HBoxContainer" parent="VBoxContainer" index="0"]

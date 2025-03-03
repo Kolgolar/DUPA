@@ -10,15 +10,6 @@ offset_bottom = 139.0
 theme_override_constants/separation = 15
 title = "CONDITION"
 slot/1/right_color = Color(0.517647, 1, 0.117647, 1)
-slot/2/left_enabled = false
-slot/2/left_type = 0
-slot/2/left_color = Color(1, 1, 1, 1)
-slot/2/left_icon = null
-slot/2/right_enabled = false
-slot/2/right_type = 0
-slot/2/right_color = Color(1, 1, 1, 1)
-slot/2/right_icon = null
-slot/2/draw_stylebox = true
 slot/3/left_enabled = false
 slot/3/left_type = 0
 slot/3/left_color = Color(1, 1, 1, 1)
@@ -42,9 +33,6 @@ script = ExtResource("2")
 [node name="HSeparator" parent="." index="2"]
 theme_override_styles/separator = SubResource("StyleBoxEmpty_0rdb7")
 
-[node name="True" type="Control" parent="." index="3"]
-layout_mode = 2
-
 [node name="ConditionVar" type="HBoxContainer" parent="." index="4"]
 layout_mode = 2
 theme_override_constants/separation = 10
@@ -60,5 +48,5 @@ custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "BOOL only!"
 
-[node name="False" type="Control" parent="." index="5"]
+[node name="Spacer1" type="Control" parent="." index="5"]
 layout_mode = 2

@@ -25,11 +25,11 @@ var from_node_to_empty : String
 @onready var error_popup = $Error
 @onready var error_popup_label = $Error/RichTextLabel
 @onready var graph_edit = $GraphEdit
-@onready var timer = $Timer
 
 
 func _ready():
-	pass
+	_node_params_popup.hide()
+	show_start_screen()
 	
 
 
@@ -73,6 +73,7 @@ func _on_graph_node_rmb_pressed(node: GraphNode):
 		return
 	_context_menu_node = node
 	_configure_node_popup(node)
+	_node_params_popup.set_item_disabled(0, node is StartNode)
 	_node_params_popup.popup()
 	_node_params_popup.position = get_local_mouse_position()
 	node.selected = true
@@ -81,7 +82,7 @@ func _on_graph_node_rmb_pressed(node: GraphNode):
 
 func _configure_node_popup(node: DefaultNode):
 	_node_params_popup.set_item_checked(0, node.desc_visible)
-	print("Config")
+	#print("Config")
 
 
 func _create_graph_node(scene : String, pos := Vector2.ZERO, _is_start_node := false, set_to_defaults := true) -> GraphNode:
@@ -187,22 +188,21 @@ func save_dialog(path, fn):
 		printerr("Error on validation!")
 		show_popup_error("Saving complete, but you must resolve errors!")
 
-
-	$VBoxContainer/HBoxContainer/Notification.visible = true
-	timer.start()
-	await timer.timeout
-	$VBoxContainer/HBoxContainer/Notification.visible = false
+	%SaveNotify.show()
+	await get_tree().create_timer(3.0).timeout
+	%SaveNotify.hide()
 	
 
-func load_save(path, fn):
+func load_save(path: String):
+	var fn = path.split("/")[-1]
 	if path.is_empty() or fn.is_empty():
-		print("File not found!")
+		print("File not found at %s" % path)
 		return
 
 	_clear()
 	_set_filename(fn)
 
-	var file = FileAccess.open(path + fn, FileAccess.READ)
+	var file = FileAccess.open(path, FileAccess.READ)
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(file.get_as_text())
 	var data = test_json_conv.get_data()
@@ -269,7 +269,6 @@ func _clear() -> void:
 	for node in get_tree().get_nodes_in_group("graph_nodes"):
 		node.delete()
 	graph_edit.clear_connections()
-	_on_start_node_deleted()
 	_set_filename("")
 
 
@@ -344,6 +343,7 @@ func _on_mous_popup_id_pressed(id:int):
 
 func _on_start_node_deleted():
 	$MousePopup.set_item_disabled(0, false)
+	_start_node = null
 
 
 func _on_graph_edit_connection_from_empty(to, to_slot, release_position):
@@ -367,13 +367,15 @@ func _on_graph_edit_popup_request(at_position: Vector2) -> void:
 		_rmb_on_node_was_pressed = false
 	else:
 		_call_mouse_popup()
+	
 
-
-func _on_graph_edit_duplicate_nodes_request() -> void:
+func _duplicate_all_focused_nodes():
 	var shift := Vector2(30, 30)
 	for n in focused_nodes:
 		if is_instance_valid(n) and not n is StartNode:
 			var new_node : GraphNode = n.duplicate()
+			new_node.rmb_pressed.disconnect(_on_graph_node_rmb_pressed)
+			new_node.rmb_pressed.connect(_on_graph_node_rmb_pressed.bind(new_node))
 			new_node.position_offset += shift
 			(n as GraphNode).selected = false
 			new_node.selected = true
@@ -384,14 +386,45 @@ func _on_graph_edit_duplicate_nodes_request() -> void:
 			printerr("Node is not valid or you're trying to duplicate Start Node (u cant, bro)")
 
 
-func _on_graph_edit_delete_nodes_request(nodes: Array[StringName]) -> void:
+func _on_graph_edit_duplicate_nodes_request() -> void:
+	_duplicate_all_focused_nodes()
+
+
+func _delete_all_focused_nodes():
 	for n in focused_nodes:
 		if is_instance_valid(n):
 			n.delete()
 	focused_nodes.clear()
 
 
+func _on_graph_edit_delete_nodes_request(nodes: Array[StringName]) -> void:
+	_delete_all_focused_nodes()
+
+
 func _on_node_params_popup_id_pressed(id: int) -> void:
 	match id:
 		0:
 			_context_menu_node.desc_visible = !_context_menu_node.desc_visible
+		10:
+			_delete_all_focused_nodes()
+		11:
+			_duplicate_all_focused_nodes()
+
+
+func show_start_screen():
+	$StartMenu.show()
+	$Editor.hide()
+
+
+func _on_dialogs_searcher_file_selected(path: String) -> void:
+	load_save(path)
+	$Editor.show()
+
+
+
+func _on_start_menu_open_timeline() -> void:
+	%DialogsSearcher.show()
+
+
+func _on_dialogs_searcher_canceled() -> void:
+	show_start_screen()

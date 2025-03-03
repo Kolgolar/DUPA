@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=4 uid="uid://brww61hhufjeh"]
+[gd_scene load_steps=11 format=4 uid="uid://brww61hhufjeh"]
 
 [ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/dupa.tres" id="1_vkgws"]
 [ext_resource type="Script" path="res://addons/dupa/project/main/main.gd" id="2_37sju"]
-[ext_resource type="Script" path="res://addons/dupa/project/main/dialogs_searcher.gd" id="3_xw4do"]
+[ext_resource type="PackedScene" uid="uid://bc20cfsm4d8wj" path="res://addons/dupa/project/main/start_menu.tscn" id="3_ajwya"]
+[ext_resource type="Texture2D" uid="uid://cqvrek4a6cw1c" path="res://addons/dupa/project/assets/cross_red.png" id="3_y3mvl"]
 [ext_resource type="Script" path="res://addons/dupa/project/main/save_as.gd" id="4_u0y80"]
 
 [sub_resource type="Image" id="Image_ied5w"]
@@ -592,7 +593,16 @@ _mouse_popup = NodePath("MousePopup")
 _node_params_popup = NodePath("NodeParamsPopup")
 _lite_line_nodes = true
 
-[node name="GraphEdit" type="GraphEdit" parent="."]
+[node name="Editor" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GraphEdit" type="GraphEdit" parent="Editor"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -605,7 +615,7 @@ zoom_max = 2.0
 zoom_step = 1.05
 show_zoom_label = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="Editor"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 75.0
@@ -613,96 +623,70 @@ offset_right = 693.0
 offset_bottom = 115.0
 theme_override_constants/separation = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Editor/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="OpenNew" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="OpenNew" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(125, 35)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "OPEN FILE"
 
-[node name="Save" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Save" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(125, 35)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SAVE"
 
-[node name="SaveAs" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="SaveAs" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(125, 35)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "SAVE AS"
 
-[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="Clear" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Clear" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(125, 35)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "CLEAR ALL"
 
-[node name="Notification" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="SaveNotify" type="Label" parent="Editor/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "SAVED!"
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
-one_shot = true
-
-[node name="DialogsSearcher" type="Window" parent="."]
-position = Vector2i(0, 36)
-size = Vector2i(600, 500)
-visible = false
-script = ExtResource("3_xw4do")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="DialogsSearcher"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 15.0
-offset_top = 15.0
-offset_right = -15.0
-offset_bottom = -15.0
-theme_override_constants/separation = 25
-
-[node name="HBoxContainer" type="HBoxContainer" parent="DialogsSearcher/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 30
-
-[node name="LineEdit" type="LineEdit" parent="DialogsSearcher/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Dialogues folder path"
-
-[node name="Search" type="Button" parent="DialogsSearcher/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "REFRESH"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="DialogsSearcher/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Dialogues" type="VBoxContainer" parent="DialogsSearcher/VBoxContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="FileName" type="Label" parent="."]
+[node name="FileName" type="Label" parent="Editor"]
 layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -20.0
+offset_left = 600.0
 offset_top = 10.0
-offset_right = 20.0
-offset_bottom = 25.0
+offset_right = 640.0
+offset_bottom = 33.0
 grow_horizontal = 2
 horizontal_alignment = 1
+
+[node name="StartMenu" parent="." instance=ExtResource("3_ajwya")]
+layout_mode = 1
+offset_top = -222.5
+offset_bottom = 222.5
+
+[node name="DialogsSearcher" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a File"
+initial_position = 1
+size = Vector2i(900, 500)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.json", "*.dupa")
+use_native_dialog = true
 
 [node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
 script = ExtResource("4_u0y80")
@@ -723,13 +707,8 @@ placeholder_text = "File name"
 [node name="Deletion" type="ConfirmationDialog" parent="."]
 dialog_text = "Are you sure you want to delete all nodes?"
 
-[node name="TextureRect" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="MousePopup" type="PopupMenu" parent="."]
-size = Vector2i(126, 158)
+size = Vector2i(138, 170)
 item_count = 6
 item_0/text = "+ START"
 item_1/text = "+ Line"
@@ -743,14 +722,6 @@ item_4/id = 4
 item_5/text = "+ Dynamic Line"
 item_5/id = 5
 
-[node name="NodeParamsPopup" type="PopupMenu" parent="."]
-size = Vector2i(212, 100)
-visible = true
-unfocusable = true
-item_count = 1
-item_0/text = "Show description field"
-item_0/checkable = 2
-
 [node name="Error" type="AcceptDialog" parent="."]
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Error"]
@@ -762,6 +733,21 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = -43.0
 text = "Произошла залупа. Чекай логи."
+
+[node name="NodeParamsPopup" type="PopupMenu" parent="."]
+size = Vector2i(236, 100)
+visible = true
+unfocusable = true
+item_count = 4
+item_0/text = "Show description field"
+item_0/checkable = 2
+item_1/id = 2
+item_1/separator = true
+item_2/text = "Duplicate"
+item_2/id = 11
+item_3/text = "DELETE"
+item_3/icon = ExtResource("3_y3mvl")
+item_3/id = 10
 
 [node name="Version" type="CanvasLayer" parent="."]
 
@@ -777,25 +763,23 @@ grow_horizontal = 0
 theme_override_fonts/font = SubResource("FontFile_bbopm")
 text = "Dialog Universal Professional Asset (beta 4)"
 
-[connection signal="connection_from_empty" from="GraphEdit" to="." method="_on_graph_edit_connection_from_empty"]
-[connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
-[connection signal="connection_to_empty" from="GraphEdit" to="." method="_on_graph_edit_connection_to_empty"]
-[connection signal="delete_nodes_request" from="GraphEdit" to="." method="_on_graph_edit_delete_nodes_request"]
-[connection signal="disconnection_request" from="GraphEdit" to="." method="_on_grap_edit_disconnection_request"]
-[connection signal="duplicate_nodes_request" from="GraphEdit" to="." method="_on_graph_edit_duplicate_nodes_request"]
-[connection signal="gui_input" from="GraphEdit" to="." method="_on_graph_edit_gui_input"]
-[connection signal="node_deselected" from="GraphEdit" to="." method="_on_graph_edit_node_deselected"]
-[connection signal="node_selected" from="GraphEdit" to="." method="_on_graph_edit_node_selected"]
-[connection signal="popup_request" from="GraphEdit" to="." method="_on_graph_edit_popup_request"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/OpenNew" to="." method="_on_open_new_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/SaveAs" to="." method="_on_save_as_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
-[connection signal="about_to_popup" from="DialogsSearcher" to="DialogsSearcher" method="_on_dialogs_searcher_about_to_show"]
-[connection signal="close_requested" from="DialogsSearcher" to="DialogsSearcher" method="_on_close_requested"]
-[connection signal="directory_updated" from="DialogsSearcher" to="." method="_on_dialogs_searcher_directory_updated"]
-[connection signal="load_dialog" from="DialogsSearcher" to="." method="load_save"]
-[connection signal="pressed" from="DialogsSearcher/VBoxContainer/HBoxContainer/Search" to="DialogsSearcher" method="_on_refresh_pressed"]
+[connection signal="connection_from_empty" from="Editor/GraphEdit" to="." method="_on_graph_edit_connection_from_empty"]
+[connection signal="connection_request" from="Editor/GraphEdit" to="." method="_on_graph_edit_connection_request"]
+[connection signal="connection_to_empty" from="Editor/GraphEdit" to="." method="_on_graph_edit_connection_to_empty"]
+[connection signal="delete_nodes_request" from="Editor/GraphEdit" to="." method="_on_graph_edit_delete_nodes_request"]
+[connection signal="disconnection_request" from="Editor/GraphEdit" to="." method="_on_grap_edit_disconnection_request"]
+[connection signal="duplicate_nodes_request" from="Editor/GraphEdit" to="." method="_on_graph_edit_duplicate_nodes_request"]
+[connection signal="gui_input" from="Editor/GraphEdit" to="." method="_on_graph_edit_gui_input"]
+[connection signal="node_deselected" from="Editor/GraphEdit" to="." method="_on_graph_edit_node_deselected"]
+[connection signal="node_selected" from="Editor/GraphEdit" to="." method="_on_graph_edit_node_selected"]
+[connection signal="popup_request" from="Editor/GraphEdit" to="." method="_on_graph_edit_popup_request"]
+[connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/OpenNew" to="." method="_on_open_new_pressed"]
+[connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/SaveAs" to="." method="_on_save_as_pressed"]
+[connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/Clear" to="." method="_on_clear_pressed"]
+[connection signal="open_timeline" from="StartMenu" to="." method="_on_start_menu_open_timeline"]
+[connection signal="canceled" from="DialogsSearcher" to="." method="_on_dialogs_searcher_canceled"]
+[connection signal="file_selected" from="DialogsSearcher" to="." method="_on_dialogs_searcher_file_selected"]
 [connection signal="confirmed" from="ConfirmationDialog" to="ConfirmationDialog" method="_on_confirmation_dialog_confirmed"]
 [connection signal="save_dialog_as" from="ConfirmationDialog" to="." method="_on_confirmation_dialog_save_dialog_as"]
 [connection signal="confirmed" from="Deletion" to="." method="_on_deletion_confirmed"]

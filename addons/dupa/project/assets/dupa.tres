@@ -44,7 +44,7 @@ bg_color = Color(0.0980392, 0.266667, 0.360784, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dvng5"]
 content_margin_left = 5.0
-content_margin_top = 30.0
+content_margin_top = 15.0
 content_margin_right = 5.0
 bg_color = Color(0.0627451, 0.117647, 0.203922, 1)
 border_width_left = 1
@@ -53,11 +53,10 @@ border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
-expand_margin_bottom = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7sxq1"]
 content_margin_left = 5.0
-content_margin_top = 30.0
+content_margin_top = 15.0
 content_margin_right = 5.0
 bg_color = Color(0.12549, 0.223529, 0.380392, 1)
 border_width_left = 1
@@ -66,7 +65,7 @@ border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
-expand_margin_bottom = 15.0
+expand_margin_bottom = 5.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3vu7h"]
 content_margin_left = 10.0
@@ -132,6 +131,8 @@ Button/styles/focus = SubResource("20")
 Button/styles/hover = SubResource("19")
 Button/styles/normal = SubResource("3")
 Button/styles/pressed = SubResource("2")
+ButtonStartMenu/base_type = &"Button"
+ButtonStartMenu/font_sizes/font_size = 30
 CheckBox/constants/hseparation = 20
 CheckBox/styles/normal = SubResource("4")
 GraphEdit/styles/panel = SubResource("StyleBoxFlat_iampf")
@@ -141,8 +142,11 @@ GraphNode/styles/panel_selected = SubResource("StyleBoxFlat_7sxq1")
 GraphNode/styles/titlebar = SubResource("StyleBoxFlat_3vu7h")
 GraphNode/styles/titlebar_selected = SubResource("StyleBoxFlat_klvsg")
 GraphNodeTitleLabel/colors/font_color = Color(1, 1, 1, 1)
+GraphNodeTitleLabel/constants/line_spacing = 10
 GraphNodeTitleLabel/font_sizes/font_size = 22
-Label/colors/font_color = Color(0, 1, 0.976471, 1)
+Label/colors/font_color = Color(1, 1, 1, 1)
+LabelHighlight/base_type = &"Label"
+LabelHighlight/colors/font_color = Color(0, 1, 0.976471, 1)
 LineEdit/colors/font_color = Color(1, 1, 1, 1)
 LineEdit/styles/normal = SubResource("8")
 OptionButton/styles/focus = SubResource("16")

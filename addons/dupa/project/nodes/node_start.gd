@@ -9,6 +9,7 @@ signal on_delete
 
 func _ready():
 	type = "START"
+	desc_visible = false
 
 
 func gen_data(graph_edit : GraphEdit) -> Dictionary:
@@ -22,7 +23,7 @@ func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> vo
 	if "source" in data:
 		source.text = data["source"]
 
-	
-func _on_GraphNode_close_request() -> void:
-	emit_signal("on_delete")
-	delete()
+
+func delete():
+	super()
+	on_delete.emit()

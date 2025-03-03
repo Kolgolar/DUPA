@@ -1,0 +1,19 @@
+extends PanelContainer
+
+signal create_timeline
+signal open_timeline
+
+
+func _on_new_pressed() -> void:
+	create_timeline.emit()
+
+
+func _on_open_pressed() -> void:
+	open_timeline.emit()
+
+
+func _on_help_pressed() -> void:
+	pass
+
+func _on_exit_pressed() -> void:
+	get_tree().quit()

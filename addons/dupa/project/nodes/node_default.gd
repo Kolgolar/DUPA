@@ -11,9 +11,11 @@ class_name DefaultNode
 var id : int
 var short_title := ""
 
-var desc_visible := true:
+var desc_visible := false:
 	set(value):
+		desc_visible = value
 		node_title.visible = value
+		size.y -= 64
 
 signal name_changed
 signal rmb_pressed
@@ -38,6 +40,7 @@ func gen_base_data() -> Dictionary:
 	data["title"] = short_title
 	data["offset_x"] = position_offset.x
 	data["offset_y"] = position_offset.y
+	data["desc_visible"] = desc_visible
 	return {str(id) : data}
 
 
@@ -51,7 +54,6 @@ func gen_data(graph_edit : GraphEdit) -> Dictionary:
 
 func delete() -> void:
 	clear_all_slots()
-
 	queue_free()
 
 
