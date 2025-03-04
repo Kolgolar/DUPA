@@ -12,16 +12,16 @@ config_version=5
 
 config/name="DUPA"
 run/main_scene="res://addons/dupa/project/main/main.tscn"
-config/features=PackedStringArray("4.3")
+config/features=PackedStringArray("4.4")
 run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 1)
-boot_splash/image="res://addons/dupa/project/assets/hamezteam_logo.png"
+boot_splash/show_image=false
 config/icon="res://icon.png"
 
 [autoload]
 
-SaS="*res://addons/dupa/project/main/save_system.gd"
-Act="*res://addons/dupa/project/main/actions.gd"
+DupaConfig="*res://addons/dupa/project/main/dupa_config.gd"
+Act="res://addons/dupa/project/main/actions.gd"
 
 [display]
 

@@ -1,4 +1,4 @@
-[gd_resource type="VisualShader" load_steps=2 format=3 uid="uid://dfxtrr026f8st"]
+[gd_resource type="VisualShader" load_steps=2 format=3 uid="uid://cwdmxoljocou1"]
 
 [sub_resource type="VisualShaderNodeColorFunc" id="VisualShaderNodeColorFunc_7fqk2"]
 
@@ -27,7 +27,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-43.2838, 33.2754)
 nodes/fragment/2/node = SubResource("VisualShaderNodeColorFunc_7fqk2")
 nodes/fragment/2/position = Vector2(85.894, 276.217)
 nodes/fragment/connections = PackedInt32Array(2, 0, 0, 0)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://d27yly1pgog0"]
 
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1_4b34c"]
-[ext_resource type="Script" path="res://addons/dupa/project/nodes/node_line_lite.gd" id="2_g0s0d"]
+[ext_resource type="Script" uid="uid://ccbkaqk0f6dnt" path="res://addons/dupa/project/nodes/node_line_lite.gd" id="2_g0s0d"]
 
 [node name="LineNodeLite" node_paths=PackedStringArray("localization_id", "is_player_line") instance=ExtResource("1_4b34c")]
 offset_right = 384.0

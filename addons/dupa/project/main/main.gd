@@ -24,12 +24,13 @@ var from_node_to_empty : String
 
 @onready var error_popup = $Error
 @onready var error_popup_label = $Error/RichTextLabel
-@onready var graph_edit = $GraphEdit
+@onready var graph_edit = $Editor/GraphEdit
 
 
 func _ready():
 	_node_params_popup.hide()
 	show_start_screen()
+
 	
 
 
@@ -40,15 +41,21 @@ func _search_for_localization():
 
 
 # SAVE 
+func _save_as_requested():
+	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, _on_save_dialog_as)
+	add_child(fm)
+
+
+
 func _on_save_pressed(): 
 	if file_name.is_empty():
-		$ConfirmationDialog.popup()
+		_save_as_requested()
 		return
 	
 	dialog.clear()
 	for node in get_tree().get_nodes_in_group("graph_nodes"):
 		dialog.merge(node.gen_base_data())
-		dialog[str(node.id)].merge(node.gen_data($GraphEdit))
+		dialog[str(node.id)].merge(node.gen_data(%GraphEdit))
 
 	# print(dialog)
 	save_dialog(directory, file_name)
@@ -161,7 +168,7 @@ func _validation() -> int:
 
 func show_popup_error(error_text : String) -> void:
 	var time = Time.get_time_dict_from_system()
-	error_popup_label.text += "\n[{0}:{1}:{2}".format([time["hour"], time["minute"], time["second"]]) + "]  " + error_text
+	error_popup_label.text = "[{0}:{1}:{2}".format([time["hour"], time["minute"], time["second"]]) + "]  " + error_text + "\n"
 	error_popup.popup()
 
 
@@ -182,7 +189,6 @@ func save_dialog(path, fn):
 	file.store_line(JSON.new().stringify(data))
 	
 	file.close()
-	# $FileName.text = fn
 	
 	if err != OK:
 		printerr("Error on validation!")
@@ -237,8 +243,8 @@ func load_save(path: String):
 		# node = node.instance()
 		var node = _create_graph_node(node_scene_path, Vector2.ZERO, false, false)
 		# graph_edit.add_child(node)
-		node.set_base_data($GraphEdit, timeline[graph_node], graph_node)
-		node.set_data($GraphEdit, timeline[graph_node], graph_node)
+		node.set_base_data(%GraphEdit, timeline[graph_node], graph_node)
+		node.set_data(%GraphEdit, timeline[graph_node], graph_node)
 		graph_names[graph_node] = node.name
 
 	for graph_node in timeline:
@@ -261,7 +267,7 @@ func load_save(path: String):
 
 
 func _set_filename(new_name : String) -> void:
-	$FileName.text = new_name
+	%TimelineName.text = new_name
 	file_name = new_name
 
 
@@ -300,14 +306,18 @@ func _unhandled_input(event: InputEvent):
 	
 
 func _on_open_new_pressed():
-	$DialogsSearcher.popup_centered()
+	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.OPEN_TIMELINE, true, _on_dupa_file_manager_file_selected)
+	add_child(fm)
 
 
 func _on_save_as_pressed():
-	$ConfirmationDialog.popup_centered()
+	#$ConfirmationDialog.popup_centered()
+	_save_as_requested()
 
 
-func _on_confirmation_dialog_save_dialog_as(fn : String):
+func _on_save_dialog_as(path : String):
+	var directory = path.get_base_dir()
+	var fn = path.get_file()
 	_set_filename(fn)
 	_on_save_pressed()
 	save_dialog(directory, fn)
@@ -397,6 +407,10 @@ func _delete_all_focused_nodes():
 	focused_nodes.clear()
 
 
+func _show_file_manager():
+	pass
+
+
 func _on_graph_edit_delete_nodes_request(nodes: Array[StringName]) -> void:
 	_delete_all_focused_nodes()
 
@@ -416,15 +430,25 @@ func show_start_screen():
 	$Editor.hide()
 
 
-func _on_dialogs_searcher_file_selected(path: String) -> void:
+func _on_dupa_file_manager_file_selected(path: String) -> void:
 	load_save(path)
 	$Editor.show()
 
 
+func _on_dupa_file_manager_timeline_saved(path: String):
+	load_save(path)
 
-func _on_start_menu_open_timeline() -> void:
-	%DialogsSearcher.show()
+
+func _on_open_timeline() -> void:
+	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.OPEN_TIMELINE, true, _on_dupa_file_manager_file_selected)
+	add_child(fm)
 
 
-func _on_dialogs_searcher_canceled() -> void:
-	show_start_screen()
+func _on_create_timeline() -> void:
+	#var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, _on_dupa_file_manager_timeline_saved)
+	#add_child(fm)
+	_set_filename("")
+	directory = ""
+	%TimelineName.text = "(not saved)"
+	%Editor.show()
+	pass

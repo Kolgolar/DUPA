@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://nytw3aaj0cds"]
 
-[ext_resource type="Script" path="res://addons/dupa/project/nodes/node_default.gd" id="1"]
+[ext_resource type="Script" uid="uid://drpw46gjkuqrf" path="res://addons/dupa/project/nodes/node_default.gd" id="1"]
 [ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/dupa.tres" id="2"]
 [ext_resource type="Texture2D" uid="uid://cqvrek4a6cw1c" path="res://addons/dupa/project/assets/cross_red.png" id="3_8csve"]
 

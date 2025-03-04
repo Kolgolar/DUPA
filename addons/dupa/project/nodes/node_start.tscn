@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://mhdjkl12kec7"]
 
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1"]
-[ext_resource type="Script" path="res://addons/dupa/project/nodes/node_start.gd" id="2"]
+[ext_resource type="Script" uid="uid://cixnusabdulvu" path="res://addons/dupa/project/nodes/node_start.gd" id="2"]
 
 [node name="StartNode" node_paths=PackedStringArray("source") instance=ExtResource("1")]
 offset_right = 266.0

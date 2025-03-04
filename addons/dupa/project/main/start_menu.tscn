@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bc20cfsm4d8wj"]
 
 [ext_resource type="Texture2D" uid="uid://cvupxw7p3ljqu" path="res://addons/dupa/project/assets/dupa.png" id="1_lpyfo"]
-[ext_resource type="Script" path="res://addons/dupa/project/main/start_menu.gd" id="1_pct73"]
+[ext_resource type="Script" uid="uid://lqi64g30qbg1" path="res://addons/dupa/project/main/start_menu.gd" id="1_pct73"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rg07"]
 bg_color = Color(0.163992, 0.215785, 0.242031, 1)

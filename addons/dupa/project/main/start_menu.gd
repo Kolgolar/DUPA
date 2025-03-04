@@ -13,7 +13,8 @@ func _on_open_pressed() -> void:
 
 
 func _on_help_pressed() -> void:
-	pass
+	OS.shell_open("https://github.com/Kolgolar/DUPA/blob/rework/README.md")
+
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()
