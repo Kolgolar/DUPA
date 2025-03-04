@@ -709,6 +709,7 @@ text = "(not saved)"
 horizontal_alignment = 1
 
 [node name="Deletion" type="ConfirmationDialog" parent="."]
+size = Vector2i(343, 100)
 dialog_text = "Are you sure you want to delete all nodes?"
 
 [node name="MousePopup" type="PopupMenu" parent="."]

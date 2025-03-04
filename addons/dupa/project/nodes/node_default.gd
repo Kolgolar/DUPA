@@ -60,9 +60,9 @@ func delete() -> void:
 func _arrange_go_to(graph_edit : GraphEdit, port_id := 0) -> Array:
 	var to_nodes_pos_y := {}
 	for connection in graph_edit.get_connection_list():
-		if connection["from"] == self.name and connection["from_port"] == port_id:
-			var to_node : GraphNode = graph_edit.get_node(connection["to"])
-			to_nodes_pos_y[to_node.offset.y] = str(to_node.id)
+		if connection["from_node"] == self.name and connection["from_port"] == port_id:
+			var to_node : GraphNode = graph_edit.get_node(NodePath(connection["to_node"]))
+			to_nodes_pos_y[to_node.position_offset.y] = str(to_node.id)
 
 	var coords = to_nodes_pos_y.keys()
 	coords.sort()

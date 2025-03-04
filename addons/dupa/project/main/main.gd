@@ -30,6 +30,7 @@ var from_node_to_empty : String
 func _ready():
 	_node_params_popup.hide()
 	show_start_screen()
+	_reset()
 
 	
 
@@ -146,7 +147,7 @@ func _validation() -> int:
 				var connected := false
 				for connection in graph_edit.get_connection_list():
 					print(connection)
-					if connection["from"] == node.name:
+					if connection["from_node"] == node.name:
 						connected = true
 						break
 				if not connected:
@@ -205,7 +206,7 @@ func load_save(path: String):
 		print("File not found at %s" % path)
 		return
 
-	_clear()
+	_reset()
 	_set_filename(fn)
 
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -271,11 +272,15 @@ func _set_filename(new_name : String) -> void:
 	file_name = new_name
 
 
-func _clear() -> void:
+func _reset() -> void:
+	_clear_nodes()
+	_set_filename("(not saved)")
+
+
+func _clear_nodes():
+	graph_edit.clear_connections()
 	for node in get_tree().get_nodes_in_group("graph_nodes"):
 		node.delete()
-	graph_edit.clear_connections()
-	_set_filename("")
 
 
 func _call_mouse_popup() -> void:
@@ -369,7 +374,7 @@ func _on_graph_edit_connection_to_empty(from, from_slot, release_position):
 
 
 func _on_deletion_confirmed():
-	_clear()
+	_clear_nodes()
 
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:
@@ -447,8 +452,14 @@ func _on_open_timeline() -> void:
 func _on_create_timeline() -> void:
 	#var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, _on_dupa_file_manager_timeline_saved)
 	#add_child(fm)
-	_set_filename("")
-	directory = ""
-	%TimelineName.text = "(not saved)"
+	#_set_filename("")
+	#directory = ""
+	if !file_name.is_empty():
+		# TODO: Стыбзить из лмстудио код создания конфёрм попапов
+		# Спросить, точно ли пользователь хочет создать новый таймлайн, ведь тут есть
+		# несохранённые изменения
+		# TODO: Соответственно, нужен механизм туду реду, чтобы определять, были
+		# ли совершены действия, которые не были сохранены.
+		pass
 	%Editor.show()
-	pass
+	_reset()
