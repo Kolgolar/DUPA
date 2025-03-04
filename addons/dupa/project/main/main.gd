@@ -49,7 +49,7 @@ func _save_as_requested():
 
 
 func _on_save_pressed(): 
-	if file_name.is_empty():
+	if file_name.is_empty() || directory.is_empty():
 		_save_as_requested()
 		return
 	
@@ -324,7 +324,7 @@ func _on_save_dialog_as(path : String):
 	var directory = path.get_base_dir()
 	var fn = path.get_file()
 	_set_filename(fn)
-	_on_save_pressed()
+	#_on_save_pressed()
 	save_dialog(directory, fn)
 
 
