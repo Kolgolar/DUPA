@@ -7,16 +7,21 @@ class_name SetterNode
 
 
 func _ready():
+	super()
 	type = "SETTER"
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
-	var_name.text = data["var_name"]
-	var_value.text = data["var_value"]
+func _set_param(param_name: StringName, value):
+	super(param_name, value)
+	match param_name:
+		&"var_name":
+			var_name.text = value
+		&"var_value":
+			var_value.text = value
 
 
-func gen_data(graph_edit : GraphEdit) -> Dictionary:
-	var data := {}
+func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
+	var data = super(graph_edit)
 	data["var_name"] = var_name.text
 	data["var_value"] = var_value.text
 	data["go_to"] = []

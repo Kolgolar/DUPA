@@ -6,23 +6,25 @@ class_name LineNodeLite
 @export var is_player_line: CheckButton
 
 
-
 func _ready():
+	super()
 	type = "LINE"
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
-	if "localization_id" in data:
-		localization_id.text = data["localization_id"]
-	if "is_player" in data:
-		is_player_line.button_pressed = data["is_player"]
+func _set_param(param_name: StringName, value):
+	super(param_name, value)
+	match param_name:
+		&"localization_id":
+			localization_id.text = value
+		&"is_player":
+			is_player_line.set_pressed_no_signal(value)
 
 
-func gen_data(graph_edit : GraphEdit) -> Dictionary:
-	var data := {}
+func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
+	var data := super(graph_edit)
 	data["go_to"] = []
-	data["is_player"] = is_player_line.pressed
-	if not localization_id.text.is_empty():
+	data["is_player"] = is_player_line.button_pressed
+	if not localization_id.text.is_empty() || allow_empty:
 		data["localization_id"] = localization_id.text
 	
 	data["go_to"] = _arrange_go_to(graph_edit)

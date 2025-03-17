@@ -11,16 +11,22 @@ var file_name := ""
 var directory := ""
 var initial_pos = Vector2(40,40)
 
-var focused_nodes := []
+var _focused_nodes := []
+var _focused_nodes_names: Array[StringName] = []
 var _context_menu_node: GraphNode
 var _rmb_on_node_was_pressed := false
 
-var max_id = 1
+var max_id := 1
 var _start_node: StartNode
 
 var from_empty_to_node : String
 var slot_to_connect : int
 var from_node_to_empty : String
+
+# TODO: При удалении запоминать данные узла (позиция, содержание)
+# Вероятно, под это дело нужен второй словарь
+var _created_nodes: Dictionary[int, GraphNode]
+var _deleted_nodes: Dictionary[int, Dictionary]
 
 @onready var error_popup = $Error
 @onready var error_popup_label = $Error/RichTextLabel
@@ -55,24 +61,30 @@ func _on_save_pressed():
 	
 	dialog.clear()
 	for node in get_tree().get_nodes_in_group("graph_nodes"):
-		dialog.merge(node.gen_base_data())
-		dialog[str(node.id)].merge(node.gen_data(%GraphEdit))
+		dialog[str(node.id)].merge(node.gen_data(graph_edit))
 
 	# print(dialog)
 	save_dialog(directory, file_name)
 	
 
 func _input(event):
-	if event.is_action_pressed("save"):
+	if event.is_action_pressed(&"save"):
 		_on_save_pressed()
+	
+	elif event.is_action_pressed(&"ui_undo"):
+		ActionsMaster.undo()
+	elif event.is_action_pressed(&"ui_redo"):
+		ActionsMaster.redo()
 
 
 func _on_graph_edit_node_selected(node):
-	focused_nodes.append(node)
+	_focused_nodes.append(node)
+	_focused_nodes_names.append(node.name)
 
 
 func _on_graph_edit_node_deselected(node):
-	focused_nodes.erase(node)
+	_focused_nodes.erase(node)
+	_focused_nodes_names.erase(node.name)
 
 
 func _on_graph_node_rmb_pressed(node: GraphNode):
@@ -81,7 +93,6 @@ func _on_graph_node_rmb_pressed(node: GraphNode):
 		return
 	_context_menu_node = node
 	_configure_node_popup(node)
-	_node_params_popup.set_item_disabled(0, node is StartNode)
 	_node_params_popup.popup()
 	_node_params_popup.position = get_local_mouse_position()
 	node.selected = true
@@ -93,39 +104,72 @@ func _configure_node_popup(node: DefaultNode):
 	#print("Config")
 
 
-func _create_graph_node(scene : String, pos := Vector2.ZERO, _is_start_node := false, set_to_defaults := true) -> GraphNode:
-	var node = load(scene).instantiate()
+func _on_graph_node_position_offset_changed(from: Vector2, to: Vector2, node: GraphNode):
+	#ActionsMaster.register_property_action("Move Node", node, &"position_offset", from, to)
+	pass
+
+func _create_graph_node(scene_path: String, pos := Vector2.ZERO, _is_start_node := false, remember_created := true, id := -1) -> GraphNode:
+	var node = load(scene_path).instantiate()
 	graph_edit.add_child(node)
+
 	node.rmb_pressed.connect(_on_graph_node_rmb_pressed.bind(node))
+	node.position_offset_changed_action.connect(_on_graph_node_position_offset_changed.bind(node))
+	
 	if node is StartNode:
-		$MousePopup.set_item_disabled(0, true)
-		node.connect("on_delete", Callable(self, "_on_start_node_deleted"))
 		node.connect("focus_entered", Callable(self, "_on_graph_node_focus_entered"))
 		node.connect("focus_exited", Callable(self, "_on_graph_node_focus_exited"))
 		_start_node = node
-	if set_to_defaults:
-		_set_new_node_params(node, pos, _is_start_node)
+	#node.on_delete.connect(_on_node_deletion.bind(node))
+	
+	if id > -1:
+		node.id = id
+	else:
+		if node is StartNode:
+			node.id = 0
+		else:
+			max_id += 1
+			node.id = max_id
+			
+	var real_size = graph_edit.size / graph_edit.zoom
+	var offset = graph_edit.scroll_offset
+	node.position_offset = (pos + graph_edit.scroll_offset) / graph_edit.zoom - Vector2(0, node.size.y / 2)
+	initial_pos = node.position_offset
+	
+	
 	if not from_empty_to_node.is_empty():
 		graph_edit.connect_node(node.name, 0, from_empty_to_node, slot_to_connect)
+		#ActionsMaster.register_method_action(
+			#"Connect nodes",
+			#graph_edit.connect_node.bind(node.name, 0, from_empty_to_node, slot_to_connect),
+			#graph_edit.disconnect_node(node.name, 0, from_empty_to_node, slot_to_connect)
+		#)
 		from_empty_to_node = ""
 	elif not from_node_to_empty.is_empty():
 		graph_edit.connect_node(from_node_to_empty, slot_to_connect, node.name, 0)
 		from_node_to_empty = ""
 	slot_to_connect = -1
 	
+	if remember_created:
+		_created_nodes[node.id] = node
+	if _deleted_nodes.has(node.id):
+		node.set_data(graph_edit, _deleted_nodes[node.id], "")
+		_deleted_nodes.erase(node.id)
+	
+	_mouse_popup.disable_start_node(_created_nodes.has(0))
+	
 	return node
 
 
-func _set_new_node_params(node : GraphNode, pos : Vector2, _is_start_node := false) -> void:
-	if node is StartNode:
-		node.id = 0
-	else:
-		max_id += 1
-		node.id = max_id
-	var real_size = graph_edit.size / graph_edit.zoom
-	var offset = graph_edit.scroll_offset
-	node.position_offset = (pos + graph_edit.scroll_offset) / graph_edit.zoom - Vector2(0, node.size.y / 2)
-	initial_pos = node.position_offset
+#func _set_new_node_params(node : GraphNode, pos : Vector2, _is_start_node := false) -> void:
+	#if node is StartNode:
+		#node.id = 0
+	#else:
+		#max_id += 1
+		#node.id = max_id
+	#var real_size = graph_edit.size / graph_edit.zoom
+	#var offset = graph_edit.scroll_offset
+	#node.position_offset = (pos + graph_edit.scroll_offset) / graph_edit.zoom - Vector2(0, node.size.y / 2)
+	#initial_pos = node.position_offset
 
 
 
@@ -173,7 +217,7 @@ func show_popup_error(error_text : String) -> void:
 	error_popup.popup()
 
 
-func save_dialog(path, fn):	
+func save_dialog(path, fn):
 	# save file
 	var err = _validation()
 	if fn.is_empty():
@@ -220,7 +264,6 @@ func load_save(path: String):
 	max_id = config["max_id"]
 
 	var graph_names := {}
-
 	for graph_node in timeline:
 		var node_scene_path
 		match timeline[graph_node]["type"]:
@@ -244,10 +287,10 @@ func load_save(path: String):
 		# node = node.instance()
 		var node = _create_graph_node(node_scene_path, Vector2.ZERO, false, false)
 		# graph_edit.add_child(node)
-		node.set_base_data(%GraphEdit, timeline[graph_node], graph_node)
-		node.set_data(%GraphEdit, timeline[graph_node], graph_node)
+		#node.set_base_data(graph_edit, timeline[graph_node], graph_node)
+		node.set_data(graph_edit, timeline[graph_node], graph_node)
 		graph_names[graph_node] = node.name
-
+	
 	for graph_node in timeline:
 		for tag in timeline[graph_node]:
 			var from_port_num := -1
@@ -274,7 +317,7 @@ func _set_filename(new_name : String) -> void:
 
 func _reset() -> void:
 	_clear_nodes()
-	_set_filename("(not saved)")
+	_set_filename("(not saved!)")
 
 
 func _clear_nodes():
@@ -289,19 +332,20 @@ func _call_mouse_popup() -> void:
 
 
 func _on_graph_edit_connection_request(from, from_slot, to, to_slot):
-	graph_edit.connect_node(from, from_slot, to, to_slot)
+	ActionsMaster.register_method_action(
+		"Connect nodes",
+		graph_edit.connect_node.bind(from, from_slot, to, to_slot),
+		graph_edit.disconnect_node.bind(from, from_slot, to, to_slot)
+	)
 
 
 func _on_grap_edit_disconnection_request(from, from_slot, to, to_slot):
-	graph_edit.disconnect_node(from, from_slot, to, to_slot)
+	ActionsMaster.register_method_action(
+		"Disconnect nodes",
+		graph_edit.disconnect_node.bind(from, from_slot, to, to_slot),
+		graph_edit.connect_node.bind(from, from_slot, to, to_slot),
+	)
 
-
-func _on_graph_edit_gui_input(event):
-	pass
-	#if Input.is_action_just_pressed("right_click"):
-		#await get_tree().process_frame
-		#if !_node_params_popup.visible:
-			#_call_mouse_popup()
 
 
 func _unhandled_input(event: InputEvent):
@@ -337,29 +381,48 @@ func _on_clear_pressed():
 
 
 func _on_mous_popup_id_pressed(id:int):
+	var node_path: String
+	var is_start_node := false
 	match id:
 		0:
-			_create_graph_node("res://addons/dupa/project/nodes/node_start.tscn", _mouse_popup.position, true)
+			node_path = "res://addons/dupa/project/nodes/node_start.tscn"
+			is_start_node = true
 		1:
 			if _lite_line_nodes:
-				_create_graph_node("res://addons/dupa/project/nodes/node_line_lite.tscn", _mouse_popup.position)
+				node_path = "res://addons/dupa/project/nodes/node_line_lite.tscn"
 			else:
-				_create_graph_node("res://addons/dupa/project/nodes/node_line.tscn", _mouse_popup.position)
+				node_path = "res://addons/dupa/project/nodes/node_line.tscn"
 		2:
-			_create_graph_node("res://addons/dupa/project/nodes/node_condition.tscn", _mouse_popup.position)
+			node_path = "res://addons/dupa/project/nodes/node_condition.tscn"
 		3:
-			_create_graph_node("res://addons/dupa/project/nodes/node_setter.tscn", _mouse_popup.position)
+			node_path = "res://addons/dupa/project/nodes/node_setter.tscn"
 		4:
-			_create_graph_node("res://addons/dupa/project/nodes/node_caller.tscn", _mouse_popup.position)
+			node_path = "res://addons/dupa/project/nodes/node_caller.tscn"
 		5:
-			_create_graph_node("res://addons/dupa/project/nodes/node_dynamic_line_lite.tscn", _mouse_popup.position)
+			node_path = "res://addons/dupa/project/nodes/node_caller.tscn"
 		_:
 			printerr("Unknown id!")
-
-func _on_start_node_deleted():
-	$MousePopup.set_item_disabled(0, false)
-	_start_node = null
-
+			return
+	
+	var op_name = "Create Node"
+	ActionsMaster.register_property_action(op_name, self, "from_empty_to_node", "", from_empty_to_node, false)
+	ActionsMaster.register_property_action(op_name, self, "from_node_to_empty", "", from_node_to_empty, false, UndoRedo.MERGE_ALL)
+	ActionsMaster.register_property_action(op_name, self, "slot_to_connect", -1, slot_to_connect, false, UndoRedo.MERGE_ALL)
+	var node = _create_graph_node(node_path, _mouse_popup.position, is_start_node)
+	ActionsMaster.register_method_action(
+		op_name,
+		_create_graph_node.bind(
+			node_path,
+			_mouse_popup.position,
+			is_start_node,
+			true,
+			node.id
+		),
+		_delete_by_id.bind(node.id),
+		false,
+		UndoRedo.MERGE_ALL
+	)
+	
 
 func _on_graph_edit_connection_from_empty(to, to_slot, release_position):
 	from_empty_to_node = to
@@ -370,7 +433,15 @@ func _on_graph_edit_connection_from_empty(to, to_slot, release_position):
 func _on_graph_edit_connection_to_empty(from, from_slot, release_position):
 	from_node_to_empty = from
 	slot_to_connect = from_slot
+	_mouse_popup.disable_start_node(true)
 	_call_mouse_popup()
+
+
+# Запоминать индексы в массиве всех нод???
+func _delete_by_id(id: int):
+	_deleted_nodes[id] = _created_nodes[id].gen_data(graph_edit)
+	_created_nodes[id].delete()
+	_created_nodes.erase(id)
 
 
 func _on_deletion_confirmed():
@@ -386,7 +457,7 @@ func _on_graph_edit_popup_request(at_position: Vector2) -> void:
 
 func _duplicate_all_focused_nodes():
 	var shift := Vector2(30, 30)
-	for n in focused_nodes:
+	for n in _focused_nodes:
 		if is_instance_valid(n) and not n is StartNode:
 			var new_node : GraphNode = n.duplicate()
 			new_node.rmb_pressed.disconnect(_on_graph_node_rmb_pressed)
@@ -394,8 +465,8 @@ func _duplicate_all_focused_nodes():
 			new_node.position_offset += shift
 			(n as GraphNode).selected = false
 			new_node.selected = true
-			focused_nodes.erase(n)
-			focused_nodes.append(new_node)
+			_focused_nodes.erase(n)
+			_focused_nodes.append(new_node)
 			graph_edit.add_child(new_node)
 		else:
 			printerr("Node is not valid or you're trying to duplicate Start Node (u cant, bro)")
@@ -406,10 +477,13 @@ func _on_graph_edit_duplicate_nodes_request() -> void:
 
 
 func _delete_all_focused_nodes():
-	for n in focused_nodes:
+	for n in _focused_nodes:
 		if is_instance_valid(n):
-			n.delete()
-	focused_nodes.clear()
+			if n.id == 0:
+				_mouse_popup.disable_start_node(false)
+				_start_node = null
+			_delete_by_id(n.id)
+	_focused_nodes.clear()
 
 
 func _show_file_manager():
@@ -424,6 +498,16 @@ func _on_node_params_popup_id_pressed(id: int) -> void:
 	match id:
 		0:
 			_context_menu_node.desc_visible = !_context_menu_node.desc_visible
+		4:
+			for connection_data in graph_edit.get_connection_list():
+				if connection_data.from_node in _focused_nodes_names || connection_data.to_node in _focused_nodes_names:
+					graph_edit.disconnect_node(
+						connection_data.from_node,
+						connection_data.from_port,
+						connection_data.to_node,
+						connection_data.to_port
+					)
+				
 		10:
 			_delete_all_focused_nodes()
 		11:
@@ -431,7 +515,7 @@ func _on_node_params_popup_id_pressed(id: int) -> void:
 
 
 func show_start_screen():
-	$StartMenu.show()
+	$StartPanels.show()
 	$Editor.hide()
 
 
@@ -463,3 +547,15 @@ func _on_create_timeline() -> void:
 		pass
 	%Editor.show()
 	_reset()
+
+
+func _on_undo_action_pressed() -> void:
+	ActionsMaster.undo()
+	
+
+func _on_redo_action_pressed() -> void:
+	ActionsMaster.redo()
+
+
+func _on_mouse_popup_popup_hide() -> void:
+	_mouse_popup.disable_start_node(_created_nodes.has(0))

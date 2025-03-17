@@ -5,7 +5,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0rdb7"]
 
-[node name="ConditionNode" instance=ExtResource("1")]
+[node name="ConditionNode" node_paths=PackedStringArray("_register_changes_as_actions_nodes") instance=ExtResource("1")]
 offset_bottom = 139.0
 theme_override_constants/separation = 15
 title = "CONDITION"
@@ -29,6 +29,7 @@ slot/4/right_color = Color(1, 1, 1, 1)
 slot/4/right_icon = null
 slot/4/draw_stylebox = true
 script = ExtResource("2")
+_register_changes_as_actions_nodes = [NodePath("HBoxContainer/MainColumn/Comment/Comment"), NodePath("HBoxContainer/MainColumn/Title/Title"), NodePath("ConditionVar/ConditionVar")]
 
 [node name="HSeparator" parent="." index="2"]
 theme_override_styles/separator = SubResource("StyleBoxEmpty_0rdb7")

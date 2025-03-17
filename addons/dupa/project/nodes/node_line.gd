@@ -40,7 +40,7 @@ func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> vo
 		custom_char_name.text = data["custom_char_name"]
 
 
-func gen_data(graph_edit : GraphEdit) -> Dictionary:
+func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
 	var data := {}
 	data["go_to"] = []
 	data["character"] = character_drop.text

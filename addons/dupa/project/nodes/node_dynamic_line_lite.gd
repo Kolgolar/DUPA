@@ -9,6 +9,7 @@ class_name DynamicLineNode
 
 
 func _ready():
+	super()
 	type = "DYNAMIC_LINE"
 
 
@@ -19,19 +20,21 @@ func _update_title_text(new_text : String, update_node_text := true) -> void:
 		node_title.text = short_title
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
-	if "is_player" in data:
-		is_player_line.button_pressed = data["is_player"]
-	if "base" in data:
-		_base.text = data["base"]
-	if "from" in data:
-		_from.text = str(data["from"])
-	if "to" in data:
-		_to.text = str(data["to"])
-	
+func _set_param(param_name: StringName, value):
+	super(param_name, value)
+	match param_name:
+		&"is_player":
+			is_player_line.button_pressed = value
+		&"base":
+			_base.text = value
+		&"from":
+			_from.text = str(value)
+		&"to":
+			_to.text = str(value)
 
-func gen_data(graph_edit : GraphEdit) -> Dictionary:
-	var data := {}
+
+func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
+	var data = super(graph_edit)
 	data["base"] = _base.text
 	data["from"] = int(_from.text)
 	data["to"] = int(_to.text)

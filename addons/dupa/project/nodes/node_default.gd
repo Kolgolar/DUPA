@@ -5,8 +5,12 @@ class_name DefaultNode
 @onready var main = $HBoxContainer/MainColumn
 @export var node_title: TextEdit
 @onready var comment_box = $HBoxContainer/MainColumn/Comment
-
+@onready var _prev_pos_offset := position_offset
 @onready var type := "DEFAULT"
+
+@export var _register_changes_as_actions_nodes: Array[Control]
+
+@onready var _cached_data := {}
 
 var id : int
 var short_title := ""
@@ -19,37 +23,56 @@ var desc_visible := false:
 
 signal name_changed
 signal rmb_pressed
-
+signal position_offset_changed_action(from: Vector2, to: Vector2)
+#signal on_delete
 
 func _ready():
 	node_title.hide()
-
-
-func set_base_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
-	id = int(id_name)
-	position_offset.x  = data["offset_x"]
-	position_offset.y = data["offset_y"]
-	type = data["type"]
-	#_update_title_text(data["title"])
-
-
-func gen_base_data() -> Dictionary:
-	var data := {}
-	# data["id"] = id
-	data["type"] = type
-	data["title"] = short_title
-	data["offset_x"] = position_offset.x
-	data["offset_y"] = position_offset.y
-	data["desc_visible"] = desc_visible
-	return {str(id) : data}
+	
+	for node in _register_changes_as_actions_nodes:
+		#print(node.get_class())
+		match node.get_class():
+			&"CheckButton":
+				node.toggled.connect(func(toggled: bool): register_action())
+			&"TextEdit":
+				node.focus_exited.connect(register_action)
+				node.text_set.connect(register_action)
+			&"LineEdit":
+				node.text_submitted.connect(func(new_text: String): register_action())
+				node.focus_exited.connect(register_action)
+	
+	await get_tree().process_frame
+	_cached_data = gen_data(get_parent(), true)
+	
 
 
 func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
-	pass
+	id = int(id_name)
+	for param in data:
+		_set_param(param, data[param])
+		
 
+func _set_param(param_name: StringName, value):
+	match param_name:
+		&"offset_x":
+			position_offset.x = value
+		&"offset_y":
+			position_offset.y = value
+		&"type":
+			type = value
+		&"title":
+			node_title.text = value
+			
 
-func gen_data(graph_edit : GraphEdit) -> Dictionary:
-	return {}
+func gen_data(graph_edit: GraphEdit, allow_empty := false) -> Dictionary:
+	var data := {}
+	# data["id"] = id
+	data["type"] = type
+	data["title"] = node_title.text
+	data["offset_x"] = position_offset.x
+	data["offset_y"] = position_offset.y
+	data["desc_visible"] = desc_visible
+	return data
 
 
 func delete() -> void:
@@ -84,13 +107,35 @@ func _on_GraphNode_resize_request(new_minsize):
 
 
 func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_RIGHT && event.is_pressed() && !event.is_echo():
-		rmb_pressed.emit()
-
+	if event is InputEventMouseButton && !event.is_echo():
+		match event.button_index:
+			MOUSE_BUTTON_RIGHT:
+				if event.is_pressed():
+					rmb_pressed.emit()
+			MOUSE_BUTTON_LEFT:
+				if event.is_pressed():
+					_prev_pos_offset = position_offset
+				else:
+					if _prev_pos_offset.is_equal_approx(position_offset): return
+					position_offset_changed_action.emit(_prev_pos_offset, position_offset)
+				
+				
 func _on_delete_pressed() -> void:
-	delete()
+	#delete()
+	#on_delete.emit()
+	pass
 
 
 func _on_title_text_changed() -> void:
 	#_update_title_text(node_title.text, false)
 	pass
+
+
+func register_action():
+	var new_data = gen_data(get_parent(), true)
+	# NOTE: Если за раз было изменено несколько параметров, то это будет засчитано
+	# как разные действия. Возможно, следует доработать логику, чтобы избежать этого 
+	for param in new_data:
+		if _cached_data[param] != new_data[param]:
+			ActionsMaster.register_method_action("Param %s changed" % param, _set_param.bind(param, new_data[param]), _set_param.bind(param, _cached_data[param]), false)
+	_cached_data = gen_data(get_parent(), true)
