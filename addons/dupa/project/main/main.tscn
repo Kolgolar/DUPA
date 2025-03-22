@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cqq173rktlrl3" path="res://addons/dupa/project/main/main.gd" id="2_37sju"]
 [ext_resource type="PackedScene" uid="uid://bc20cfsm4d8wj" path="res://addons/dupa/project/main/start_menu.tscn" id="3_ajwya"]
 [ext_resource type="Texture2D" uid="uid://cqvrek4a6cw1c" path="res://addons/dupa/project/assets/cross_red.png" id="3_y3mvl"]
-[ext_resource type="Texture2D" uid="uid://bmmdre35xxj30" path="res://addons/dupa/project/assets/btn_restart.png" id="5_6jpfx"]
+[ext_resource type="Texture2D" uid="uid://bhk1jvu3ta0jn" path="res://addons/dupa/project/assets/btn_undo.png" id="5_6jpfx"]
 [ext_resource type="Texture2D" uid="uid://b3o6ox7e63421" path="res://addons/dupa/project/assets/hamezteam_logo.png" id="6_6jpfx"]
 [ext_resource type="Texture2D" uid="uid://bdr3e62hpdjae" path="res://addons/dupa/project/assets/btn_redo.png" id="6_xndxn"]
 [ext_resource type="Script" uid="uid://bkx5tuw8qlu0d" path="res://addons/dupa/project/main/mouse_popup.gd" id="7_sbjni"]

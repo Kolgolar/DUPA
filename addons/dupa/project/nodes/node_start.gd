@@ -18,7 +18,7 @@ func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
 	return data
 
 
-func _set_param(param_name: StringName, value):
+func set_param(param_name: StringName, value):
 	super(param_name, value)
 	match param_name:
 		&"source":

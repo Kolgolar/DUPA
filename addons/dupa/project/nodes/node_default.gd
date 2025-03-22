@@ -6,7 +6,7 @@ class_name DefaultNode
 @export var node_title: TextEdit
 @onready var comment_box = $HBoxContainer/MainColumn/Comment
 @onready var _prev_pos_offset := position_offset
-@onready var type := "DEFAULT"
+@onready var type := &"DEFAULT"
 
 @export var _register_changes_as_actions_nodes: Array[Control]
 
@@ -23,12 +23,16 @@ var desc_visible := false:
 
 signal name_changed
 signal rmb_pressed
-signal position_offset_changed_action(from: Vector2, to: Vector2)
+signal param_changed(param: StringName, new_value, prev_value)
+#signal position_offset_changed_action(from: Vector2, to: Vector2)
 #signal on_delete
 
 func _ready():
 	node_title.hide()
-	
+
+# Вызывается ПОСЛЕ того, как нода была добавлена в граф и настроена. Иначе будут
+# ненужные реагирования на изменения во время настройки ноды.
+func activate_data_managing():
 	for node in _register_changes_as_actions_nodes:
 		#print(node.get_class())
 		match node.get_class():
@@ -42,18 +46,24 @@ func _ready():
 				node.focus_exited.connect(register_action)
 	
 	await get_tree().process_frame
-	_cached_data = gen_data(get_parent(), true)
-	
+	if _cached_data.is_empty():
+		_cached_data = gen_data(get_parent(), true)
 
 
 func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
 	id = int(id_name)
 	for param in data:
-		_set_param(param, data[param])
+		set_param(param, data[param])
 		
 
-func _set_param(param_name: StringName, value):
+
+func set_param(param_name: StringName, value):
 	match param_name:
+		# NOTE: offset_x и offset_y сохраняются в json-файл, а offset используется
+		# в операциях REDO/UNDO. Возможно, стоит полностью отказаться от offset_x и 
+		# offset_y (но как сохранять Vector2 в json?)
+		&"offset":
+			position_offset = value
 		&"offset_x":
 			position_offset.x = value
 		&"offset_y":
@@ -67,11 +77,11 @@ func _set_param(param_name: StringName, value):
 func gen_data(graph_edit: GraphEdit, allow_empty := false) -> Dictionary:
 	var data := {}
 	# data["id"] = id
-	data["type"] = type
-	data["title"] = node_title.text
-	data["offset_x"] = position_offset.x
-	data["offset_y"] = position_offset.y
-	data["desc_visible"] = desc_visible
+	data[&"type"] = type
+	data[&"title"] = node_title.text
+	data[&"offset_x"] = position_offset.x
+	data[&"offset_y"] = position_offset.y
+	data[&"desc_visible"] = desc_visible
 	return data
 
 
@@ -117,7 +127,8 @@ func _on_gui_input(event: InputEvent) -> void:
 					_prev_pos_offset = position_offset
 				else:
 					if _prev_pos_offset.is_equal_approx(position_offset): return
-					position_offset_changed_action.emit(_prev_pos_offset, position_offset)
+					#position_offset_changed_action.emit(_prev_pos_offset, position_offset)
+					register_action()
 				
 				
 func _on_delete_pressed() -> void:
@@ -135,7 +146,24 @@ func register_action():
 	var new_data = gen_data(get_parent(), true)
 	# NOTE: Если за раз было изменено несколько параметров, то это будет засчитано
 	# как разные действия. Возможно, следует доработать логику, чтобы избежать этого 
-	for param in new_data:
-		if _cached_data[param] != new_data[param]:
-			ActionsMaster.register_method_action("Param %s changed" % param, _set_param.bind(param, new_data[param]), _set_param.bind(param, _cached_data[param]), false)
+	
+	# _cached_data пустой в случае, если нода была только что создана, значит
+	# производится первоначальная настройка
+	if !_cached_data.is_empty():
+		var offset_changed := false
+		for param in new_data:
+			if _cached_data[param] != new_data[param]:
+				# TODO: Лютый костыль, чтобы при изменении offset_x или offset_y запоминать
+				# значение сразу по двум осям.
+				if &"offset" in (param as StringName):
+					if !offset_changed:
+						param_changed.emit(
+							&"offset",
+							Vector2(new_data[&"offset_x"], new_data[&"offset_y"]),
+							Vector2(_cached_data[&"offset_x"], _cached_data[&"offset_y"])
+						)
+						offset_changed = true
+				else:
+					param_changed.emit(param, new_data[param], _cached_data[param])
+					
 	_cached_data = gen_data(get_parent(), true)

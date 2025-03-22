@@ -23,8 +23,6 @@ var from_empty_to_node : String
 var slot_to_connect : int
 var from_node_to_empty : String
 
-# TODO: При удалении запоминать данные узла (позиция, содержание)
-# Вероятно, под это дело нужен второй словарь
 var _created_nodes: Dictionary[int, GraphNode]
 var _deleted_nodes: Dictionary[int, Dictionary]
 
@@ -78,9 +76,14 @@ func _input(event):
 
 
 func _on_graph_edit_node_selected(node):
+	if Input.is_action_pressed("right_click"):
+		for n in _focused_nodes:
+			n.selected = false
+		_focused_nodes.clear()
+		_focused_nodes_names.clear()
 	_focused_nodes.append(node)
 	_focused_nodes_names.append(node.name)
-
+	
 
 func _on_graph_edit_node_deselected(node):
 	_focused_nodes.erase(node)
@@ -113,7 +116,7 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, _is_start_node 
 	graph_edit.add_child(node)
 
 	node.rmb_pressed.connect(_on_graph_node_rmb_pressed.bind(node))
-	node.position_offset_changed_action.connect(_on_graph_node_position_offset_changed.bind(node))
+	#node.position_offset_changed_action.connect(_on_graph_node_position_offset_changed.bind(node))
 	
 	if node is StartNode:
 		node.connect("focus_entered", Callable(self, "_on_graph_node_focus_entered"))
@@ -121,15 +124,17 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, _is_start_node 
 		_start_node = node
 	#node.on_delete.connect(_on_node_deletion.bind(node))
 	
-	if id > -1:
-		node.id = id
-	else:
+	if id == -1:
 		if node is StartNode:
-			node.id = 0
+			id = 0
 		else:
 			max_id += 1
-			node.id = max_id
-			
+			id = max_id
+		
+	node.id = id
+
+	node.param_changed.connect(_on_graph_node_param_changed.bind(node.id))
+
 	var real_size = graph_edit.size / graph_edit.zoom
 	var offset = graph_edit.scroll_offset
 	node.position_offset = (pos + graph_edit.scroll_offset) / graph_edit.zoom - Vector2(0, node.size.y / 2)
@@ -153,11 +158,25 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, _is_start_node 
 		_created_nodes[node.id] = node
 	if _deleted_nodes.has(node.id):
 		node.set_data(graph_edit, _deleted_nodes[node.id], "")
+		print(_deleted_nodes[node.id])
 		_deleted_nodes.erase(node.id)
 	
 	_mouse_popup.disable_start_node(_created_nodes.has(0))
 	
+	node.activate_data_managing()
+	
 	return node
+
+
+func _on_graph_node_param_changed(param_name: StringName, new_value, prev_value, graph_node_id: int):
+	ActionsMaster.register_method_action("Param %s changed" % param_name, set_graph_node_param.bind(graph_node_id, param_name, new_value), set_graph_node_param.bind(graph_node_id, param_name, prev_value), false)
+
+
+func set_graph_node_param(graph_node_id: int, param_name: StringName, value):
+	_created_nodes[graph_node_id].set_param(param_name, value)
+
+
+
 
 
 #func _set_new_node_params(node : GraphNode, pos : Vector2, _is_start_node := false) -> void:
@@ -244,6 +263,28 @@ func save_dialog(path, fn):
 	%SaveNotify.hide()
 	
 
+func _get_graph_node_scene_path_by_type(type: StringName) -> String:
+	match type:
+			&"LINE":
+				if _lite_line_nodes:
+					return "res://addons/dupa/project/nodes/node_line_lite.tscn"
+				else:
+					return "res://addons/dupa/project/nodes/node_line.tscn"
+			&"DYNAMIC_LINE":
+				return "res://addons/dupa/project/nodes/node_dynamic_line_lite.tscn"
+			&"CONDITION":
+				return "res://addons/dupa/project/nodes/node_condition.tscn"
+			&"START":
+				return "res://addons/dupa/project/nodes/node_start.tscn"
+			"SETTER":
+				return "res://addons/dupa/project/nodes/node_setter.tscn"
+			"CALLER":
+				return "res://addons/dupa/project/nodes/node_caller.tscn"
+			_:
+				printerr("Unknown node type!")
+				return ""
+
+
 func load_save(path: String):
 	var fn = path.split("/")[-1]
 	if path.is_empty() or fn.is_empty():
@@ -265,25 +306,8 @@ func load_save(path: String):
 
 	var graph_names := {}
 	for graph_node in timeline:
-		var node_scene_path
-		match timeline[graph_node]["type"]:
-			"LINE":
-				if _lite_line_nodes:
-					node_scene_path = "res://addons/dupa/project/nodes/node_line_lite.tscn"
-				else:
-					node_scene_path = "res://addons/dupa/project/nodes/node_line.tscn"
-			"DYNAMIC_LINE":
-				node_scene_path = "res://addons/dupa/project/nodes/node_dynamic_line_lite.tscn"
-			"CONDITION":
-				node_scene_path = "res://addons/dupa/project/nodes/node_condition.tscn"
-			"START":
-				node_scene_path = "res://addons/dupa/project/nodes/node_start.tscn"
-			"SETTER":
-				node_scene_path = "res://addons/dupa/project/nodes/node_setter.tscn"
-			"CALLER":
-				node_scene_path = "res://addons/dupa/project/nodes/node_caller.tscn"
-			_:
-				printerr("Unknown node type!")
+		var node_scene_path = _get_graph_node_scene_path_by_type(timeline[graph_node]["type"])
+		
 		# node = node.instance()
 		var node = _create_graph_node(node_scene_path, Vector2.ZERO, false, false)
 		# graph_edit.add_child(node)
@@ -382,11 +406,9 @@ func _on_clear_pressed():
 
 func _on_mous_popup_id_pressed(id:int):
 	var node_path: String
-	var is_start_node := false
 	match id:
 		0:
 			node_path = "res://addons/dupa/project/nodes/node_start.tscn"
-			is_start_node = true
 		1:
 			if _lite_line_nodes:
 				node_path = "res://addons/dupa/project/nodes/node_line_lite.tscn"
@@ -408,6 +430,7 @@ func _on_mous_popup_id_pressed(id:int):
 	ActionsMaster.register_property_action(op_name, self, "from_empty_to_node", "", from_empty_to_node, false)
 	ActionsMaster.register_property_action(op_name, self, "from_node_to_empty", "", from_node_to_empty, false, UndoRedo.MERGE_ALL)
 	ActionsMaster.register_property_action(op_name, self, "slot_to_connect", -1, slot_to_connect, false, UndoRedo.MERGE_ALL)
+	var is_start_node = id == 0
 	var node = _create_graph_node(node_path, _mouse_popup.position, is_start_node)
 	ActionsMaster.register_method_action(
 		op_name,
@@ -465,9 +488,10 @@ func _duplicate_all_focused_nodes():
 			new_node.position_offset += shift
 			(n as GraphNode).selected = false
 			new_node.selected = true
-			_focused_nodes.erase(n)
-			_focused_nodes.append(new_node)
+			_on_graph_edit_node_deselected(n)
 			graph_edit.add_child(new_node)
+			_on_graph_edit_node_selected(new_node)
+			#_focused_nodes.append(new_node)
 		else:
 			printerr("Node is not valid or you're trying to duplicate Start Node (u cant, bro)")
 
@@ -477,17 +501,38 @@ func _on_graph_edit_duplicate_nodes_request() -> void:
 
 
 func _delete_all_focused_nodes():
+	var ids_to_delete: PackedInt32Array = []
+	
 	for n in _focused_nodes:
-		if is_instance_valid(n):
-			if n.id == 0:
+		ids_to_delete.append(n.id)
+	ActionsMaster.register_method_action(
+		"Delete node(s)",
+		__delete_nodes_by_ids.bind(ids_to_delete),
+		__restore_nodes_by_ids.bind(ids_to_delete),
+		true,
+		UndoRedo.MERGE_ALL if ids_to_delete.size() > 1 else UndoRedo.MERGE_DISABLE
+	)
+
+func __restore_nodes_by_ids(ids: PackedInt32Array):
+	for id in ids:
+		var node_data: Dictionary = _deleted_nodes[id]
+		_create_graph_node(
+			_get_graph_node_scene_path_by_type(node_data.type),
+			Vector2(node_data.offset_x, node_data.offset_y),
+			id == 0,
+			true,
+			id
+		)
+
+
+func __delete_nodes_by_ids(ids: PackedInt32Array):
+	for id in ids:
+		if is_instance_valid(_created_nodes[id]):
+			if id == 0:
 				_mouse_popup.disable_start_node(false)
 				_start_node = null
-			_delete_by_id(n.id)
+			_delete_by_id(id)
 	_focused_nodes.clear()
-
-
-func _show_file_manager():
-	pass
 
 
 func _on_graph_edit_delete_nodes_request(nodes: Array[StringName]) -> void:

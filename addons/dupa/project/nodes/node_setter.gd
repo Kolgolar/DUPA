@@ -11,7 +11,7 @@ func _ready():
 	type = "SETTER"
 
 
-func _set_param(param_name: StringName, value):
+func set_param(param_name: StringName, value):
 	super(param_name, value)
 	match param_name:
 		&"var_name":

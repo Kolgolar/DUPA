@@ -11,8 +11,9 @@ func _ready():
 	type = "LINE"
 
 
-func _set_param(param_name: StringName, value):
+func set_param(param_name: StringName, value):
 	super(param_name, value)
+	print(param_name)
 	match param_name:
 		&"localization_id":
 			localization_id.text = value

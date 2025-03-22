@@ -20,7 +20,7 @@ func _update_title_text(new_text : String, update_node_text := true) -> void:
 		node_title.text = short_title
 
 
-func _set_param(param_name: StringName, value):
+func set_param(param_name: StringName, value):
 	super(param_name, value)
 	match param_name:
 		&"is_player":
