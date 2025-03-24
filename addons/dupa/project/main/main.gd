@@ -83,11 +83,13 @@ func _on_graph_edit_node_selected(node):
 		_focused_nodes_names.clear()
 	_focused_nodes.append(node)
 	_focused_nodes_names.append(node.name)
+	#print(_focused_nodes_names)
 	
 
 func _on_graph_edit_node_deselected(node):
 	_focused_nodes.erase(node)
 	_focused_nodes_names.erase(node.name)
+	#print(_focused_nodes_names)
 
 
 func _on_graph_node_rmb_pressed(node: GraphNode):
@@ -157,8 +159,7 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, _is_start_node 
 	if remember_created:
 		_created_nodes[node.id] = node
 	if _deleted_nodes.has(node.id):
-		node.set_data(graph_edit, _deleted_nodes[node.id], "")
-		print(_deleted_nodes[node.id])
+		node.set_data(graph_edit, _deleted_nodes[node.id])
 		_deleted_nodes.erase(node.id)
 	
 	_mouse_popup.disable_start_node(_created_nodes.has(0))
@@ -209,7 +210,6 @@ func _validation() -> int:
 			"START":
 				var connected := false
 				for connection in graph_edit.get_connection_list():
-					print(connection)
 					if connection["from_node"] == node.name:
 						connected = true
 						break
@@ -309,10 +309,10 @@ func load_save(path: String):
 		var node_scene_path = _get_graph_node_scene_path_by_type(timeline[graph_node]["type"])
 		
 		# node = node.instance()
-		var node = _create_graph_node(node_scene_path, Vector2.ZERO, false, false)
+		var node = _create_graph_node(node_scene_path, Vector2.ZERO, false, false, int(graph_node))
 		# graph_edit.add_child(node)
 		#node.set_base_data(graph_edit, timeline[graph_node], graph_node)
-		node.set_data(graph_edit, timeline[graph_node], graph_node)
+		node.set_data(graph_edit, timeline[graph_node])
 		graph_names[graph_node] = node.name
 	
 	for graph_node in timeline:
@@ -441,7 +441,7 @@ func _on_mous_popup_id_pressed(id:int):
 			true,
 			node.id
 		),
-		_delete_by_id.bind(node.id),
+		__delete_by_id.bind(node.id),
 		false,
 		UndoRedo.MERGE_ALL
 	)
@@ -461,10 +461,14 @@ func _on_graph_edit_connection_to_empty(from, from_slot, release_position):
 
 
 # Запоминать индексы в массиве всех нод???
-func _delete_by_id(id: int):
-	_deleted_nodes[id] = _created_nodes[id].gen_data(graph_edit)
+func __delete_by_id(id: int):
+	var node = _created_nodes[id]
+	_deleted_nodes[id] = node.gen_data(graph_edit)
 	_created_nodes[id].delete()
 	_created_nodes.erase(id)
+	_focused_nodes.erase(node)
+	_focused_nodes_names.erase(node.name)
+	#print(_focused_nodes_names)
 
 
 func _on_deletion_confirmed():
@@ -479,21 +483,42 @@ func _on_graph_edit_popup_request(at_position: Vector2) -> void:
 	
 
 func _duplicate_all_focused_nodes():
-	var shift := Vector2(30, 30)
-	for n in _focused_nodes:
-		if is_instance_valid(n) and not n is StartNode:
-			var new_node : GraphNode = n.duplicate()
-			new_node.rmb_pressed.disconnect(_on_graph_node_rmb_pressed)
-			new_node.rmb_pressed.connect(_on_graph_node_rmb_pressed.bind(new_node))
-			new_node.position_offset += shift
-			(n as GraphNode).selected = false
-			new_node.selected = true
-			_on_graph_edit_node_deselected(n)
-			graph_edit.add_child(new_node)
-			_on_graph_edit_node_selected(new_node)
-			#_focused_nodes.append(new_node)
-		else:
+	# TODO: Сохранять связи с нодами, которые тоже были продублированы?
+	var nodes_to_duplicate_ids: PackedInt32Array
+	for node in _focused_nodes:
+		(node as GraphNode).set_deferred("selected", false)
+		if !is_instance_valid(node) || node is StartNode:
 			printerr("Node is not valid or you're trying to duplicate Start Node (u cant, bro)")
+			continue
+		else:
+			nodes_to_duplicate_ids.append(node.id)
+			
+	var created_nodes_ids: PackedInt32Array = __duplicate_nodes(nodes_to_duplicate_ids)
+	
+	ActionsMaster.register_method_action(
+		"Duplicate node(s)",
+		__duplicate_nodes.bind(nodes_to_duplicate_ids, created_nodes_ids),
+		__delete_nodes_by_ids.bind(created_nodes_ids),
+		false
+	)
+	
+
+
+func __duplicate_nodes(nodes_to_duplicate_ids: PackedInt32Array, forced_ids := PackedInt32Array()) -> PackedInt32Array:
+	var created_nodes_ids: PackedInt32Array
+	var shift := Vector2(30, 30)
+	for i in nodes_to_duplicate_ids.size():
+		var node = _created_nodes[nodes_to_duplicate_ids[i]]
+		(node as GraphNode).set_deferred("selected", false)
+		var id := -1
+		if !forced_ids.is_empty():
+			id = forced_ids[i]
+		var new_node: DefaultNode = _create_graph_node(node.scene_file_path, Vector2.ZERO, false, true, id)
+		new_node.set_data(graph_edit, node.gen_data(graph_edit))
+		new_node.position_offset = node.position_offset + shift
+		new_node.set_deferred("selected", true)
+		created_nodes_ids.append(new_node.id)
+	return created_nodes_ids
 
 
 func _on_graph_edit_duplicate_nodes_request() -> void:
@@ -505,12 +530,15 @@ func _delete_all_focused_nodes():
 	
 	for n in _focused_nodes:
 		ids_to_delete.append(n.id)
+	var act_name = "Delete node(s)"
+	_remove_focused_nodes_connections(act_name)
 	ActionsMaster.register_method_action(
-		"Delete node(s)",
+		act_name,
 		__delete_nodes_by_ids.bind(ids_to_delete),
 		__restore_nodes_by_ids.bind(ids_to_delete),
 		true,
-		UndoRedo.MERGE_ALL if ids_to_delete.size() > 1 else UndoRedo.MERGE_DISABLE
+		UndoRedo.MERGE_ALL,
+		true
 	)
 
 func __restore_nodes_by_ids(ids: PackedInt32Array):
@@ -526,12 +554,13 @@ func __restore_nodes_by_ids(ids: PackedInt32Array):
 
 
 func __delete_nodes_by_ids(ids: PackedInt32Array):
+	print("Deleting nodes...")
 	for id in ids:
 		if is_instance_valid(_created_nodes[id]):
 			if id == 0:
 				_mouse_popup.disable_start_node(false)
 				_start_node = null
-			_delete_by_id(id)
+			__delete_by_id(id)
 	_focused_nodes.clear()
 
 
@@ -539,20 +568,52 @@ func _on_graph_edit_delete_nodes_request(nodes: Array[StringName]) -> void:
 	_delete_all_focused_nodes()
 
 
+func _remove_focused_nodes_connections(act_name := "Remove node(s) connections"):
+	var all_connections_data: Array
+	for connection_data in graph_edit.get_connection_list():
+		if connection_data.from_node in _focused_nodes_names || connection_data.to_node in _focused_nodes_names:
+			all_connections_data.append({
+				&"from_node": graph_edit.get_node(NodePath(connection_data.from_node)).id,
+				&"from_port": connection_data.from_port,
+				&"to_node": graph_edit.get_node(NodePath(connection_data.to_node)).id,
+				&"to_port": connection_data.from_port,
+			})
+	ActionsMaster.register_method_action(
+		act_name,
+		__remove_connections.bind(all_connections_data),
+		__retrieve_connections.bind(all_connections_data),
+		true,
+		UndoRedo.MERGE_DISABLE,
+		true
+	)
+	
+
+func __remove_connections(all_connections_data: Array):
+	for connection_data in all_connections_data:
+		graph_edit.disconnect_node(
+			_created_nodes[connection_data.from_node].name,
+			connection_data.from_port,
+			_created_nodes[connection_data.to_node].name,
+			connection_data.to_port
+		)
+
+
+func __retrieve_connections(all_connections_data: Array):
+	for connection_data in all_connections_data:
+		graph_edit.connect_node(
+			_created_nodes[connection_data.from_node].name,
+			connection_data.from_port,
+			_created_nodes[connection_data.to_node].name,
+			connection_data.to_port
+		)
+
+
 func _on_node_params_popup_id_pressed(id: int) -> void:
 	match id:
 		0:
 			_context_menu_node.desc_visible = !_context_menu_node.desc_visible
 		4:
-			for connection_data in graph_edit.get_connection_list():
-				if connection_data.from_node in _focused_nodes_names || connection_data.to_node in _focused_nodes_names:
-					graph_edit.disconnect_node(
-						connection_data.from_node,
-						connection_data.from_port,
-						connection_data.to_node,
-						connection_data.to_port
-					)
-				
+			_remove_focused_nodes_connections()
 		10:
 			_delete_all_focused_nodes()
 		11:

@@ -50,8 +50,9 @@ func activate_data_managing():
 		_cached_data = gen_data(get_parent(), true)
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
-	id = int(id_name)
+func set_data(graph_edit : GraphEdit, data : Dictionary) -> void:
+	#if !id_name.is_empty():
+		#id = int(id_name)
 	for param in data:
 		set_param(param, data[param])
 		

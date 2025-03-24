@@ -24,8 +24,8 @@ func dummy_method():
 	pass
 
 
-func register_method_action(act_name: String, do_method: Callable, undo_method: Callable, execute := true, merge_mode := UndoRedo.MERGE_DISABLE):
-	undo_redo.create_action(act_name, merge_mode)
+func register_method_action(act_name: String, do_method: Callable, undo_method: Callable, execute := true, merge_mode := UndoRedo.MERGE_DISABLE, backwards_undo := false):
+	undo_redo.create_action(act_name, merge_mode, backwards_undo)
 	undo_redo.add_do_method(do_method)
 	undo_redo.add_undo_method(undo_method)
 	undo_redo.commit_action(execute)
