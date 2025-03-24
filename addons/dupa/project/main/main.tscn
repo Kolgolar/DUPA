@@ -232,12 +232,6 @@ item_4/text = "DELETE"
 item_4/icon = ExtResource("3_y3mvl")
 item_4/id = 10
 
-[node name="FileDialog" type="FileDialog" parent="."]
-title = "Open a File or Directory"
-ok_button_text = "Open"
-file_mode = 3
-access = 2
-
 [connection signal="create_timeline" from="StartPanels/StartMenu" to="." method="_on_create_timeline"]
 [connection signal="open_timeline" from="StartPanels/StartMenu" to="." method="_on_open_timeline"]
 [connection signal="connection_from_empty" from="Editor/GraphEdit" to="." method="_on_graph_edit_connection_from_empty"]

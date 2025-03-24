@@ -53,15 +53,14 @@ func _save_as_requested():
 
 
 func _on_save_pressed(): 
+	dialog.clear()
+	for node in get_tree().get_nodes_in_group("graph_nodes"):
+		dialog[str(node.id)] = (node.gen_data(graph_edit))
+	
 	if file_name.is_empty() || directory.is_empty():
 		_save_as_requested()
 		return
-	
-	dialog.clear()
-	for node in get_tree().get_nodes_in_group("graph_nodes"):
-		dialog[str(node.id)].merge(node.gen_data(graph_edit))
 
-	# print(dialog)
 	save_dialog(directory, file_name)
 	
 
@@ -240,7 +239,7 @@ func save_dialog(path, fn):
 	# save file
 	var err = _validation()
 	if fn.is_empty():
-		# printerr("File name is empty!")
+		printerr("File name is empty!")
 		return
 	# file_path = file_path
 	if not ".json" in fn:
@@ -249,7 +248,7 @@ func save_dialog(path, fn):
 	var data = {}
 	data["CONFIG"] = {"max_id" : max_id}
 	data["TIMELINE"] = dialog
-	var file = FileAccess.open(path + fn, FileAccess.WRITE)
+	var file = FileAccess.open(path.path_join(fn), FileAccess.WRITE)
 	file.store_line(JSON.new().stringify(data))
 	
 	file.close()
@@ -388,7 +387,7 @@ func _on_save_as_pressed():
 	_save_as_requested()
 
 
-func _on_save_dialog_as(path : String):
+func _on_save_dialog_as(path: String):
 	var directory = path.get_base_dir()
 	var fn = path.get_file()
 	_set_filename(fn)

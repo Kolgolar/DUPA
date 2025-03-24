@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1"]
 [ext_resource type="Script" uid="uid://cixnusabdulvu" path="res://addons/dupa/project/nodes/node_start.gd" id="2"]
 
-[node name="StartNode" node_paths=PackedStringArray("source", "_register_changes_as_actions_nodes") instance=ExtResource("1")]
+[node name="StartNode" node_paths=PackedStringArray("source") instance=ExtResource("1")]
 offset_right = 266.0
 offset_bottom = 82.0
 title = ">>>>>>>>>>>> START >>>>>>>>>>>>"
@@ -19,7 +19,6 @@ slot/3/right_icon = null
 slot/3/draw_stylebox = true
 script = ExtResource("2")
 source = NodePath("VBoxContainer/Source/Var")
-_register_changes_as_actions_nodes = [NodePath("HBoxContainer/MainColumn/Comment/Comment"), NodePath("HBoxContainer/MainColumn/Title/Title"), NodePath("VBoxContainer/Source/Var")]
 
 [node name="Title" parent="HBoxContainer/MainColumn" index="0"]
 visible = false

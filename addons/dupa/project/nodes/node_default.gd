@@ -3,12 +3,10 @@ extends GraphNode
 class_name DefaultNode
 
 @onready var main = $HBoxContainer/MainColumn
-@export var node_title: TextEdit
-@onready var comment_box = $HBoxContainer/MainColumn/Comment
 @onready var _prev_pos_offset := position_offset
 @onready var type := &"DEFAULT"
 
-@export var _register_changes_as_actions_nodes: Array[Control]
+@onready var _description = %Description
 
 @onready var _cached_data := {}
 
@@ -18,22 +16,26 @@ var short_title := ""
 var desc_visible := false:
 	set(value):
 		desc_visible = value
-		node_title.visible = value
+		_description.visible = value
 		size.y -= 64
 
 signal name_changed
 signal rmb_pressed
 signal param_changed(param: StringName, new_value, prev_value)
-#signal position_offset_changed_action(from: Vector2, to: Vector2)
-#signal on_delete
 
 func _ready():
-	node_title.hide()
+	_description.hide()
+
+
+func _get_fields_to_track() -> Array[Control]:
+	var fields: Array[Control] = [_description]
+	return fields
+
 
 # Вызывается ПОСЛЕ того, как нода была добавлена в граф и настроена. Иначе будут
 # ненужные реагирования на изменения во время настройки ноды.
 func activate_data_managing():
-	for node in _register_changes_as_actions_nodes:
+	for node in _get_fields_to_track():
 		#print(node.get_class())
 		match node.get_class():
 			&"CheckButton":
@@ -41,6 +43,7 @@ func activate_data_managing():
 			&"TextEdit":
 				node.focus_exited.connect(register_action)
 				node.text_set.connect(register_action)
+				node.visibility_changed.connect(register_action)
 			&"LineEdit":
 				node.text_submitted.connect(func(new_text: String): register_action())
 				node.focus_exited.connect(register_action)
@@ -51,8 +54,6 @@ func activate_data_managing():
 
 
 func set_data(graph_edit : GraphEdit, data : Dictionary) -> void:
-	#if !id_name.is_empty():
-		#id = int(id_name)
 	for param in data:
 		set_param(param, data[param])
 		
@@ -71,17 +72,21 @@ func set_param(param_name: StringName, value):
 			position_offset.y = value
 		&"type":
 			type = value
-		&"title":
-			node_title.text = value
+		&"desc":
+			_description.text = value
+		&"desc_visible":
+			set_block_signals(true)
+			desc_visible = value
+			set_block_signals(false)
 			
 
 func gen_data(graph_edit: GraphEdit, allow_empty := false) -> Dictionary:
 	var data := {}
 	# data["id"] = id
 	data[&"type"] = type
-	data[&"title"] = node_title.text
 	data[&"offset_x"] = position_offset.x
 	data[&"offset_y"] = position_offset.y
+	data[&"desc"] = _description.text
 	data[&"desc_visible"] = desc_visible
 	return data
 
@@ -110,7 +115,7 @@ func _update_title_text(new_text : String, update_node_text := true) -> void:
 	title = type + ": " + new_text
 	short_title = new_text
 	if update_node_text:
-		node_title.text = short_title
+		_description.text = short_title
 
 
 func _on_GraphNode_resize_request(new_minsize):
@@ -128,19 +133,7 @@ func _on_gui_input(event: InputEvent) -> void:
 					_prev_pos_offset = position_offset
 				else:
 					if _prev_pos_offset.is_equal_approx(position_offset): return
-					#position_offset_changed_action.emit(_prev_pos_offset, position_offset)
 					register_action()
-				
-				
-func _on_delete_pressed() -> void:
-	#delete()
-	#on_delete.emit()
-	pass
-
-
-func _on_title_text_changed() -> void:
-	#_update_title_text(node_title.text, false)
-	pass
 
 
 func register_action():

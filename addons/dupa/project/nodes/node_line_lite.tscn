@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1_4b34c"]
 [ext_resource type="Script" uid="uid://ccbkaqk0f6dnt" path="res://addons/dupa/project/nodes/node_line_lite.gd" id="2_g0s0d"]
 
-[node name="LineNodeLite" node_paths=PackedStringArray("localization_id", "is_player_line", "_register_changes_as_actions_nodes") instance=ExtResource("1_4b34c")]
+[node name="LineNodeLite" instance=ExtResource("1_4b34c")]
 offset_right = 384.0
 offset_bottom = 106.0
 title = "LINE"
@@ -17,9 +17,6 @@ slot/3/right_color = Color(1, 1, 1, 1)
 slot/3/right_icon = null
 slot/3/draw_stylebox = true
 script = ExtResource("2_g0s0d")
-localization_id = NodePath("VBoxContainer/Text/LocalizationLine")
-is_player_line = NodePath("VBoxContainer/IsPlayer/IsPlayerLine")
-_register_changes_as_actions_nodes = [NodePath("HBoxContainer/MainColumn/Comment/Comment"), NodePath("HBoxContainer/MainColumn/Title/Title"), NodePath("VBoxContainer/IsPlayer/IsPlayerLine"), NodePath("VBoxContainer/Text/LocalizationLine")]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." index="4"]
 layout_mode = 2
@@ -35,6 +32,7 @@ text = "Force player
 speaking"
 
 [node name="IsPlayerLine" type="CheckButton" parent="VBoxContainer/IsPlayer" index="1"]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Text" type="HBoxContainer" parent="VBoxContainer" index="1"]
@@ -47,6 +45,7 @@ layout_mode = 2
 text = "Text"
 
 [node name="LocalizationLine" type="LineEdit" parent="VBoxContainer/Text" index="1"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "Localization ID only!"

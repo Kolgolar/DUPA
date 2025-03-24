@@ -29,7 +29,7 @@ func _ready():
 		char_index += 1 
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary, id_name : String) -> void:
+func set_data(graph_edit : GraphEdit, data : Dictionary) -> void:
 	character_drop.text = data["character"]
 	text.text = data["text"]
 	if "choice_name" in data:
