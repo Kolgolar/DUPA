@@ -21,7 +21,6 @@ config/icon="uid://cvupxw7p3ljqu"
 [autoload]
 
 DupaConfig="*res://addons/dupa/project/main/dupa_config.gd"
-ActionsMaster="*res://addons/dupa/project/main/actions_master.gd"
 
 [display]
 

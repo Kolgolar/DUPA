@@ -8,15 +8,18 @@ extends Control
 var file_name := ""
 var directory := ""
 
+@export var _actions_master: ActionsMaster
+
+
 
 func _input(event):
 	if event.is_action_pressed(&"save"):
 		_on_save_pressed()
 	
 	elif event.is_action_pressed(&"ui_undo"):
-		ActionsMaster.undo()
+		_actions_master.undo()
 	elif event.is_action_pressed(&"ui_redo"):
-		ActionsMaster.redo()
+		_actions_master.redo()
 
 
 func reset() -> void:
@@ -181,8 +184,8 @@ func _on_deletion_confirmed():
 
 
 func _on_undo_action_pressed() -> void:
-	ActionsMaster.undo()
+	_actions_master.undo()
 
 
 func _on_redo_action_pressed() -> void:
-	ActionsMaster.redo()
+	_actions_master.redo()

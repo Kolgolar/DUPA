@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://brww61hhufjeh"]
+[gd_scene load_steps=12 format=3 uid="uid://brww61hhufjeh"]
 
 [ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/dupa.tres" id="1_vkgws"]
 [ext_resource type="Script" uid="uid://cqq173rktlrl3" path="res://addons/dupa/project/main/main.gd" id="2_37sju"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bn5kj4hk582nh" path="res://addons/dupa/project/main/dupa_graph_edit.gd" id="5_7dhgn"]
 [ext_resource type="Script" uid="uid://cmmaf60tjuehi" path="res://addons/dupa/project/main/dupa_editor.gd" id="5_nud8t"]
 [ext_resource type="Texture2D" uid="uid://b3o6ox7e63421" path="res://addons/dupa/project/assets/hamezteam_logo.png" id="6_6jpfx"]
+[ext_resource type="Script" uid="uid://bwxvtg83w4r7q" path="res://addons/dupa/project/main/actions_master.gd" id="6_6v7uy"]
 [ext_resource type="Texture2D" uid="uid://bdr3e62hpdjae" path="res://addons/dupa/project/assets/btn_redo.png" id="6_xndxn"]
 [ext_resource type="Script" uid="uid://bkx5tuw8qlu0d" path="res://addons/dupa/project/main/mouse_popup.gd" id="7_sbjni"]
 
@@ -80,7 +81,7 @@ layout_mode = 2
 text = "Dialogic Universal Professional Asset in-dev"
 horizontal_alignment = 1
 
-[node name="Editor" type="Control" parent="." node_paths=PackedStringArray("graph_edit", "error_popup", "error_popup_label", "deletion_popup")]
+[node name="Editor" type="Control" parent="." node_paths=PackedStringArray("graph_edit", "error_popup", "error_popup_label", "deletion_popup", "_actions_master")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -93,8 +94,12 @@ graph_edit = NodePath("GraphEdit")
 error_popup = NodePath("Popups/Error")
 error_popup_label = NodePath("Popups/Error/RichTextLabel")
 deletion_popup = NodePath("Popups/Deletion")
+_actions_master = NodePath("ActionsMaster")
 
-[node name="GraphEdit" type="GraphEdit" parent="Editor" node_paths=PackedStringArray("_mouse_popup", "_node_params_popup")]
+[node name="ActionsMaster" type="Node" parent="Editor"]
+script = ExtResource("6_6v7uy")
+
+[node name="GraphEdit" type="GraphEdit" parent="Editor" node_paths=PackedStringArray("_mouse_popup", "_node_params_popup", "_actions_master")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -111,6 +116,7 @@ script = ExtResource("5_7dhgn")
 _mouse_popup = NodePath("../Popups/MousePopup")
 _node_params_popup = NodePath("../Popups/NodeParamsPopup")
 _lite_line_nodes = true
+_actions_master = NodePath("../ActionsMaster")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Editor"]
 layout_mode = 0
@@ -202,7 +208,7 @@ dialog_text = "Are you sure you want to delete all nodes?"
 [node name="MousePopup" type="PopupMenu" parent="Editor/Popups"]
 size = Vector2i(138, 170)
 item_count = 6
-item_0/text = "+ START"
+item_0/text = "+ Start"
 item_0/id = 0
 item_1/text = "+ Line"
 item_1/id = 1
@@ -212,7 +218,7 @@ item_3/text = "+ Setter"
 item_3/id = 3
 item_4/text = "+ Caller"
 item_4/id = 4
-item_5/text = "+ Dynamic Line"
+item_5/text = "+ Dynamic ID Line"
 item_5/id = 5
 script = ExtResource("7_sbjni")
 
@@ -233,22 +239,24 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="NodeParamsPopup" type="PopupMenu" parent="Editor/Popups"]
-size = Vector2i(236, 121)
+size = Vector2i(236, 148)
 visible = true
 unfocusable = true
-item_count = 5
+item_count = 6
 item_0/text = "Show description field"
 item_0/checkable = 2
 item_0/id = 0
-item_1/id = 2
-item_1/separator = true
-item_2/text = "Duplicate"
-item_2/id = 11
-item_3/text = "Clear connections"
-item_3/id = 4
-item_4/text = "DELETE"
-item_4/icon = ExtResource("3_y3mvl")
-item_4/id = 10
+item_1/text = "Open node reference"
+item_1/id = 5
+item_2/id = 2
+item_2/separator = true
+item_3/text = "Duplicate"
+item_3/id = 11
+item_4/text = "Clear connections"
+item_4/id = 4
+item_5/text = "DELETE"
+item_5/icon = ExtResource("3_y3mvl")
+item_5/id = 10
 
 [connection signal="create_timeline" from="MainMenu/StartPanels/StartMenu" to="." method="_on_create_timeline"]
 [connection signal="open_timeline" from="MainMenu/StartPanels/StartMenu" to="." method="_on_open_timeline"]

@@ -8,13 +8,17 @@
 [node name="ConditionNode" instance=ExtResource("1")]
 offset_bottom = 139.0
 theme_override_constants/separation = 15
-title = "CONDITION"
-slot/1/right_color = Color(0.517647, 1, 0.117647, 1)
+title = "Condition"
+slot/0/right_enabled = true
+slot/0/right_color = Color(0.517647, 1, 0.117647, 1)
+slot/1/right_enabled = false
+slot/2/right_enabled = true
+slot/2/right_color = Color(1, 0.156863, 0.117647, 1)
 slot/3/left_enabled = false
 slot/3/left_type = 0
 slot/3/left_color = Color(1, 1, 1, 1)
 slot/3/left_icon = null
-slot/3/right_enabled = true
+slot/3/right_enabled = false
 slot/3/right_type = 0
 slot/3/right_color = Color(1, 0.156863, 0.117647, 1)
 slot/3/right_icon = null
@@ -32,6 +36,9 @@ script = ExtResource("2")
 
 [node name="HSeparator" parent="." index="2"]
 theme_override_styles/separator = SubResource("StyleBoxEmpty_0rdb7")
+
+[node name="Control" parent="." index="3"]
+visible = false
 
 [node name="ConditionVar" type="HBoxContainer" parent="." index="4"]
 layout_mode = 2

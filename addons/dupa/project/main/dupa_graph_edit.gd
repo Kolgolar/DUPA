@@ -5,6 +5,7 @@ signal error(error_text: String)
 @export var _mouse_popup: PopupMenu
 @export var _node_params_popup: PopupMenu
 @export var _lite_line_nodes := false
+@export var _actions_master: ActionsMaster
 
 var dialog = {}
 var max_id := 1
@@ -112,6 +113,8 @@ func _on_node_params_popup_id_pressed(id: int) -> void:
 			_context_menu_node.desc_visible = !_context_menu_node.desc_visible
 		4:
 			_remove_focused_nodes_connections()
+		5:
+			print("Нужно выводить краткую справку по ноде")
 		10:
 			_delete_all_focused_nodes()
 		11:
@@ -139,18 +142,18 @@ func _on_mouse_popup_id_pressed(id:int):
 		4:
 			node_path = "res://addons/dupa/project/nodes/node_caller.tscn"
 		5:
-			node_path = "res://addons/dupa/project/nodes/node_caller.tscn"
+			node_path = "res://addons/dupa/project/nodes/node_dynamic_line_lite.tscn"
 		_:
 			printerr("Unknown action id %s!" % id)
 			return
 	
 	var op_name := "Create Node"
-	ActionsMaster.register_property_action(op_name, self, &"_from_empty_to_node", &"", _from_empty_to_node, false)
-	ActionsMaster.register_property_action(op_name, self, &"_from_node_to_empty", &"", _from_node_to_empty, false, UndoRedo.MERGE_ALL)
-	ActionsMaster.register_property_action(op_name, self, &"_slot_to_connect", -1, _slot_to_connect, false, UndoRedo.MERGE_ALL)
+	_actions_master.register_property_action(op_name, self, &"_from_empty_to_node", &"", _from_empty_to_node, false)
+	_actions_master.register_property_action(op_name, self, &"_from_node_to_empty", &"", _from_node_to_empty, false, UndoRedo.MERGE_ALL)
+	_actions_master.register_property_action(op_name, self, &"_slot_to_connect", -1, _slot_to_connect, false, UndoRedo.MERGE_ALL)
 	var node = _create_graph_node(node_path, _mouse_popup.position)
 	
-	ActionsMaster.register_method_action(
+	_actions_master.register_method_action(
 		op_name,
 		_create_graph_node.bind(
 			node_path,
@@ -230,6 +233,7 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, remember_create
 
 func _duplicate_all_focused_nodes():
 	# TODO: Сохранять связи с нодами, которые тоже были продублированы?
+	# TODO: Некорректная работа undo операции дублирования
 	var nodes_to_duplicate_ids: PackedInt32Array
 	for node in _focused_nodes:
 		(node as GraphNode).set_deferred(&"selected", false)
@@ -241,7 +245,7 @@ func _duplicate_all_focused_nodes():
 			
 	var created_nodes_ids: PackedInt32Array = __duplicate_nodes(nodes_to_duplicate_ids)
 	
-	ActionsMaster.register_method_action(
+	_actions_master.register_method_action(
 		&"Duplicate node(s)",
 		__duplicate_nodes.bind(nodes_to_duplicate_ids, created_nodes_ids),
 		__delete_nodes_by_ids.bind(created_nodes_ids),
@@ -256,7 +260,7 @@ func _delete_all_focused_nodes():
 		ids_to_delete.append(n.id)
 	var act_name := "Delete node(s)"
 	_remove_focused_nodes_connections(act_name)
-	ActionsMaster.register_method_action(
+	_actions_master.register_method_action(
 		act_name,
 		__delete_nodes_by_ids.bind(ids_to_delete),
 		__restore_nodes_by_ids.bind(ids_to_delete),
@@ -276,7 +280,7 @@ func _remove_focused_nodes_connections(act_name := "Remove node(s) connections")
 				&"to_node": get_node(NodePath(connection_data.to_node)).id,
 				&"to_port": connection_data.from_port,
 			})
-	ActionsMaster.register_method_action(
+	_actions_master.register_method_action(
 		act_name,
 		__remove_connections.bind(all_connections_data),
 		__retrieve_connections.bind(all_connections_data),
@@ -380,7 +384,7 @@ func validation() -> int:
 #region GraphNodes Signals
 
 func _on_graph_node_param_changed(param_name: StringName, new_value, prev_value, graph_node_id: int):
-	ActionsMaster.register_method_action("Param %s changed" % param_name, set_graph_node_param.bind(graph_node_id, param_name, new_value), set_graph_node_param.bind(graph_node_id, param_name, prev_value), false)
+	_actions_master.register_method_action("Param %s changed" % param_name, set_graph_node_param.bind(graph_node_id, param_name, new_value), set_graph_node_param.bind(graph_node_id, param_name, prev_value), false)
 
 
 func _configure_node_popup(node: DUPA_DefaultNode):
@@ -421,7 +425,7 @@ func _on_connection_to_empty(from_node: StringName, from_port: int, release_posi
 
 
 func _on_connection_request(from_node: StringName, from_port: int, to_node: StringName, to_port: int) -> void:
-	ActionsMaster.register_method_action(
+	_actions_master.register_method_action(
 		"Connect nodes",
 		connect_node.bind(from_node, from_port, to_node, to_port),
 		disconnect_node.bind(from_node, from_port, to_node, to_port)
@@ -433,7 +437,7 @@ func _on_delete_nodes_request(_nodes: Array[StringName]) -> void:
 
 
 func _on_disconnection_request(from_node: StringName, from_port: int, to_node: StringName, to_port: int) -> void:
-	ActionsMaster.register_method_action(
+	_actions_master.register_method_action(
 		"Disconnect nodes",
 		connect_node.bind(from_node, from_port, to_node, to_port),
 		disconnect_node.bind(from_node, from_port, to_node, to_port)

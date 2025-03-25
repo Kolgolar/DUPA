@@ -6,7 +6,7 @@
 [node name="LineNodeLite" instance=ExtResource("1_4b34c")]
 offset_right = 384.0
 offset_bottom = 106.0
-title = "LINE"
+title = "Line"
 slot/3/left_enabled = false
 slot/3/left_type = 0
 slot/3/left_color = Color(1, 1, 1, 1)

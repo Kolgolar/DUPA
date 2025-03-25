@@ -31,7 +31,7 @@ func gen_data(allow_empty := false) -> Dictionary:
 	data[&"base"] = %IDBase.text
 	data[&"from"] = int(%IDFrom.text)
 	data[&"to"] = int(%IDTo.text)
-	data[&"is_player"] = %IsPlayerLine.pressed
+	data[&"is_player"] = %IsPlayerLine.button_pressed
 	data[&"go_to"] = _arrange_go_to()
 	
 	return data

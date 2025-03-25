@@ -6,7 +6,7 @@
 [node name="StartNode" node_paths=PackedStringArray("source") instance=ExtResource("1")]
 offset_right = 266.0
 offset_bottom = 82.0
-title = ">>>>>>>>>>>> START >>>>>>>>>>>>"
+title = "Start"
 slot/1/left_enabled = false
 slot/3/left_enabled = false
 slot/3/left_type = 0

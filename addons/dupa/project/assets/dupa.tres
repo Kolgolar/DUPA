@@ -43,9 +43,10 @@ corner_radius_bottom_left = 5
 bg_color = Color(0.0980392, 0.266667, 0.360784, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dvng5"]
-content_margin_left = 5.0
+content_margin_left = 15.0
 content_margin_top = 15.0
-content_margin_right = 5.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
 bg_color = Color(0.0627451, 0.117647, 0.203922, 1)
 border_width_left = 1
 border_width_right = 1
@@ -55,9 +56,10 @@ corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7sxq1"]
-content_margin_left = 5.0
+content_margin_left = 15.0
 content_margin_top = 15.0
-content_margin_right = 5.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
 bg_color = Color(0.12549, 0.223529, 0.380392, 1)
 border_width_left = 1
 border_width_right = 1
@@ -141,7 +143,7 @@ GraphNode/styles/panel = SubResource("StyleBoxFlat_dvng5")
 GraphNode/styles/panel_selected = SubResource("StyleBoxFlat_7sxq1")
 GraphNode/styles/titlebar = SubResource("StyleBoxFlat_3vu7h")
 GraphNode/styles/titlebar_selected = SubResource("StyleBoxFlat_klvsg")
-GraphNodeTitleLabel/colors/font_color = Color(1, 1, 1, 1)
+GraphNodeTitleLabel/colors/font_color = Color(0, 1, 0.976471, 1)
 GraphNodeTitleLabel/constants/line_spacing = 10
 GraphNodeTitleLabel/font_sizes/font_size = 22
 Label/colors/font_color = Color(1, 1, 1, 1)

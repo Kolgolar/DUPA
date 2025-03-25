@@ -5,6 +5,8 @@ signal name_changed
 signal rmb_pressed
 signal param_changed(param: StringName, new_value, prev_value)
 
+#var input_port_id := 0
+
 @onready var main = $HBoxContainer/MainColumn
 @onready var _prev_pos_offset := position_offset
 @onready var type := &"DEFAULT"

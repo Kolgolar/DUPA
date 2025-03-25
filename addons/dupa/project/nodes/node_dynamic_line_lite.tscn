@@ -6,7 +6,7 @@
 [node name="DynamicLineNodeLite" instance=ExtResource("1")]
 offset_right = 384.0
 offset_bottom = 106.0
-title = "DYNAMIC LINE"
+title = "Dynamic ID Line"
 slot/3/left_enabled = false
 slot/3/left_type = 0
 slot/3/left_color = Color(1, 1, 1, 1)
