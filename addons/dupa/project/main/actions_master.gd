@@ -20,10 +20,6 @@ func redo():
 	print("Redoing action '%s'" % undo_redo.get_current_action_name())
 
 
-func dummy_method():
-	pass
-
-
 func register_method_action(act_name: String, do_method: Callable, undo_method: Callable, execute := true, merge_mode := UndoRedo.MERGE_DISABLE, backwards_undo := false):
 	undo_redo.create_action(act_name, merge_mode, backwards_undo)
 	undo_redo.add_do_method(do_method)
@@ -40,7 +36,3 @@ func register_property_action(act_name: String, node: Node, property_name: Strin
 	undo_redo.commit_action(execute)
 	if merge_mode == UndoRedo.MERGE_DISABLE:
 		print("Action '%s' was commited!" % act_name)
-
-
-func _register_action():
-	pass

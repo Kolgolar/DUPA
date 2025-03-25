@@ -3,6 +3,7 @@ extends Control
 @export var graph_edit: GraphEdit
 @export var error_popup: AcceptDialog
 @export var error_popup_label: RichTextLabel
+@export var deletion_popup: ConfirmationDialog
 
 var file_name := ""
 var directory := ""
@@ -166,7 +167,7 @@ func _on_new_pressed():
 
 
 func _on_clear_pressed():
-	$Deletion.popup_centered()
+	deletion_popup.popup_centered()
 
 
 func _on_deletion_confirmed():
