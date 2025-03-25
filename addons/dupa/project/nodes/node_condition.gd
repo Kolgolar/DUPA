@@ -1,4 +1,5 @@
-extends DefaultNode
+class_name ConditionNode
+extends DUPA_DefaultNode
 
 const TRUE_PORT_ID = 0
 const FALSE_PORT_ID = 1
@@ -22,9 +23,9 @@ func set_param(param_name: StringName, value):
 
 
 
-func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
-	var data = super(graph_edit)
-	data["var_name"] = %ConditionVar.text
-	data["go_to_true"] = _arrange_go_to(graph_edit, TRUE_PORT_ID)
-	data["go_to_false"] = _arrange_go_to(graph_edit, FALSE_PORT_ID)
+func gen_data(allow_empty := false) -> Dictionary:
+	var data = super()
+	data[&"var_name"] = %ConditionVar.text
+	data[&"go_to_true"] = _arrange_go_to(TRUE_PORT_ID)
+	data[&"go_to_false"] = _arrange_go_to(FALSE_PORT_ID)
 	return data

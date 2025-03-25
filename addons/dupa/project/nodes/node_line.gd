@@ -1,4 +1,4 @@
-extends DefaultNode
+extends DUPA_DefaultNode
 
 class_name LineNode
 
@@ -29,7 +29,7 @@ func _ready():
 		char_index += 1 
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary) -> void:
+func set_data(data : Dictionary) -> void:
 	character_drop.text = data["character"]
 	text.text = data["text"]
 	if "choice_name" in data:
@@ -40,7 +40,7 @@ func set_data(graph_edit : GraphEdit, data : Dictionary) -> void:
 		custom_char_name.text = data["custom_char_name"]
 
 
-func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
+func gen_data(allow_empty := false) -> Dictionary:
 	var data := {}
 	data["go_to"] = []
 	data["character"] = character_drop.text
@@ -52,5 +52,5 @@ func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
 	if not custom_char_name.text.is_empty():
 		data["custom_char_name"] = custom_char_name.text
 	
-	data["go_to"] = _arrange_go_to(graph_edit)
+	data["go_to"] = _arrange_go_to()
 	return data

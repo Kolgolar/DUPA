@@ -1,4 +1,4 @@
-extends DefaultNode
+extends DUPA_DefaultNode
 
 class_name StartNode
 
@@ -7,14 +7,14 @@ class_name StartNode
 
 func _ready():
 	super()
-	type = "START"
+	type = &"START"
 	desc_visible = false
 
 
-func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
-	var data := super(graph_edit)
-	data["go_to"] = _arrange_go_to(graph_edit)
-	data["source"] = source.text
+func gen_data(allow_empty := false) -> Dictionary:
+	var data := super()
+	data[&"go_to"] = _arrange_go_to()
+	data[&"source"] = source.text
 	return data
 
 

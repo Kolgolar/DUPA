@@ -1,11 +1,10 @@
-extends DefaultNode
-
 class_name DynamicLineNode
+extends DUPA_DefaultNode
 
 
 func _ready():
 	super()
-	type = "DYNAMIC_LINE"
+	type = &"DYNAMIC_LINE"
 
 
 func _get_fields_to_track() -> Array[Control]:
@@ -27,12 +26,12 @@ func set_param(param_name: StringName, value):
 			%IDTo.text = str(value)
 
 
-func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
-	var data = super(graph_edit)
-	data["base"] = %IDBase.text
-	data["from"] = int(%IDFrom.text)
-	data["to"] = int(%IDTo.text)
-	data["is_player"] = %IsPlayerLine.pressed
-	data["go_to"] = _arrange_go_to(graph_edit)
+func gen_data(allow_empty := false) -> Dictionary:
+	var data = super()
+	data[&"base"] = %IDBase.text
+	data[&"from"] = int(%IDFrom.text)
+	data[&"to"] = int(%IDTo.text)
+	data[&"is_player"] = %IsPlayerLine.pressed
+	data[&"go_to"] = _arrange_go_to()
 	
 	return data

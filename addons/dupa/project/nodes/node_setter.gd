@@ -1,12 +1,10 @@
-extends DefaultNode
-
 class_name SetterNode
-
+extends DUPA_DefaultNode
 
 
 func _ready():
 	super()
-	type = "SETTER"
+	type = &"SETTER"
 
 
 func _get_fields_to_track() -> Array[Control]:
@@ -24,10 +22,10 @@ func set_param(param_name: StringName, value):
 			%VarValue.text = value
 
 
-func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
-	var data = super(graph_edit)
-	data["var_name"] = %VarName.text
-	data["var_value"] = %VarValue.text
-	data["go_to"] = []
-	data["go_to"] = _arrange_go_to(graph_edit)
+func gen_data(allow_empty := false) -> Dictionary:
+	var data = super()
+	data[&"var_name"] = %VarName.text
+	data[&"var_value"] = %VarValue.text
+	data[&"go_to"] = []
+	data[&"go_to"] = _arrange_go_to()
 	return data

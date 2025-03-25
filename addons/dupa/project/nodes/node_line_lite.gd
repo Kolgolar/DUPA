@@ -1,11 +1,10 @@
-extends DefaultNode
-
 class_name LineNodeLite
+extends DUPA_DefaultNode
 
 
 func _ready():
 	super()
-	type = "LINE"
+	type = &"LINE"
 
 
 func _get_fields_to_track() -> Array[Control]:
@@ -23,12 +22,12 @@ func set_param(param_name: StringName, value):
 			%IsPlayerLine.set_pressed_no_signal(value)
 
 
-func gen_data(graph_edit : GraphEdit, allow_empty := false) -> Dictionary:
-	var data := super(graph_edit)
-	data["go_to"] = []
-	data["is_player"] = %IsPlayerLine.button_pressed
+func gen_data(allow_empty := false) -> Dictionary:
+	var data := super()
+	data[&"go_to"] = []
+	data[&"is_player"] = %IsPlayerLine.button_pressed
 	if not %LocalizationLine.text.is_empty() || allow_empty:
-		data["localization_id"] = %LocalizationLine.text
+		data[&"localization_id"] = %LocalizationLine.text
 	
-	data["go_to"] = _arrange_go_to(graph_edit)
+	data[&"go_to"] = _arrange_go_to()
 	return data

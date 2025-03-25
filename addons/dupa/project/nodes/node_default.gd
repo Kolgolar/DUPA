@@ -1,27 +1,24 @@
+class_name DUPA_DefaultNode
 extends GraphNode
 
-class_name DefaultNode
+signal name_changed
+signal rmb_pressed
+signal param_changed(param: StringName, new_value, prev_value)
 
 @onready var main = $HBoxContainer/MainColumn
 @onready var _prev_pos_offset := position_offset
 @onready var type := &"DEFAULT"
-
 @onready var _description = %Description
-
 @onready var _cached_data := {}
+@onready var _graph_edit: GraphEdit = get_parent()
 
 var id : int
-var short_title := ""
-
 var desc_visible := false:
 	set(value):
 		desc_visible = value
 		_description.visible = value
 		size.y -= 64
 
-signal name_changed
-signal rmb_pressed
-signal param_changed(param: StringName, new_value, prev_value)
 
 func _ready():
 	_description.hide()
@@ -50,14 +47,13 @@ func activate_data_managing():
 	
 	await get_tree().process_frame
 	if _cached_data.is_empty():
-		_cached_data = gen_data(get_parent(), true)
+		_cached_data = gen_data(true)
 
 
-func set_data(graph_edit : GraphEdit, data : Dictionary) -> void:
+func set_data(data : Dictionary) -> void:
 	for param in data:
 		set_param(param, data[param])
 		
-
 
 func set_param(param_name: StringName, value):
 	match param_name:
@@ -80,7 +76,7 @@ func set_param(param_name: StringName, value):
 			set_block_signals(false)
 			
 
-func gen_data(graph_edit: GraphEdit, allow_empty := false) -> Dictionary:
+func gen_data(allow_empty := false) -> Dictionary:
 	var data := {}
 	# data["id"] = id
 	data[&"type"] = type
@@ -96,11 +92,11 @@ func delete() -> void:
 	queue_free()
 
 
-func _arrange_go_to(graph_edit : GraphEdit, port_id := 0) -> Array:
+func _arrange_go_to(port_id := 0) -> Array:
 	var to_nodes_pos_y := {}
-	for connection in graph_edit.get_connection_list():
-		if connection["from_node"] == self.name and connection["from_port"] == port_id:
-			var to_node : GraphNode = graph_edit.get_node(NodePath(connection["to_node"]))
+	for connection in _graph_edit.get_connection_list():
+		if connection[&"from_node"] == self.name and connection[&"from_port"] == port_id:
+			var to_node : GraphNode = _graph_edit.get_node(NodePath(connection[&"to_node"]))
 			to_nodes_pos_y[to_node.position_offset.y] = str(to_node.id)
 
 	var coords = to_nodes_pos_y.keys()
@@ -109,13 +105,6 @@ func _arrange_go_to(graph_edit : GraphEdit, port_id := 0) -> Array:
 	for n in coords:
 		arranged_arr.append(to_nodes_pos_y[n])
 	return arranged_arr
-
-
-func _update_title_text(new_text : String, update_node_text := true) -> void:
-	title = type + ": " + new_text
-	short_title = new_text
-	if update_node_text:
-		_description.text = short_title
 
 
 func _on_GraphNode_resize_request(new_minsize):
@@ -137,7 +126,7 @@ func _on_gui_input(event: InputEvent) -> void:
 
 
 func register_action():
-	var new_data = gen_data(get_parent(), true)
+	var new_data = gen_data(true)
 	# NOTE: Если за раз было изменено несколько параметров, то это будет засчитано
 	# как разные действия. Возможно, следует доработать логику, чтобы избежать этого 
 	
@@ -160,4 +149,4 @@ func register_action():
 				else:
 					param_changed.emit(param, new_data[param], _cached_data[param])
 					
-	_cached_data = gen_data(get_parent(), true)
+	_cached_data = gen_data(true)
