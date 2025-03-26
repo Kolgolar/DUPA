@@ -1,6 +1,12 @@
 class_name DynamicLineNode
 extends DUPA_DefaultNode
 
+@export var is_player_line: CheckButton
+@export var id_base: LineEdit
+@export var id_from: LineEdit
+@export var id_to: LineEdit
+
+
 
 func _ready():
 	super()
@@ -9,7 +15,7 @@ func _ready():
 
 func _get_fields_to_track() -> Array[Control]:
 	var fields = super()
-	fields.append_array([%IsPlayerLine, %IDBase, %IDFrom, %IDTo])
+	fields.append_array([is_player_line, id_base, id_from, id_to])
 	return fields
 
 
@@ -17,21 +23,21 @@ func set_param(param_name: StringName, value):
 	super(param_name, value)
 	match param_name:
 		&"is_player":
-			%IsPlayerLine.button_pressed = value
+			is_player_line.button_pressed = value
 		&"base":
-			%IDBase.text = value
+			id_base.text = value
 		&"from":
-			%IDFrom.text = str(value)
+			id_from.text = str(value)
 		&"to":
-			%IDTo.text = str(value)
+			id_to.text = str(value)
 
 
 func gen_data(allow_empty := false) -> Dictionary:
 	var data = super()
-	data[&"base"] = %IDBase.text
-	data[&"from"] = int(%IDFrom.text)
-	data[&"to"] = int(%IDTo.text)
-	data[&"is_player"] = %IsPlayerLine.button_pressed
+	data[&"base"] = id_base.text
+	data[&"from"] = int(id_from.text)
+	data[&"to"] = int(id_to.text)
+	data[&"is_player"] = is_player_line.button_pressed
 	data[&"go_to"] = _arrange_go_to()
 	
 	return data

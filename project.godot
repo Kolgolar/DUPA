@@ -35,7 +35,7 @@ enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/
 
 [gui]
 
-theme/custom="res://addons/dupa/project/assets/dupa.tres"
+theme/custom="res://addons/dupa/project/assets/styles/dupa.tres"
 
 [input]
 

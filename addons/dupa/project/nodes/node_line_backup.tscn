@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://da5wsbwt83e67"]
 
-[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/dupa.tres" id="1_lq0n7"]
+[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/styles/dupa.tres" id="1_lq0n7"]
 [ext_resource type="Script" uid="uid://drpw46gjkuqrf" path="res://addons/dupa/project/nodes/node_default.gd" id="2_kfifu"]
+
 
 [node name="GraphNode" type="GraphNode" groups=["graph_nodes"]]
 offset_right = 532.0

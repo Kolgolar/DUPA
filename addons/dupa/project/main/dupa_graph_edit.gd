@@ -75,7 +75,6 @@ func __restore_nodes_by_ids(ids: PackedInt32Array):
 		var node = _create_graph_node(
 			_get_graph_node_scene_path_by_type(node_data.type),
 			Vector2(node_data.offset_x, node_data.offset_y),
-			true,
 			id
 		)
 		node.set_data(_deleted_nodes[id])
@@ -91,7 +90,7 @@ func __duplicate_nodes(nodes_to_duplicate_ids: PackedInt32Array, forced_ids := P
 		var id := -1
 		if !forced_ids.is_empty():
 			id = forced_ids[i]
-		var new_node: DUPA_DefaultNode = _create_graph_node(node.scene_file_path, Vector2.ZERO, true, id)
+		var new_node: DUPA_DefaultNode = _create_graph_node(node.scene_file_path, Vector2.ZERO, id)
 		new_node.set_data(node.gen_data())
 		new_node.position_offset = node.position_offset + shift
 		new_node.set_deferred(&"selected", true)
@@ -193,7 +192,7 @@ func _get_graph_node_scene_path_by_type(type: StringName) -> String:
 				return ""
 
 
-func _create_graph_node(scene_path: String, pos := Vector2.ZERO, remember_created := true, id := -1) -> GraphNode:
+func _create_graph_node(scene_path: String, pos := Vector2.ZERO, id := -1) -> GraphNode:
 	var node = load(scene_path).instantiate()
 	add_child(node)
 
@@ -204,6 +203,9 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, remember_create
 		else:
 			max_id += 1
 			id = max_id
+	elif id == 0:
+		_start_node = node
+		
 	node.id = id
 
 	node.rmb_pressed.connect(_on_graph_node_rmb_pressed.bind(node))
@@ -213,8 +215,8 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, remember_create
 	var offset = scroll_offset
 	node.position_offset = (pos + scroll_offset) / zoom - Vector2(0, node.size.y / 2)
 	
-	if remember_created:
-		_created_nodes[node.id] = node
+	#if remember_created:
+	_created_nodes[node.id] = node
 	
 	# Создаём соединение с другой нодой, если необходимо
 	if not _from_empty_to_node.is_empty():
@@ -303,10 +305,20 @@ func _call_mouse_popup() -> void:
 #-------------------------------------------
 #region Global Operations
 
+
+func get_timeline() -> Dictionary:
+	var timeline := {}
+	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
+		timeline[str(node.id)] = node.gen_data()
+	return timeline
+
+
 func clear_nodes():
 	clear_connections()
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		node.delete()
+	_created_nodes.clear()
+	_deleted_nodes.clear()
 
 
 func set_timeline(timeline: Dictionary, config: Dictionary):
@@ -316,7 +328,7 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 	for graph_node_id in timeline:
 		var node_scene_path = _get_graph_node_scene_path_by_type(timeline[graph_node_id][&"type"])
 		
-		var node = _create_graph_node(node_scene_path, Vector2.ZERO, false, int(graph_node_id))
+		var node = _create_graph_node(node_scene_path, Vector2.ZERO, int(graph_node_id))
 		node.set_data(timeline[graph_node_id])
 		graph_names[graph_node_id] = node.name
 	
@@ -339,7 +351,7 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 					go_to_count += 1
 
 
-func validation() -> int:
+func validate_timeline() -> int:
 	var err := OK
 	if not _start_node:
 		error.emit("Add start node to the graph!")

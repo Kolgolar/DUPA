@@ -6,15 +6,10 @@
 [node name="CallerNode" instance=ExtResource("1_e7suo")]
 offset_top = 0.0
 offset_right = 380.0
+theme_type_variation = &"GraphNodeCaller"
+resizable = true
 title = "Caller"
 script = ExtResource("2_b8i13")
-
-[node name="Label" parent="HBoxContainer/MainColumn/Title" index="0"]
-visible = true
-text = "Title"
-
-[node name="Description" parent="HBoxContainer/MainColumn/Title" index="1"]
-visible = false
 
 [node name="HSeparator" parent="." index="2"]
 theme_override_constants/separation = 10

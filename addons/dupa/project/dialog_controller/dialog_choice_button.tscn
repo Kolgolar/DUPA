@@ -1,0 +1,11 @@
+[gd_scene load_steps=0 format=3 uid="uid://btnlpvuiepr3q"]
+
+[node name="Choice0" type="Button"]
+use_parent_material = true
+custom_minimum_size = Vector2(650, 160)
+offset_right = 250.0
+offset_bottom = 45.0
+size_flags_horizontal = 4
+theme_type_variation = &"DialogChoiceButton"
+text = "Yes."
+alignment = 0

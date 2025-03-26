@@ -1,12 +1,19 @@
 extends Control
 
+@export var _compare_versions := true
+
 @export var graph_edit: GraphEdit
 @export var error_popup: AcceptDialog
 @export var error_popup_label: RichTextLabel
 @export var deletion_popup: ConfirmationDialog
 
-var file_name := ""
-var directory := ""
+var timeline_file_path := "":
+	set(value):
+		timeline_file_path = value
+		if value.is_empty():
+			%TimelineName.text = "(not saved!)"
+		else:
+			%TimelineName.text = value.get_file()
 
 @export var _actions_master: ActionsMaster
 
@@ -24,7 +31,8 @@ func _input(event):
 
 func reset() -> void:
 	graph_edit.clear_nodes()
-	_set_filename("(not saved!)")
+	timeline_file_path = ""
+	#_set_filename("(not saved!)")
 
 
 
@@ -33,9 +41,10 @@ func reset() -> void:
 #--------------------------------------------
 #region Saving&Loading
 
-func save_dialog(path, fn):
-	# save file
-	var err = graph_edit.validation()
+func save_changes_to_timeline_file(path: String):
+	error_popup_label.text = ""
+	var validation_err = graph_edit.validate_timeline()
+	var fn = path.get_file()
 	if fn.is_empty():
 		printerr("File name is empty!")
 		return
@@ -44,31 +53,33 @@ func save_dialog(path, fn):
 		fn += ".json"
 	
 	var data = {}
-	data[&"CONFIG"] = {"max_id" : graph_edit.max_id}
-	data[&"TIMELINE"] = graph_edit.dialog
-	var file = FileAccess.open(path.path_join(fn), FileAccess.WRITE)
-	file.store_line(JSON.new().stringify(data))
+	data[&"CONFIG"] = {
+		&"max_id": graph_edit.max_id,
+		&"dupa_version": DUPA_Utility.get_dupa_config_value(&"meta", &"version")}
+	data[&"TIMELINE"] = graph_edit.get_timeline()
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	var opening_err = file.get_open_error()
+	if opening_err == OK:
+		file.store_line(JSON.new().stringify(data))
+		file.close()
+	else:
+		show_popup_error("Error on opening file to save timeline at: %s" % path)
 	
-	file.close()
-	
-	if err != OK:
+	if validation_err != OK:
 		printerr("Error on validation!")
-		show_popup_error("Saving complete, but you must resolve errors!")
-
+		show_popup_error("---> Saving complete, but you must resolve errors!")
+	
+	timeline_file_path = path
 	%SaveNotify.show()
 	await get_tree().create_timer(3.0).timeout
 	%SaveNotify.hide()
 
 
-func load_save(path: String):
+func open_timeline_file(path: String):
 	var fn = path.split("/")[-1]
 	if path.is_empty() or fn.is_empty():
 		print("File not found at %s" % path)
 		return
-	
-	show()
-	reset()
-	_set_filename(fn)
 
 	var file = FileAccess.open(path, FileAccess.READ)
 	var test_json_conv = JSON.new()
@@ -76,56 +87,71 @@ func load_save(path: String):
 	var data = test_json_conv.get_data()
 	file.close()
 	
+	var timeline: Dictionary = data[&"TIMELINE"]
+	var config: Dictionary = data[&"CONFIG"]
 	
+	var confirmation_text = ""
+	var show_version_warning := false
+	var timeline_dupa_version := ""
+	var current_dupa_version: String = DUPA_Utility.get_dupa_config_value(&"meta", &"version")
 	
-	var timeline = data[&"TIMELINE"]
-	var config = data[&"CONFIG"]
+	if _compare_versions:
+		if config.has(&"dupa_version"):
+			timeline_dupa_version = config.dupa_version
+			if int(current_dupa_version[0]) != int(timeline_dupa_version[0]) || int(current_dupa_version[1]) != int(timeline_dupa_version[1]):
+				confirmation_text = (
+					"Выбранный файл был создан в DUPA v%s. Текущая версия программы: %s.
+					Возможны ошибки отображения содержания файла.
+					
+					Вы желаете продолжить операцию?" % [timeline_dupa_version, current_dupa_version]
+				)
+		else:
+			confirmation_text = (
+				"Не найдена информация о версии DUPA, в которой был создан выбранный файл.
+				Возможны ошибки отображения содержания файла.
+				
+				Вы желаете продолжить операцию?"
+			)
+			
+	if confirmation_text.is_empty():
+		_load_timeline(path, timeline, config)
+	else:
+		DUPA_Utility.create_confirmation_dialog(confirmation_text, self, _load_timeline.bind(path, timeline, config))
 
+
+func _load_timeline(path: String, timeline: Dictionary, config: Dictionary):
+	reset()
+	timeline_file_path = path
 	graph_edit.set_timeline(timeline, config)
-
-
-func _set_filename(new_name : String) -> void:
-	%TimelineName.text = new_name
-	file_name = new_name
-
-
-func _on_dupa_file_manager_file_selected(path: String) -> void:
-	load_save(path)
 	show()
 
 
-func _on_save_dialog_as(path: String):
-	var directory = path.get_base_dir()
-	var fn = path.get_file()
-	_set_filename(fn)
-	#_on_save_pressed()
-	save_dialog(directory, fn)
+func _on_dupa_file_manager_file_selected(path: String) -> void:
+	open_timeline_file(path)
 
 
-func _save_as():
-	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, _on_save_dialog_as)
+func _create_timeline_file():
+	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, save_changes_to_timeline_file)
 	add_child(fm)
 
+
+# Сигналы от кнопок интерфейса:
 
 func _on_open_new_pressed():
 	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.OPEN_TIMELINE, true, _on_dupa_file_manager_file_selected)
 	add_child(fm)
 
 
-func _on_save_pressed(): 
-	graph_edit.dialog.clear()
-	for node in get_tree().get_nodes_in_group("graph_nodes"):
-		graph_edit.dialog[str(node.id)] = (node.gen_data())
-	
-	if file_name.is_empty() || directory.is_empty():
-		_save_as()
+func _on_save_pressed():
+	if !timeline_file_path:
+		_create_timeline_file()
 		return
 
-	save_dialog(directory, file_name)
+	save_changes_to_timeline_file(timeline_file_path)
 
 
 func _on_save_as_pressed():
-	_save_as()
+	_create_timeline_file()
 
 #endregion
 
@@ -137,9 +163,9 @@ func _on_save_as_pressed():
 
 
 func show_popup_error(error_text : String) -> void:
-	error_popup_label.clear()
 	var time = Time.get_time_dict_from_system()
-	error_popup_label.text = "[{0}:{1}:{2}".format([time["hour"], time["minute"], time["second"]]) + "]  " + error_text + "\n"
+	#error_popup_label.text += "[{0}:{1}:{2}".format([time["hour"], time["minute"], time["second"]]) + "]  " + error_text + "\n"
+	error_popup_label.text += error_text + "\n"
 	error_popup.popup()
 
 
@@ -154,7 +180,7 @@ func _on_dupa_graph_edit_error(error_text: String) -> void:
 
 
 func new_timeline():
-	if !file_name.is_empty():
+	if timeline_file_path.is_empty():
 		# TODO: Стыбзить из лмстудио код создания конфёрм попапов
 		# Спросить, точно ли пользователь хочет создать новый таймлайн, ведь тут есть
 		# несохранённые изменения
@@ -174,7 +200,7 @@ func _on_clear_pressed():
 
 
 func _on_deletion_confirmed():
-	graph_edit.clear_nodes()
+	reset()
 
 
 

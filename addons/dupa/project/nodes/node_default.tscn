@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://nytw3aaj0cds"]
 
 [ext_resource type="Script" uid="uid://drpw46gjkuqrf" path="res://addons/dupa/project/nodes/node_default.gd" id="1"]
-[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/dupa.tres" id="2"]
+[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/project/assets/styles/dupa.tres" id="2"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_4djmp"]
 color = Color(1, 1, 1, 1)
@@ -9,13 +9,12 @@ grow_begin = -7.0
 grow_end = -7.0
 thickness = 4
 
-[node name="DefaultNode" type="GraphNode" groups=["graph_nodes"]]
+[node name="DefaultNode" type="GraphNode" node_paths=PackedStringArray("description") groups=["graph_nodes"]]
 offset_top = 8.0
 offset_right = 360.0
 offset_bottom = 144.0
 theme = ExtResource("2")
 theme_override_constants/separation = 0
-resizable = true
 title = "NEW"
 slot/0/left_enabled = false
 slot/0/left_type = 0
@@ -45,6 +44,7 @@ slot/2/right_color = Color(1, 1, 1, 1)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
 script = ExtResource("1")
+description = NodePath("HBoxContainer/MainColumn/Description")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -55,19 +55,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="Title" type="HBoxContainer" parent="HBoxContainer/MainColumn"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="HBoxContainer/MainColumn/Title"]
-visible = false
-custom_minimum_size = Vector2(120, 32)
-layout_mode = 2
-text = "Description"
-vertical_alignment = 1
-
-[node name="Description" type="TextEdit" parent="HBoxContainer/MainColumn/Title"]
-unique_name_in_owner = true
+[node name="Description" type="TextEdit" parent="HBoxContainer/MainColumn"]
 custom_minimum_size = Vector2(350, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.948052, 0.870558, 0.523905, 1)

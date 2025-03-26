@@ -6,11 +6,11 @@ signal rmb_pressed
 signal param_changed(param: StringName, new_value, prev_value)
 
 #var input_port_id := 0
+@export var description: TextEdit
 
 @onready var main = $HBoxContainer/MainColumn
 @onready var _prev_pos_offset := position_offset
 @onready var type := &"DEFAULT"
-@onready var _description = %Description
 @onready var _cached_data := {}
 @onready var _graph_edit: GraphEdit = get_parent()
 
@@ -18,16 +18,16 @@ var id : int
 var desc_visible := false:
 	set(value):
 		desc_visible = value
-		_description.visible = value
+		description.visible = value
 		size.y -= 64
 
 
 func _ready():
-	_description.hide()
+	description.hide()
 
 
 func _get_fields_to_track() -> Array[Control]:
-	var fields: Array[Control] = [_description]
+	var fields: Array[Control] = [description]
 	return fields
 
 
@@ -71,7 +71,7 @@ func set_param(param_name: StringName, value):
 		&"type":
 			type = value
 		&"desc":
-			_description.text = value
+			description.text = value
 		&"desc_visible":
 			set_block_signals(true)
 			desc_visible = value
@@ -84,7 +84,7 @@ func gen_data(allow_empty := false) -> Dictionary:
 	data[&"type"] = type
 	data[&"offset_x"] = position_offset.x
 	data[&"offset_y"] = position_offset.y
-	data[&"desc"] = _description.text
+	data[&"desc"] = description.text
 	data[&"desc_visible"] = desc_visible
 	return data
 

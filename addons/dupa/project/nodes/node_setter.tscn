@@ -3,8 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1"]
 [ext_resource type="Script" uid="uid://dayviurw6r7wv" path="res://addons/dupa/project/nodes/node_setter.gd" id="2"]
 
-[node name="SetterNode" instance=ExtResource("1")]
+[node name="SetterNode" node_paths=PackedStringArray("var_name", "var_value") instance=ExtResource("1")]
 offset_bottom = 146.0
+theme_type_variation = &"GraphNodeSetter"
 title = "Setter"
 slot/3/left_enabled = false
 slot/3/left_type = 0
@@ -16,6 +17,8 @@ slot/3/right_color = Color(1, 1, 1, 1)
 slot/3/right_icon = null
 slot/3/draw_stylebox = true
 script = ExtResource("2")
+var_name = NodePath("VBoxContainer/Var/VarName")
+var_value = NodePath("VBoxContainer/Value/VarValue")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." index="4"]
 layout_mode = 2
@@ -31,7 +34,6 @@ text = "Var name"
 vertical_alignment = 1
 
 [node name="VarName" type="LineEdit" parent="VBoxContainer/Var" index="1"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "e.g. is_item_sold"
@@ -47,7 +49,6 @@ text = "Var value"
 vertical_alignment = 1
 
 [node name="VarValue" type="LineEdit" parent="VBoxContainer/Value" index="1"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "INT or BOOL only!"
