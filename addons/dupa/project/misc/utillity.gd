@@ -1,6 +1,6 @@
 extends Node
 
-class_name DUPA_Utility
+class_name DupaUtility
 
 # TODO: Сделать отдельный статик-скрипт, в котором будет всё, что относится к конфигам?
 # И тогда на вход подавать не StringName, а константы из enum?

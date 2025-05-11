@@ -1,5 +1,5 @@
 class_name SetterNode
-extends DUPA_DefaultNode
+extends DupaNodeBase
 
 @export var var_name: LineEdit
 @export var var_value: LineEdit
@@ -7,7 +7,7 @@ extends DUPA_DefaultNode
 
 func _ready():
 	super()
-	type = &"SETTER"
+	type = DupaLib.NodeType.SETTER
 
 
 func _get_fields_to_track() -> Array[Control]:
@@ -29,6 +29,5 @@ func gen_data(allow_empty := false) -> Dictionary:
 	var data = super()
 	data[&"var_name"] = var_name.text
 	data[&"var_value"] = var_value.text
-	data[&"go_to"] = []
 	data[&"go_to"] = _arrange_go_to()
 	return data

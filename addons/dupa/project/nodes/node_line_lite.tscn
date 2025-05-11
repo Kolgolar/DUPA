@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://d27yly1pgog0"]
 
-[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1_4b34c"]
+[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_base.tscn" id="1_4b34c"]
 [ext_resource type="Script" uid="uid://ccbkaqk0f6dnt" path="res://addons/dupa/project/nodes/node_line_lite.gd" id="2_g0s0d"]
 
-[node name="LineNodeLite" node_paths=PackedStringArray("line", "is_player_line") instance=ExtResource("1_4b34c")]
+[node name="LineNodeLite" node_paths=PackedStringArray("line_text", "is_player_line") instance=ExtResource("1_4b34c")]
 offset_right = 384.0
 offset_bottom = 106.0
 title = "Line"
@@ -17,7 +17,7 @@ slot/3/right_color = Color(1, 1, 1, 1)
 slot/3/right_icon = null
 slot/3/draw_stylebox = true
 script = ExtResource("2_g0s0d")
-line = NodePath("VBoxContainer/Text/LocalizationLine")
+line_text = NodePath("VBoxContainer/Text/LocalizationLine")
 is_player_line = NodePath("VBoxContainer/IsPlayer/IsPlayerLine")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." index="4"]

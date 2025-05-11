@@ -1,4 +1,4 @@
-extends DUPA_DefaultNode
+extends DupaNodeBase
 
 class_name StartNode
 
@@ -7,7 +7,7 @@ class_name StartNode
 
 func _ready():
 	super()
-	type = &"START"
+	type = DupaLib.NodeType.START
 	desc_visible = false
 
 

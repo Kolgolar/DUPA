@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://c8dmr5o5thh70"]
 
-[ext_resource type="Script" uid="uid://btopaddgyfm2j" path="res://dupa/dialog_controller.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://dupa/dialog_choice_button.tscn" id="2"]
-[ext_resource type="Script" uid="uid://cw1onif7ke7dy" path="res://game/bars/relab/dialog_variables_relab.gd" id="2_vumi7"]
-[ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://dupa/text_panel_default.tres" id="4_13dyn"]
+[ext_resource type="Script" uid="uid://bmlwvs4vm6qio" path="res://addons/dupa/project/dialog_controller/dialog_controller.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/project/dialog_controller/dialog_choice_button.tscn" id="2"]
+[ext_resource type="Script" uid="uid://ctwn8ghyxecxi" path="res://addons/dupa/project/dialog_controller/dialogs_variables_base.gd" id="2_nysh1"]
+[ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/project/dialog_controller/text_panel_default.tres" id="4_13dyn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jd040"]
 
@@ -15,12 +15,17 @@ _drag_player_line_prompt_to_coursor = false
 _character_text = NodePath("Frame/MainContainer/TextPanel/MarginContainer/VBoxContainer/CharacterText")
 _player_choices_container = NodePath("Frame/MainContainer/ChoicesArea/ChoicesZone/ChoicesContainer")
 _player_line = NodePath("Frame/SelectLine/PlayerLine")
-_timeline = "res://game/novel/dialogs/relab/dialog_relab_sasha_meeting.json"
+_timeline = "res://addons/dupa/project/demo/voice_test.json"
 _next_line_button = NodePath("Frame/MainContainer/TextPanel/NextLine")
+_force_custom_csv = true
+_custom_csv_file = "res://addons/dupa/project/demo/demo_localization.csv"
+_voice_lines_directory = "res://addons/dupa/project/demo/audio/"
 dv = NodePath("DialogVariables")
 
 [node name="DialogVariables" type="Node" parent="."]
-script = ExtResource("2_vumi7")
+script = ExtResource("2_nysh1")
+character_name = "Собеседник"
+player_name = "Игрок"
 
 [node name="Frame" type="Button" parent="."]
 anchors_preset = 15
@@ -174,7 +179,9 @@ theme_override_constants/margin_bottom = 5
 
 [node name="S1" type="AudioStreamPlayer" parent="CharSounds"]
 max_polyphony = 32
-bus = &"Effects"
+
+[node name="VoiceLinePlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
 
 [connection signal="pressed" from="Frame" to="." method="_on_Frame_pressed"]
 [connection signal="pressed" from="Frame/MainContainer/TextPanel/NextLine" to="." method="_on_NextLine_pressed"]

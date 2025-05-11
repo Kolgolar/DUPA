@@ -28,6 +28,10 @@ enum Modes {PLAIN_TEXT, DEFAULT}
 @export var _showing_speed : float = 60
 @export var _char_showing_sounds_folder := ""
 @export var delete_when_finished := false
+@export var _force_custom_csv := false
+@export var _custom_csv_file := ""
+@export var _voice_lines_directory := ""
+@export_enum("ru", "en") var _locale = "ru"
 
 
 var char_name_clr := Color("ffb45b") # Цвет имени персонада, НЕ игрока
@@ -61,6 +65,7 @@ var _char_sounds := []
 var _prev_char_sound_time : float = 0
 
 var _choice_text_tween: Tween
+var _voice_line_players := {}
 
 
 @export var dv : DialogsVariables
@@ -71,7 +76,8 @@ var _choice_text_tween: Tween
 
 signal dialog_started
 signal dialog_ended
-signal line_id_tags_detected(tag: PackedStringArray)
+signal line_text_tags_detected(tag: PackedStringArray)
+signal voice_line_found(stream: AudioStream)
 
 
 func _ready():
@@ -103,15 +109,22 @@ func _process(delta) -> void:
 			get_tree().reload_current_scene()
 			
 
+func set_voice_player(char_name: String, player):
+	if player is AudioStreamPlayer3D || player is AudioStreamPlayer2D || player is AudioStreamPlayer:
+		_voice_line_players[char_name] = player
+	else:
+		printerr("Audio player should be AudioStreamPlayer[''/2D/3D]")
+
+
 func set_char_sounds(folder: String):
-	_char_sounds = DUPA_Utility.get_all_files_at(folder, ".mp3")
+	_char_sounds = DupaUtility.get_all_files_at(folder, ".mp3")
 
 
 static func _read_csv_file(file_path: String) -> Dictionary:
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var err = FileAccess.get_open_error()
 	if err != OK:
-		push_error("CSV файл не найден: %s. Ошибка: %d", [file_path, err])
+		push_error("Не найден csv-файл в директории %s. Ошибка: %s" % [file_path, err])
 		return {}
 		
 	var data = {}
@@ -122,6 +135,10 @@ static func _read_csv_file(file_path: String) -> Dictionary:
 			if is_first_line:
 				is_first_line = false
 				continue
+			# FIXME: Не учитывается количество локалей, не учитывается, что могут появляться
+			# другие столбцы. Сначала нужно сканировать название столбцов, и исходя из этого
+			# заполнять словарь. Возможно, стоит обозначать каждую локаль названием типа
+			# locale_**
 			if line != "":  # Пропустить пустые строки
 				var row := line.split(";")  # Разделить строку по табам
 				if row[1] == "": continue # Если id пустой
@@ -129,8 +146,8 @@ static func _read_csv_file(file_path: String) -> Dictionary:
 				row.remove_at(0) # Удаляем комментарий
 				row.remove_at(0)
 				data[id] = {
-					"tags": row[0],
-					"line": row[1],
+					"tags": row[1],
+					"line": row[2],
 				}
 		file.close()
 	
@@ -184,10 +201,12 @@ func start_dialog(timeline_name := _timeline) -> void:
 	# print(_td)
 	var start_node = "0"
 	_curr_node = start_node
-	if _td[start_node]["type"] != "START":
+	if _td[start_node]["type"] != DupaLib.NodeType.START:
 		printerr("Node with id == 0 is not StartNode!")
 		return
-	if _td[start_node].has("source"):
+	if _force_custom_csv:
+		_csv_data = _read_csv_file(_custom_csv_file)
+	elif _td[start_node].has("source"):
 		_csv_data = _read_csv_file(_td[start_node]["source"])
 	_next_line()
 
@@ -225,7 +244,7 @@ func _get_node_type(node_name) -> String:
 func _get_go_to_nodes(node_name) -> Array:
 	var go_to_arr := []
 	match _td[node_name].type:
-		"CONDITION":
+		DupaLib.NodeType.CONDITION:
 			if _condition:
 				go_to_arr = _td[node_name]["go_to_true"]
 			else:
@@ -245,14 +264,14 @@ func _display_choices(choices : Array) -> void:
 		var choice_text := ""
 		# TODO: Учитывать разные настройки вывода текста выбора (только на кнопках или нет и т.д.)
 		if _player_lines_on_choice_buttons:
-			if _td[choices[c]].has("localization_id"):
-				b_text = _td[choices[c]]["localization_id"]
+			if _td[choices[c]].has("line_text"):
+				b_text = _td[choices[c]]["line_text"]
 			else:
 				b_text = _td[choices[c]]["text"]
 		else:
 			var full_text = ""
-			if _td[choices[c]].has("localization_id"):
-				full_text = _td[choices[c]]["localization_id"]
+			if _td[choices[c]].has("line_text"):
+				full_text = _td[choices[c]]["line_text"]
 			else:
 				full_text = _td[choices[c]]["text"]
 			
@@ -323,10 +342,10 @@ func _next_line(idx := 0) -> void:
 		if _dynamic_line_curr < 0:
 			_curr_node = go_to_arr[idx]
 
-		var line_id := ""
+		var line_text := ""
 		var node_type = _td[_curr_node]["type"]
-		if "LINE" in node_type:
-			if node_type == "DYNAMIC_LINE":
+		if DupaLib.NodeType.LINE == node_type || DupaLib.NodeType.DYNAMIC_ID_LINE == node_type:
+			if node_type == DupaLib.NodeType.DYNAMIC_ID_LINE:
 				if _dynamic_line_curr < 0:
 					_dynamic_line_base = _td[_curr_node]["base"]
 					_dynamic_line_from = int(_td[_curr_node]["from"])
@@ -336,30 +355,30 @@ func _next_line(idx := 0) -> void:
 					_dynamic_line_curr += 1
 				
 				if _dynamic_line_curr <= _dynamic_line_to:
-					line_id =_dynamic_line_base + str(_dynamic_line_curr)
+					line_text =_dynamic_line_base + str(_dynamic_line_curr)
 				else:
 					_dynamic_line_curr = -1
 					_set_next_step()
 					return
 				
 			else:
-				if _td[_curr_node].has("localization_id"):
-					line_id = _td[_curr_node]["localization_id"]
+				if _td[_curr_node].has("line_text"):
+					line_text = _td[_curr_node]["line_text"]
 				else:
-					line_id = _td[_curr_node]["text"]
+					line_text = _td[_curr_node]["text"]
 			var has_player_line_tag := false
 			var text = ""
 			if _csv_data.is_empty(): 
-				text = tr(line_id)
+				text = tr(line_text)
 			else:
-				text = _csv_data[line_id].line
-				var tags_list = _csv_data[line_id].tags.split(',', false)
+				text = _csv_data[line_text].line
+				var tags_list = _csv_data[line_text].tags.split(',', false)
 				var tags_data := {}
 				if tags_list.size() > 0:
 					for data in tags_list:
 						var key_value = data.split(':')
 						tags_data[key_value[0]] = key_value[1]
-					line_id_tags_detected.emit(tags_data)
+					line_text_tags_detected.emit(tags_data)
 					if tags_data.has("char"):
 						has_player_line_tag = tags_data.char == "player"
 			
@@ -417,7 +436,7 @@ func _next_line(idx := 0) -> void:
 			_show_character_line(_curr_character, text)
 			return
 			
-		elif node_type == "CONDITION":
+		elif node_type == DupaLib.NodeType.CONDITION:
 			var node_data : Dictionary = _td[_curr_node]
 			var condition_var : bool = dv.get(node_data["var_name"])
 			if condition_var == null:
@@ -522,6 +541,31 @@ func _show_character_line(character : String, line : String) -> void:
 	if !_is_player_speaking:
 		_visible_characters_tweener.tween_method(_play_char_showing_sound, 0.0, time, time)
 	
+	# TODO: Не проигрывает звуки, не выводит текст (не считывает сами реплики из csv, хотя остальное видит?)
+	
+	if !_voice_lines_directory.is_empty():
+		var line_text := ""
+		if _td[_curr_node].has("line_text"):
+			line_text = _td[_curr_node]["line_text"]
+		else:
+			line_text = _td[_curr_node]["text"]
+		var path = _voice_lines_directory.path_join(_locale).path_join(line_text + ".mp3")
+		var is_exists = FileAccess.file_exists(path)
+		if is_exists:
+			var player
+			if _voice_line_players.has(character):
+				player = _voice_line_players[character]
+			else:
+				player = %VoiceLinePlayer
+			var audio_stream: AudioStream = load(path)
+			#if _voice_line_players.has(character):
+				#voice_line_found.emit(audio_stream)
+			#else:
+			player.stream = audio_stream
+			player.play()
+		
+				
+			
 
 func _change_visible_characters(value : int) -> void:
 	_character_text.visible_characters = value
@@ -587,6 +631,12 @@ func _on_choice_button_mouse_exited() -> void:
 func _on_choice_button_pressed(idx: int) -> void:
 	_next_line(idx)
 	_player_line_container.hide()
+
+
+func force_choice_by_num(num: int):
+	var choices = _get_go_to_nodes(_curr_node)
+	if choices.size() > num:
+		_next_line(choices[num])
 
 
 # Если мобильный режим

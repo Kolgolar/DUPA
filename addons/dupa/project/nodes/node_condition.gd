@@ -1,5 +1,5 @@
 class_name ConditionNode
-extends DUPA_DefaultNode
+extends DupaNodeBase
 
 const TRUE_PORT_ID = 0
 const FALSE_PORT_ID = 2
@@ -11,7 +11,7 @@ const INPUT_PORT_ID = 1
 func _ready():
 	super()
 	#input_port_id = 1
-	type = "CONDITION"
+	type = DupaLib.NodeType.CONDITION
 
 
 func _get_fields_to_track() -> Array[Control]:

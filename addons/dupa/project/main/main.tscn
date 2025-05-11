@@ -86,7 +86,6 @@ horizontal_alignment = 1
 
 [node name="Editor" type="Control" parent="." node_paths=PackedStringArray("graph_edit", "error_popup", "error_popup_label", "deletion_popup", "_actions_master")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -243,24 +242,27 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="NodeParamsPopup" type="PopupMenu" parent="Editor/Popups"]
-size = Vector2i(236, 148)
+size = Vector2i(236, 175)
 visible = true
 unfocusable = true
-item_count = 6
+item_count = 7
 item_0/text = "Show description field"
 item_0/checkable = 2
 item_0/id = 0
-item_1/text = "Open node reference"
-item_1/id = 5
+item_1/text = "Show voice line field"
+item_1/checkable = 2
+item_1/id = 6
 item_2/id = 2
 item_2/separator = true
-item_3/text = "Duplicate"
-item_3/id = 11
-item_4/text = "Clear connections"
-item_4/id = 4
-item_5/text = "DELETE"
-item_5/icon = ExtResource("3_y3mvl")
-item_5/id = 10
+item_3/text = "Open node reference"
+item_3/id = 5
+item_4/text = "Duplicate"
+item_4/id = 11
+item_5/text = "Clear connections"
+item_5/id = 4
+item_6/text = "DELETE"
+item_6/icon = ExtResource("3_y3mvl")
+item_6/id = 10
 
 [connection signal="create_timeline" from="MainMenu/StartPanels/StartMenu" to="." method="_on_create_timeline"]
 [connection signal="open_timeline" from="MainMenu/StartPanels/StartMenu" to="." method="_on_open_timeline"]

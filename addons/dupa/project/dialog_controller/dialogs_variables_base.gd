@@ -1,5 +1,14 @@
 extends Node
 class_name DialogsVariables
 
-var character_name := "CHARACTER_NAME"
-var player_name := "PLAYER_NAME"
+# TODO: DUPA должна создавать отдельную папку под проект, где будут храниться таймлайны,
+# имена персонажей и файлы локализации.
+# TODO: Возможность написания диалога полностью через Дупу, а затем автоматический экспорт и
+# создание файла локализации?
+# TODO: Вывод тегов? Возможность их редактирования и занесение изменений в файл локализации?
+# TODO: Поддержка разных форматов, помимо .csv
+
+# TODO: Заменить на ресурс?
+
+@export var character_name := "CHARACTER_NAME"
+@export var player_name := "PLAYER_NAME"

@@ -1,9 +1,9 @@
-extends DUPA_DefaultNode
+extends DupaNodeBase
 
 class_name LineNode
 
 @onready var text = $HBoxContainer/MainColumn/Text/Text
-@onready var localization_id = $HBoxContainer/MainColumn/Title/LocalizationLine
+@onready var line_text = $HBoxContainer/MainColumn/Title/LocalizationLine
 @onready var choice_name = $HBoxContainer/MainColumn/Choice/ChoiceName
 @onready var custom_char_name = $HBoxContainer/MainColumn/Character/CustomCharName
 @onready var character_drop = $HBoxContainer/MainColumn/Character/CharacterDrop
@@ -34,8 +34,8 @@ func set_data(data : Dictionary) -> void:
 	text.text = data["text"]
 	if "choice_name" in data:
 		choice_name.text = data["choice_name"]
-	if "localization_id" in data:
-		localization_id.text = data["localization_id"]
+	if "line_text" in data:
+		line_text.text = data["line_text"]
 	if "custom_char_name" in data:
 		custom_char_name.text = data["custom_char_name"]
 
@@ -47,8 +47,8 @@ func gen_data(allow_empty := false) -> Dictionary:
 	data["text"] = text.text
 	if not choice_name.text.is_empty():
 		data["choice_name"] = choice_name.text
-	if not localization_id.text.is_empty():
-		data["localization_id"] = localization_id.text
+	if not line_text.text.is_empty():
+		data["line_text"] = line_text.text
 	if not custom_char_name.text.is_empty():
 		data["custom_char_name"] = custom_char_name.text
 	

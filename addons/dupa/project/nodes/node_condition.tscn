@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://jvs1of01c0qr"]
 
-[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_default.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/project/nodes/node_base.tscn" id="1"]
 [ext_resource type="Script" uid="uid://ts7gk7f7v6af" path="res://addons/dupa/project/nodes/node_condition.gd" id="2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0rdb7"]

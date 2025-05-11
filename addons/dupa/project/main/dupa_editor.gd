@@ -55,7 +55,7 @@ func save_changes_to_timeline_file(path: String):
 	var data = {}
 	data[&"CONFIG"] = {
 		&"max_id": graph_edit.max_id,
-		&"dupa_version": DUPA_Utility.get_dupa_config_value(&"meta", &"version")}
+		&"dupa_version": DupaUtility.get_dupa_config_value(&"meta", &"version")}
 	data[&"TIMELINE"] = graph_edit.get_timeline()
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var opening_err = file.get_open_error()
@@ -93,15 +93,17 @@ func open_timeline_file(path: String):
 	var confirmation_text = ""
 	var show_version_warning := false
 	var timeline_dupa_version := ""
-	var current_dupa_version: String = DUPA_Utility.get_dupa_config_value(&"meta", &"version")
+	var current_dupa_version: String = DupaUtility.get_dupa_config_value(&"meta", &"version")
 	
 	if _compare_versions:
 		if config.has(&"dupa_version"):
 			timeline_dupa_version = config.dupa_version
-			if int(current_dupa_version[0]) != int(timeline_dupa_version[0]) || int(current_dupa_version[1]) != int(timeline_dupa_version[1]):
+			if current_dupa_version != timeline_dupa_version:# || int(current_dupa_version) != int(timeline_dupa_version):
 				confirmation_text = (
-					"Выбранный файл был создан в DUPA v%s. Текущая версия программы: %s.
+					"Выбранный файл был создан в DUPA %s. Текущая версия программы: %s.
 					Возможны ошибки отображения содержания файла.
+					
+					Рекомендуется сделать бэкап перед дальнейшей работой.
 					
 					Вы желаете продолжить операцию?" % [timeline_dupa_version, current_dupa_version]
 				)
@@ -110,13 +112,15 @@ func open_timeline_file(path: String):
 				"Не найдена информация о версии DUPA, в которой был создан выбранный файл.
 				Возможны ошибки отображения содержания файла.
 				
+				Рекомендуется сделать бэкап перед дальнейшей работой.
+				
 				Вы желаете продолжить операцию?"
 			)
 			
 	if confirmation_text.is_empty():
 		_load_timeline(path, timeline, config)
 	else:
-		DUPA_Utility.create_confirmation_dialog(confirmation_text, self, _load_timeline.bind(path, timeline, config))
+		DupaUtility.create_confirmation_dialog(confirmation_text, self, _load_timeline.bind(path, timeline, config))
 
 
 func _load_timeline(path: String, timeline: Dictionary, config: Dictionary):

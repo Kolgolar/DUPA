@@ -4,5 +4,5 @@ extends Control
 
 
 func _ready():
-	var version = DUPA_Utility.get_dupa_config_value(&"meta", &"version")
+	var version = DupaUtility.get_dupa_config_value(&"meta", &"version")
 	_version_label.text = "Dialogic Universal Professional Asset v%s" % version

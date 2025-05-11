@@ -1,5 +1,5 @@
-class_name DynamicLineNode
-extends DUPA_DefaultNode
+class_name DynamicIDLineNode
+extends DupaNodeBase
 
 @export var is_player_line: CheckButton
 @export var id_base: LineEdit
@@ -10,7 +10,7 @@ extends DUPA_DefaultNode
 
 func _ready():
 	super()
-	type = &"DYNAMIC_LINE"
+	type = DupaLib.NodeType.DYNAMIC_ID_LINE
 
 
 func _get_fields_to_track() -> Array[Control]:

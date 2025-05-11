@@ -1,4 +1,4 @@
-class_name DUPA_DefaultNode
+class_name DupaNodeBase
 extends GraphNode
 
 signal name_changed
@@ -10,7 +10,7 @@ signal param_changed(param: StringName, new_value, prev_value)
 
 @onready var main = $HBoxContainer/MainColumn
 @onready var _prev_pos_offset := position_offset
-@onready var type := &"DEFAULT"
+@onready var type := DupaLib.NodeType.BASE
 @onready var _cached_data := {}
 @onready var _graph_edit: GraphEdit = get_parent()
 
@@ -73,9 +73,9 @@ func set_param(param_name: StringName, value):
 		&"desc":
 			description.text = value
 		&"desc_visible":
-			set_block_signals(true)
+			#set_block_signals(true)
 			desc_visible = value
-			set_block_signals(false)
+			#set_block_signals(false)
 			
 
 func gen_data(allow_empty := false) -> Dictionary:

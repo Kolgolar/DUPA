@@ -90,7 +90,7 @@ func __duplicate_nodes(nodes_to_duplicate_ids: PackedInt32Array, forced_ids := P
 		var id := -1
 		if !forced_ids.is_empty():
 			id = forced_ids[i]
-		var new_node: DUPA_DefaultNode = _create_graph_node(node.scene_file_path, Vector2.ZERO, id)
+		var new_node: DupaNodeBase = _create_graph_node(node.scene_file_path, Vector2.ZERO, id)
 		new_node.set_data(node.gen_data())
 		new_node.position_offset = node.position_offset + shift
 		new_node.set_deferred(&"selected", true)
@@ -114,6 +114,8 @@ func _on_node_params_popup_id_pressed(id: int) -> void:
 			_remove_focused_nodes_connections()
 		5:
 			print("Нужно выводить краткую справку по ноде")
+		6:
+			_context_menu_node.line_voice_visible = !_context_menu_node.line_voice_visible
 		10:
 			_delete_all_focused_nodes()
 		11:
@@ -170,22 +172,23 @@ func set_graph_node_param(graph_node_id: int, param_name: StringName, value):
 	_created_nodes[graph_node_id].set_param(param_name, value)
 
 
-func _get_graph_node_scene_path_by_type(type: StringName) -> String:
+func _get_graph_node_scene_path_by_type(type: DupaLib.NodeType) -> String:
+	var nt = DupaLib.NodeType
 	match type:
-			&"LINE":
+			nt.LINE:
 				if _lite_line_nodes:
 					return "res://addons/dupa/project/nodes/node_line_lite.tscn"
 				else:
 					return "res://addons/dupa/project/nodes/node_line.tscn"
-			&"DYNAMIC_LINE":
+			nt.DYNAMIC_ID_LINE:
 				return "res://addons/dupa/project/nodes/node_dynamic_line_lite.tscn"
-			&"CONDITION":
+			nt.CONDITION:
 				return "res://addons/dupa/project/nodes/node_condition.tscn"
-			&"START":
+			nt.START:
 				return "res://addons/dupa/project/nodes/node_start.tscn"
-			&"SETTER":
+			nt.SETTER:
 				return "res://addons/dupa/project/nodes/node_setter.tscn"
-			&"CALLER":
+			nt.CALLER:
 				return "res://addons/dupa/project/nodes/node_caller.tscn"
 			_:
 				printerr("Unknown node type '%s'!" % type)
@@ -228,7 +231,7 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, id := -1) -> Gr
 	_slot_to_connect = -1
 	
 	_mouse_popup.disable_start_node(_created_nodes.has(0))
-	node.activate_data_managing()
+	node.call_deferred("activate_data_managing")
 
 	return node
 
@@ -326,7 +329,7 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 
 	var graph_names := {}
 	for graph_node_id in timeline:
-		var node_scene_path = _get_graph_node_scene_path_by_type(timeline[graph_node_id][&"type"])
+		var node_scene_path = _get_graph_node_scene_path_by_type(int(timeline[graph_node_id][&"type"]))
 		
 		var node = _create_graph_node(node_scene_path, Vector2.ZERO, int(graph_node_id))
 		node.set_data(timeline[graph_node_id])
@@ -357,14 +360,15 @@ func validate_timeline() -> int:
 		error.emit("Add start node to the graph!")
 		err = ERR_DOES_NOT_EXIST
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
+		var nt = DupaLib.NodeType
 		match node.type:
-			&"LINE", &"DYNAMIC_LINE":
+			nt.LINE, nt.DYNAMIC_ID_LINE:
 				pass
-			&"CONDITION":
+			nt.CONDITION:
 				if node.condition_var.text.is_empty():
 					err = ERR_INVALID_DATA
 					error.emit("No condition variable at node '" + node.title + "'")
-			&"START":
+			nt.START:
 				var connected := false
 				for connection in get_connection_list():
 					if connection[&"from_node"] == node.name:
@@ -373,11 +377,11 @@ func validate_timeline() -> int:
 				if not connected:
 					error.emit("Start node should have at least 1 connection!")
 					err = ERR_DOES_NOT_EXIST
-			&"SETTER":
+			nt.SETTER:
 				if node.var_name.text.is_empty() or node.var_value.text.is_empty():
 					error.emit("Setter node '" + node.title + "' has empty parameters!")
 					err = ERR_INVALID_DATA
-			&"CALLER":
+			nt.CALLER:
 				if node.var_name.text.is_empty():
 					error.emit("Caller node '" + node.title + "' has empty function name!")
 					err = ERR_INVALID_DATA
@@ -399,13 +403,15 @@ func _on_graph_node_param_changed(param_name: StringName, new_value, prev_value,
 	_actions_master.register_method_action("Param %s changed" % param_name, set_graph_node_param.bind(graph_node_id, param_name, new_value), set_graph_node_param.bind(graph_node_id, param_name, prev_value), false)
 
 
-func _configure_node_popup(node: DUPA_DefaultNode):
+func _configure_node_popup(node: DupaNodeBase):
 	_node_params_popup.set_item_checked(0, node.desc_visible)
+	if node.type == DupaLib.NodeType.LINE:
+		_node_params_popup.set_item_checked(1, node.line_voice_visible)
 
 
 func _on_graph_node_rmb_pressed(node: GraphNode):
-	if !node is DUPA_DefaultNode:
-		printerr("Choosen node does not inherit DUPA_DefaultNode class!")
+	if !node is DupaNodeBase:
+		printerr("Choosen node does not inherit DupaNodeBase class!")
 		return
 	_context_menu_node = node
 	_configure_node_popup(node)
