@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DUPA_Blueprint" load_steps=2 format=3 uid="uid://dfvyhqmgb1oty"]
+
+[ext_resource type="Script" uid="uid://dfg05hyo7m7fk" path="res://addons/dupa/dialog_display/blueprint.gd" id="1_vyydy"]
+
+[resource]
+script = ExtResource("1_vyydy")
+path_to_blueprint = null

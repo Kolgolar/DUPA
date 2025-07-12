@@ -14,7 +14,7 @@ signal param_changed(param: StringName, new_value, prev_value)
 @onready var _cached_data := {}
 @onready var _graph_edit: GraphEdit = get_parent()
 
-var id : int
+var id: int
 var desc_visible := false:
 	set(value):
 		desc_visible = value
@@ -99,7 +99,7 @@ func _arrange_go_to(port_id := 0) -> Array:
 	for connection in _graph_edit.get_connection_list():
 		if connection[&"from_node"] == self.name and connection[&"from_port"] == port_id:
 			var to_node : GraphNode = _graph_edit.get_node(NodePath(connection[&"to_node"]))
-			to_nodes_pos_y[to_node.position_offset.y] = str(to_node.id)
+			to_nodes_pos_y[to_node.position_offset.y] = to_node.id
 
 	var coords = to_nodes_pos_y.keys()
 	coords.sort()

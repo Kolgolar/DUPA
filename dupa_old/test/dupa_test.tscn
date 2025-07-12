@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dduvn5yx7km38"]
+
+[ext_resource type="Script" uid="uid://clg70vhc7ru35" path="res://dupa_old/test/dupa_test.gd" id="1_ix6e1"]
+[ext_resource type="PackedScene" uid="uid://c8dmr5o5thh70" path="res://addons/dupa/project/dialog_controller/dialog_controller.tscn" id="1_tl102"]
+[ext_resource type="Script" uid="uid://by0ieduirkq2d" path="res://dupa_old/intro/dupa_intro_script.gd" id="3_bo3m7"]
+
+[node name="DupaTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ix6e1")
+
+[node name="DialogController" parent="." node_paths=PackedStringArray("dv") instance=ExtResource("1_tl102")]
+_proceed_on_text_finished = false
+dv = NodePath("../DialogVariables")
+
+[node name="DialogVariables" type="Node" parent="."]
+script = ExtResource("3_bo3m7")

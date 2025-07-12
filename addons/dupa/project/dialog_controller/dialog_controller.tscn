@@ -1,31 +1,25 @@
-[gd_scene load_steps=6 format=3 uid="uid://c8dmr5o5thh70"]
+[gd_scene load_steps=5 format=3 uid="uid://c8dmr5o5thh70"]
 
 [ext_resource type="Script" uid="uid://bmlwvs4vm6qio" path="res://addons/dupa/project/dialog_controller/dialog_controller.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/project/dialog_controller/dialog_choice_button.tscn" id="2"]
-[ext_resource type="Script" uid="uid://ctwn8ghyxecxi" path="res://addons/dupa/project/dialog_controller/dialogs_variables_base.gd" id="2_nysh1"]
-[ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/project/dialog_controller/text_panel_default.tres" id="4_13dyn"]
+[ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/project/assets/styles/line_panel_default.tres" id="4_13dyn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jd040"]
 
-[node name="DialogController" type="CanvasLayer" node_paths=PackedStringArray("_character_text", "_player_choices_container", "_player_line", "_next_line_button", "dv")]
+[node name="DialogController" type="CanvasLayer" node_paths=PackedStringArray("_character_text", "_player_choices_container", "_player_line", "_next_line_button")]
 layer = 3
 script = ExtResource("1")
+mode = 0
 _mobile_mode = true
 _drag_player_line_prompt_to_coursor = false
 _character_text = NodePath("Frame/MainContainer/TextPanel/MarginContainer/VBoxContainer/CharacterText")
 _player_choices_container = NodePath("Frame/MainContainer/ChoicesArea/ChoicesZone/ChoicesContainer")
 _player_line = NodePath("Frame/SelectLine/PlayerLine")
-_timeline = "res://addons/dupa/project/demo/voice_test.json"
+_timeline = "C:\\Godot\\Projects\\Knuckle Buster\\game\\dupa\\intro\\intro_coach.json"
 _next_line_button = NodePath("Frame/MainContainer/TextPanel/NextLine")
-_force_custom_csv = true
-_custom_csv_file = "res://addons/dupa/project/demo/demo_localization.csv"
-_voice_lines_directory = "res://addons/dupa/project/demo/audio/"
-dv = NodePath("DialogVariables")
-
-[node name="DialogVariables" type="Node" parent="."]
-script = ExtResource("2_nysh1")
-character_name = "Собеседник"
-player_name = "Игрок"
+_voice_lines_directory = "C:\\Godot\\Projects\\Knuckle Buster\\game\\dupa\\intro\\audio"
+_proceed_on_voice_end = true
+_proceed_on_text_finished = true
 
 [node name="Frame" type="Button" parent="."]
 anchors_preset = 15
@@ -39,12 +33,9 @@ flat = true
 [node name="MainContainer" type="VBoxContainer" parent="Frame"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 350.0
-offset_right = -350.0
-offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 50
@@ -73,8 +64,6 @@ alignment = 2
 
 [node name="Choice0" parent="Frame/MainContainer/ChoicesArea/ChoicesZone/ChoicesContainer" instance=ExtResource("2")]
 layout_mode = 2
-toggle_mode = true
-button_pressed = true
 text = "Choice1"
 
 [node name="Choice1" parent="Frame/MainContainer/ChoicesArea/ChoicesZone/ChoicesContainer" instance=ExtResource("2")]

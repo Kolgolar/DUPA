@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DUPA_CharacterData" load_steps=2 format=3 uid="uid://bj7uihpcpw1w1"]
+
+[ext_resource type="Script" uid="uid://bu3cmf0eaxfoq" path="res://addons/dupa/dialog_display/character_data.gd" id="1_u2iub"]
+
+[resource]
+script = ExtResource("1_u2iub")
+id_name = ""
+voicelines_folder = null
+name_color = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://bu3cmf0eaxfoq"

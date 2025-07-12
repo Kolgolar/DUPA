@@ -1,0 +1,1 @@
+extends DUPA_GameLogicInteractor

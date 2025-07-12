@@ -1,11 +1,71 @@
-[gd_scene load_steps=0 format=3 uid="uid://btnlpvuiepr3q"]
+[gd_scene load_steps=8 format=3 uid="uid://btnlpvuiepr3q"]
+
+[sub_resource type="FontVariation" id="FontVariation_y4qw7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5ye8a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vgrio"]
+content_margin_left = 45.0
+bg_color = Color(0.23808, 0.23808, 0.282763, 0.784314)
+skew = Vector2(0.3, 0)
+border_color = Color(0.944615, 0.572342, 1, 1)
+corner_radius_top_left = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5foaw"]
+content_margin_left = 45.0
+bg_color = Color(0.17215, 0.154751, 0.235242, 1)
+skew = Vector2(0.3, 0)
+border_width_right = 10
+border_color = Color(0.944615, 0.572342, 1, 1)
+corner_radius_top_left = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ye8a"]
+content_margin_left = 45.0
+bg_color = Color(0.243193, 0.217305, 0.337072, 1)
+skew = Vector2(0.3, 0)
+border_width_right = 10
+border_color = Color(0.944615, 0.572342, 1, 1)
+corner_radius_top_left = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y4qw7"]
+content_margin_left = 45.0
+bg_color = Color(0.195602, 0.17531, 0.269186, 1)
+skew = Vector2(0.3, 0)
+border_width_right = 10
+border_color = Color(0.944615, 0.572342, 1, 1)
+corner_radius_top_left = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bppc5"]
+content_margin_left = 45.0
+bg_color = Color(0.243137, 0.243137, 0.345098, 0.784314)
+skew = Vector2(0.3, 0)
+border_color = Color(0.944615, 0.572342, 1, 1)
+corner_radius_top_left = 40
+corner_radius_bottom_left = 40
 
 [node name="Choice0" type="Button"]
 use_parent_material = true
-custom_minimum_size = Vector2(650, 160)
+custom_minimum_size = Vector2(650, 100)
 offset_right = 250.0
 offset_bottom = 45.0
 size_flags_horizontal = 4
-theme_type_variation = &"DialogChoiceButton"
+theme_override_colors/font_hover_pressed_color = Color(0.956863, 0.717647, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.95546, 0.717025, 1, 1)
+theme_override_fonts/font = SubResource("FontVariation_y4qw7")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5ye8a")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_vgrio")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_5foaw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5ye8a")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_y4qw7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_bppc5")
+toggle_mode = true
+button_pressed = true
 text = "Yes."
 alignment = 0

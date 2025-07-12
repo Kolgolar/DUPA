@@ -1,0 +1,2 @@
+class_name DUPA_GameLogicInteractor
+extends Node

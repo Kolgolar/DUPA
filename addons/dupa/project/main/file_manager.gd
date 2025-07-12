@@ -53,6 +53,7 @@ static func create(file_manager_mode: FileManagerMode, should_cache_dir := true,
 func _remember_path():
 	if cache_dir:
 		DupaConfig.filemanager_last_directory = current_dir
+		DupaConfig.save_config()
 
 #
 #func _on_confirmed():

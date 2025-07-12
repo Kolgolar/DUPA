@@ -4,10 +4,10 @@ class_name DialogController
 
 enum Modes {PLAIN_TEXT, DEFAULT}
 
-@export var mode := Modes.DEFAULT:
-	set(value):
-		mode = value
-		_prepare_for_mode(mode)
+@export var mode := Modes.DEFAULT#:
+	#set(value):
+		#mode = value
+		#_prepare_for_mode(mode)
 
 # export(String, "TimelineDropdown") var timeline : String
 # Если включено отображение реплик сбоку от кнопок выбора, и если это мобильное устройство,
@@ -32,6 +32,8 @@ enum Modes {PLAIN_TEXT, DEFAULT}
 @export var _custom_csv_file := ""
 @export var _voice_lines_directory := ""
 @export_enum("ru", "en") var _locale = "ru"
+@export var _proceed_on_voice_end := false
+@export var _proceed_on_text_finished := false
 
 
 var char_name_clr := Color("ffb45b") # Цвет имени персонада, НЕ игрока
@@ -66,6 +68,7 @@ var _prev_char_sound_time : float = 0
 
 var _choice_text_tween: Tween
 var _voice_line_players := {}
+var _curr_voiceline_player
 
 
 @export var dv : DialogsVariables
@@ -78,18 +81,27 @@ signal dialog_started
 signal dialog_ended
 signal line_text_tags_detected(tag: PackedStringArray)
 signal voice_line_found(stream: AudioStream)
+signal choices_displayed
+signal proceed_next_line
 
 
 func _ready():
+	_prepare_for_mode(mode)
 	_player_line_container.modulate.a = 0.0
 	_player_line_container.hide()
 	if _char_showing_sounds_folder:
 		set_char_sounds(_char_showing_sounds_folder)
 	# print_debug("Char sounds: " + str(_char_sounds))
 	
-	if get_parent() == get_viewport() or _test_mode:
-		_test_mode = true
-		start_dialog(_timeline)
+	if get_parent() == get_viewport() && !(get_parent() is SubViewport) || _test_mode:
+		print(get_parent())
+		if !dv:
+			_test_mode = true
+			dv = DialogsVariables.new()
+			add_child(dv)
+			start_dialog(_timeline)
+		else:
+			printerr("DialogVariables script was not set!")
 
 # TODO:
 # Уникальные имена для нодов в редакторе диалогов (мб скрытое поле присваивать?)
@@ -107,7 +119,7 @@ func _process(delta) -> void:
 	if _test_mode:
 		if Input.is_key_pressed(KEY_R):
 			get_tree().reload_current_scene()
-			
+
 
 func set_voice_player(char_name: String, player):
 	if player is AudioStreamPlayer3D || player is AudioStreamPlayer2D || player is AudioStreamPlayer:
@@ -164,7 +176,7 @@ func _prepare_for_mode(mode:Modes):
 			%ChoicesArea.hide()
 			%MainContainer.alignment = BoxContainer.AlignmentMode.ALIGNMENT_CENTER
 		Modes.DEFAULT:
-			%TextPanel.add_theme_stylebox_override("panel", preload("res://addons/dupa/project/dialog_controller/text_panel_default.tres"))
+			#%TextPanel.add_theme_stylebox_override("panel", preload("res://addons/dupa/project/dialog_controller/text_panel_default.tres"))
 			%CharacterName.show()
 			%ChoicesArea.show()
 			%MainContainer.alignment = BoxContainer.AlignmentMode.ALIGNMENT_END
@@ -204,7 +216,9 @@ func start_dialog(timeline_name := _timeline) -> void:
 	if _td[start_node]["type"] != DupaLib.NodeType.START:
 		printerr("Node with id == 0 is not StartNode!")
 		return
-	if _force_custom_csv:
+	if _force_custom_csv && _custom_csv_file.is_empty():
+		printerr("Custom csv file is forced but no path was given")
+	if _force_custom_csv && !_custom_csv_file.is_empty():
 		_csv_data = _read_csv_file(_custom_csv_file)
 	elif _td[start_node].has("source"):
 		_csv_data = _read_csv_file(_td[start_node]["source"])
@@ -313,6 +327,7 @@ func _display_choices(choices : Array) -> void:
 		_player_line_container.visible = !choice_text.is_empty()
 	
 	_change_player_choices_visibillity(true)
+	choices_displayed.emit()
 
 
 func _separate_to_sentences(line : String) -> Array:
@@ -364,8 +379,11 @@ func _next_line(idx := 0) -> void:
 			else:
 				if _td[_curr_node].has("line_text"):
 					line_text = _td[_curr_node]["line_text"]
-				else:
+				elif _td[_curr_node].has("text"):
 					line_text = _td[_curr_node]["text"]
+				else:
+					_set_next_step()
+					return
 			var has_player_line_tag := false
 			var text = ""
 			if _csv_data.is_empty(): 
@@ -449,7 +467,7 @@ func _next_line(idx := 0) -> void:
 			_set_next_step()
 			return
 
-		elif node_type == "SETTER":
+		elif node_type == DupaLib.NodeType.SETTER:
 			var node_data : Dictionary = _td[_curr_node]
 			var var_value = node_data["var_value"]
 			var var_name = node_data["var_name"]
@@ -461,7 +479,7 @@ func _next_line(idx := 0) -> void:
 			_set_next_step()
 			return
 					
-		elif node_type == "CALLER":
+		elif node_type == DupaLib.NodeType.CALLER:
 			var node_data : Dictionary = _td[_curr_node]
 			var func_name = node_data["var_name"]
 			var args_values = node_data["var_value"]
@@ -492,8 +510,15 @@ func _set_next_step(next_line_if_no_choices := true) -> void:
 		# TODO: Индикатор доступности вывода следующей реплики
 		_next_line_button.show()
 		_change_player_choices_visibillity(false)
-		if next_line_if_no_choices:
+		if choices.size() > 0:
+			var type = _td[choices[0]]["type"]
+			if next_line_if_no_choices || type != DupaLib.NodeType.LINE && type != DupaLib.NodeType.DYNAMIC_ID_LINE:
+				_next_line()
+		else:
 			_next_line()
+		
+		#else:
+			#_next_line()
 
 
 func _determine_type(value: String):
@@ -541,31 +566,64 @@ func _show_character_line(character : String, line : String) -> void:
 	if !_is_player_speaking:
 		_visible_characters_tweener.tween_method(_play_char_showing_sound, 0.0, time, time)
 	
-	# TODO: Не проигрывает звуки, не выводит текст (не считывает сами реплики из csv, хотя остальное видит?)
+	_try_play_voiceline(character)
 	
-	if !_voice_lines_directory.is_empty():
-		var line_text := ""
-		if _td[_curr_node].has("line_text"):
-			line_text = _td[_curr_node]["line_text"]
+	
+func _try_play_voiceline(character: String):
+	var line_text := ""
+	if _td[_curr_node].has("line_text"):
+		line_text = _td[_curr_node]["line_text"]
+	else:
+		line_text = _td[_curr_node]["text"]
+	
+	var path := ""
+	var directory = ""
+	
+	if _voice_lines_directory:
+		path = _voice_lines_directory
+	else:
+		if _custom_csv_file:
+			directory = _custom_csv_file.get_base_dir()
 		else:
-			line_text = _td[_curr_node]["text"]
-		var path = _voice_lines_directory.path_join(_locale).path_join(line_text + ".mp3")
-		var is_exists = FileAccess.file_exists(path)
-		if is_exists:
-			var player
-			if _voice_line_players.has(character):
-				player = _voice_line_players[character]
+			
+			var csv_path = _td["0"]["source"]
+			if !csv_path.is_empty():
+				directory = csv_path.get_base_dir()
 			else:
-				player = %VoiceLinePlayer
-			var audio_stream: AudioStream = load(path)
-			#if _voice_line_players.has(character):
-				#voice_line_found.emit(audio_stream)
-			#else:
-			player.stream = audio_stream
-			player.play()
+				return
+	directory = directory.path_join("audio")
+	path = directory.path_join(_locale).path_join(line_text + ".wav")
+	var is_exists = FileAccess.file_exists(path)
+	if !is_exists:
+		path = directory.path_join("en").path_join(line_text + ".wav")
+	if !is_exists:
+		print("No voiceline was found at %s" % path)
+		return
+		
+	var player
+	if _voice_line_players.has(character):
+		player = _voice_line_players[character]
+	else:
+		player = %VoiceLinePlayer
+	var audio_stream: AudioStream = load(path)
+	#if _voice_line_players.has(character):
+		#voice_line_found.emit(audio_stream)
+	#else:
+	player.stream = audio_stream
+	player.play()
+	player.finished.connect(_on_voiceline_finished)
+	proceed_next_line.connect(player.stop)
+			
 		
 				
 			
+func _on_voiceline_finished():
+	if _proceed_on_voice_end:
+		await get_tree().create_timer(1).timeout
+		_set_next_step(true)
+		#if _get_go_to_nodes(_curr_node).size() <= 1:
+			#_proceed()
+
 
 func _change_visible_characters(value : int) -> void:
 	_character_text.visible_characters = value
@@ -636,7 +694,7 @@ func _on_choice_button_pressed(idx: int) -> void:
 func force_choice_by_num(num: int):
 	var choices = _get_go_to_nodes(_curr_node)
 	if choices.size() > num:
-		_next_line(choices[num])
+		_next_line(num)
 
 
 # Если мобильный режим
@@ -662,6 +720,7 @@ func _on_select_line_pressed(idx: int) -> void:
 
 
 func _proceed() -> void:
+	proceed_next_line.emit()
 	if _visible_characters_tweener and _visible_characters_tweener.is_running():
 		_visible_characters_tweener.kill()
 		_character_text.visible_ratio = 1.0
@@ -677,7 +736,17 @@ func _proceed() -> void:
 
 
 func _on_text_showing_tween_finished() -> void:
-	if _is_final_segment() && _dynamic_line_curr < 0:
+	#_set_next_step(false)
+	## TODO: Абсолютный кал.
+	#if _proceed_on_voice_end:
+		#if _get_go_to_nodes(_curr_node).size() <= 1:
+			#_proceed()
+			#return
+	var node_type = _td[_curr_node]["type"]
+	if DupaLib.NodeType.DYNAMIC_ID_LINE == node_type:
+		if _is_final_segment() && _dynamic_line_curr < 0:
+			_set_next_step(false)
+	elif  _get_go_to_nodes(_curr_node).size() > 0:
 		_set_next_step(false)
 
 

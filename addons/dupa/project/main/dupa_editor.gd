@@ -18,9 +18,17 @@ var timeline_file_path := "":
 @export var _actions_master: ActionsMaster
 
 
+func _ready():
+	var save_event = InputEventKey.new()
+	save_event.keycode = KEY_S
+	save_event.ctrl_pressed = true
+	InputMap.add_action(&"dupa_save")
+	InputMap.action_add_event(&"dupa_save", save_event)
+
+
 
 func _input(event):
-	if event.is_action_pressed(&"save"):
+	if event.is_action_pressed(&"dupa_save"):
 		_on_save_pressed()
 	
 	elif event.is_action_pressed(&"ui_undo"):
