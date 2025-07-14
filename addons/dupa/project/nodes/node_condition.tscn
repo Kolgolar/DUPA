@@ -15,15 +15,7 @@ slot/0/right_color = Color(0.517647, 1, 0.117647, 1)
 slot/1/right_enabled = false
 slot/2/right_enabled = true
 slot/2/right_color = Color(1, 0.156863, 0.117647, 1)
-slot/3/left_enabled = false
-slot/3/left_type = 0
-slot/3/left_color = Color(1, 1, 1, 1)
-slot/3/left_icon = null
-slot/3/right_enabled = false
-slot/3/right_type = 0
 slot/3/right_color = Color(1, 0.156863, 0.117647, 1)
-slot/3/right_icon = null
-slot/3/draw_stylebox = true
 slot/4/left_enabled = false
 slot/4/left_type = 0
 slot/4/left_color = Color(1, 1, 1, 1)
@@ -33,6 +25,15 @@ slot/4/right_type = 0
 slot/4/right_color = Color(1, 1, 1, 1)
 slot/4/right_icon = null
 slot/4/draw_stylebox = true
+slot/5/left_enabled = false
+slot/5/left_type = 0
+slot/5/left_color = Color(1, 1, 1, 1)
+slot/5/left_icon = null
+slot/5/right_enabled = false
+slot/5/right_type = 0
+slot/5/right_color = Color(1, 1, 1, 1)
+slot/5/right_icon = null
+slot/5/draw_stylebox = true
 script = ExtResource("2")
 condition_var = NodePath("ConditionVar/ConditionVar")
 
@@ -42,7 +43,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_0rdb7")
 [node name="Control" parent="." index="3"]
 visible = false
 
-[node name="ConditionVar" type="HBoxContainer" parent="." index="4"]
+[node name="ConditionVar" type="HBoxContainer" parent="." index="5"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
@@ -57,5 +58,5 @@ custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "BOOL only!"
 
-[node name="Spacer1" type="Control" parent="." index="5"]
+[node name="Spacer1" type="Control" parent="." index="6"]
 layout_mode = 2

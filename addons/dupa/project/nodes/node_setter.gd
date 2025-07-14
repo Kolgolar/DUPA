@@ -7,7 +7,7 @@ extends DupaNodeBase
 
 func _ready():
 	super()
-	type = DupaLib.NodeType.SETTER
+	type = DUPA_Lib.NodeType.SETTER
 
 
 func _get_fields_to_track() -> Array[Control]:
@@ -29,5 +29,4 @@ func gen_data(allow_empty := false) -> Dictionary:
 	var data = super()
 	data[&"var_name"] = var_name.text
 	data[&"var_value"] = var_value.text
-	data[&"go_to"] = _arrange_go_to()
 	return data

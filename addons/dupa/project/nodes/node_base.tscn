@@ -43,6 +43,15 @@ slot/2/right_type = 0
 slot/2/right_color = Color(1, 1, 1, 1)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
 script = ExtResource("2_gd61k")
 description = NodePath("HBoxContainer/MainColumn/Description")
 
@@ -72,6 +81,15 @@ theme_override_styles/separator = SubResource("StyleBoxLine_4djmp")
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
+
+[node name="ID" type="Label" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.466667)
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "ID: 34"
+horizontal_alignment = 2
+vertical_alignment = 2
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="resize_request" from="." to="." method="_on_GraphNode_resize_request"]

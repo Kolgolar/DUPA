@@ -213,7 +213,7 @@ func start_dialog(timeline_name := _timeline) -> void:
 	# print(_td)
 	var start_node = "0"
 	_curr_node = start_node
-	if _td[start_node]["type"] != DupaLib.NodeType.START:
+	if _td[start_node]["type"] != DUPA_Lib.NodeType.START:
 		printerr("Node with id == 0 is not StartNode!")
 		return
 	if _force_custom_csv && _custom_csv_file.is_empty():
@@ -258,7 +258,7 @@ func _get_node_type(node_name) -> String:
 func _get_go_to_nodes(node_name) -> Array:
 	var go_to_arr := []
 	match _td[node_name].type:
-		DupaLib.NodeType.CONDITION:
+		DUPA_Lib.NodeType.CONDITION:
 			if _condition:
 				go_to_arr = _td[node_name]["go_to_true"]
 			else:
@@ -359,8 +359,8 @@ func _next_line(idx := 0) -> void:
 
 		var line_text := ""
 		var node_type = _td[_curr_node]["type"]
-		if DupaLib.NodeType.LINE == node_type || DupaLib.NodeType.DYNAMIC_ID_LINE == node_type:
-			if node_type == DupaLib.NodeType.DYNAMIC_ID_LINE:
+		if DUPA_Lib.NodeType.LINE == node_type || DUPA_Lib.NodeType.DYNAMIC_ID_LINE == node_type:
+			if node_type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
 				if _dynamic_line_curr < 0:
 					_dynamic_line_base = _td[_curr_node]["base"]
 					_dynamic_line_from = int(_td[_curr_node]["from"])
@@ -454,7 +454,7 @@ func _next_line(idx := 0) -> void:
 			_show_character_line(_curr_character, text)
 			return
 			
-		elif node_type == DupaLib.NodeType.CONDITION:
+		elif node_type == DUPA_Lib.NodeType.CONDITION:
 			var node_data : Dictionary = _td[_curr_node]
 			var condition_var : bool = dv.get(node_data["var_name"])
 			if condition_var == null:
@@ -467,7 +467,7 @@ func _next_line(idx := 0) -> void:
 			_set_next_step()
 			return
 
-		elif node_type == DupaLib.NodeType.SETTER:
+		elif node_type == DUPA_Lib.NodeType.SETTER:
 			var node_data : Dictionary = _td[_curr_node]
 			var var_value = node_data["var_value"]
 			var var_name = node_data["var_name"]
@@ -479,7 +479,7 @@ func _next_line(idx := 0) -> void:
 			_set_next_step()
 			return
 					
-		elif node_type == DupaLib.NodeType.CALLER:
+		elif node_type == DUPA_Lib.NodeType.CALLER:
 			var node_data : Dictionary = _td[_curr_node]
 			var func_name = node_data["var_name"]
 			var args_values = node_data["var_value"]
@@ -512,7 +512,7 @@ func _set_next_step(next_line_if_no_choices := true) -> void:
 		_change_player_choices_visibillity(false)
 		if choices.size() > 0:
 			var type = _td[choices[0]]["type"]
-			if next_line_if_no_choices || type != DupaLib.NodeType.LINE && type != DupaLib.NodeType.DYNAMIC_ID_LINE:
+			if next_line_if_no_choices || type != DUPA_Lib.NodeType.LINE && type != DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
 				_next_line()
 		else:
 			_next_line()
@@ -743,7 +743,7 @@ func _on_text_showing_tween_finished() -> void:
 			#_proceed()
 			#return
 	var node_type = _td[_curr_node]["type"]
-	if DupaLib.NodeType.DYNAMIC_ID_LINE == node_type:
+	if DUPA_Lib.NodeType.DYNAMIC_ID_LINE == node_type:
 		if _is_final_segment() && _dynamic_line_curr < 0:
 			_set_next_step(false)
 	elif  _get_go_to_nodes(_curr_node).size() > 0:

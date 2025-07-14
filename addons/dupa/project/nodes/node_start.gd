@@ -7,13 +7,12 @@ class_name StartNode
 
 func _ready():
 	super()
-	type = DupaLib.NodeType.START
+	type = DUPA_Lib.NodeType.START
 	desc_visible = false
 
 
 func gen_data(allow_empty := false) -> Dictionary:
 	var data := super()
-	data[&"go_to"] = _arrange_go_to()
 	data[&"source"] = source.text
 	return data
 

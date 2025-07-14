@@ -1,0 +1,79 @@
+{
+	"CONFIG": {
+		"dupa_version": "0.2.1",
+		"max_id": 6
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"offset_x": 428.0,
+			"offset_y": 310.0,
+			"source": "",
+			"type": 1
+		},
+		"2": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				3
+			],
+			"is_player": false,
+			"line_id": "fsdfdsf",
+			"offset_x": 860.0,
+			"offset_y": 320.0,
+			"type": 2
+		},
+		"3": {
+			"base": "kek",
+			"desc": "",
+			"desc_visible": false,
+			"from": 1,
+			"go_to": [
+				4
+			],
+			"is_player": false,
+			"offset_x": 1340.0,
+			"offset_y": 320.0,
+			"to": 10,
+			"type": 3
+		},
+		"4": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				5
+			],
+			"go_to_false": [
+				6
+			],
+			"offset_x": 1840.0,
+			"offset_y": 320.0,
+			"type": 6,
+			"var_name": "poop"
+		},
+		"5": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"offset_x": 2358.95263671875,
+			"offset_y": 154.408630371094,
+			"type": 4,
+			"var_name": "kek",
+			"var_value": "10"
+		},
+		"6": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"offset_x": 2396.47534179688,
+			"offset_y": 407.686584472656,
+			"type": 5,
+			"var_name": "hehe",
+			"var_value": "True"
+		}
+	}
+}

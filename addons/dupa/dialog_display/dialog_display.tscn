@@ -36,26 +36,29 @@ border_width_left = 10
 border_width_right = 10
 border_color = Color(0.945098, 0.572549, 1, 1)
 
-[node name="DialogDisplay" type="MarginContainer" node_paths=PackedStringArray("character_name", "character_line", "choices_container")]
+[node name="DialogDisplay" type="MarginContainer" node_paths=PackedStringArray("speaker_name", "speaker_line", "choices_container")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_78dbh")
-character_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/CharacterName")
-character_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/CharacterLine")
-choices_container = NodePath("Frame/GridContainer/ChoicesArea/GridContainer/ChoicesContainer")
-blueprint_file = "res://addons/dupa/project/demo/loca_loco_or_rabobot.json"
+blueprint_file = "res://addons/dupa/blueprint_fixed_ids_4.json"
 game_logic_interactor_script = ExtResource("2_1mc6u")
-test_mode = true
+line_showing_speed = 40.0
+speaker_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerName")
+speaker_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerLine")
+choices_container = NodePath("Frame/GridContainer/ChoicesArea/GridContainer/ChoicesContainer")
+debug_mode = true
+ignore_no_localization = false
+ignore_no_speaker_data = false
 
 [node name="GameLogicInteractor" type="Node" parent="."]
 unique_name_in_owner = true
 
 [node name="Frame" type="Control" parent="."]
 layout_mode = 2
-mouse_filter = 1
+mouse_filter = 2
 
 [node name="GridContainer" type="GridContainer" parent="Frame"]
 layout_mode = 1
@@ -69,6 +72,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="GridContainer" type="GridContainer" parent="Frame/GridContainer/ChoicesArea"]
 layout_mode = 1
@@ -104,6 +108,7 @@ text = "Choice2"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="SelectLine" type="Button" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceLineZone"]
 custom_minimum_size = Vector2(700, 160)
@@ -161,6 +166,7 @@ custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
+mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_77qm7")
 
 [node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/LinePanel"]
@@ -174,10 +180,11 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="CharacterName" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
+[node name="SpeakerName" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
+mouse_filter = 1
 theme_override_font_sizes/bold_italics_font_size = 30
 theme_override_font_sizes/italics_font_size = 30
 theme_override_font_sizes/mono_font_size = 30
@@ -188,10 +195,11 @@ text = "[i][b]Character name:[/b][/i]"
 fit_content = true
 scroll_active = false
 
-[node name="CharacterLine" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
+[node name="SpeakerLine" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 1
 theme_override_font_sizes/bold_italics_font_size = 27
 theme_override_font_sizes/italics_font_size = 27
 theme_override_font_sizes/mono_font_size = 27

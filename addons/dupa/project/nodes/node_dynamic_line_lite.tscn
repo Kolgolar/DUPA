@@ -8,22 +8,22 @@ offset_right = 384.0
 offset_bottom = 106.0
 theme_type_variation = &"GraphNodeDynamicIDLine"
 title = "Dynamic ID Line"
-slot/3/left_enabled = false
-slot/3/left_type = 0
-slot/3/left_color = Color(1, 1, 1, 1)
-slot/3/left_icon = null
-slot/3/right_enabled = false
-slot/3/right_type = 0
-slot/3/right_color = Color(1, 1, 1, 1)
-slot/3/right_icon = null
-slot/3/draw_stylebox = true
+slot/4/left_enabled = false
+slot/4/left_type = 0
+slot/4/left_color = Color(1, 1, 1, 1)
+slot/4/left_icon = null
+slot/4/right_enabled = false
+slot/4/right_type = 0
+slot/4/right_color = Color(1, 1, 1, 1)
+slot/4/right_icon = null
+slot/4/draw_stylebox = true
 script = ExtResource("2")
 is_player_line = NodePath("VBoxContainer/IsPlayer/IsPlayerLine")
 id_base = NodePath("VBoxContainer/Base/IDBase")
 id_from = NodePath("VBoxContainer/From/IDFrom")
 id_to = NodePath("VBoxContainer/To/IDTo")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." index="4"]
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="5"]
 layout_mode = 2
 
 [node name="IsPlayer" type="HBoxContainer" parent="VBoxContainer" index="0"]
@@ -63,10 +63,9 @@ layout_mode = 2
 text = "From"
 vertical_alignment = 1
 
-[node name="IDFrom" type="LineEdit" parent="VBoxContainer/From" index="1"]
+[node name="IDFrom" type="SpinBox" parent="VBoxContainer/From" index="1"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
-placeholder_text = "0"
 
 [node name="To" type="HBoxContainer" parent="VBoxContainer" index="3"]
 layout_mode = 2
@@ -78,7 +77,8 @@ layout_mode = 2
 text = "To"
 vertical_alignment = 1
 
-[node name="IDTo" type="LineEdit" parent="VBoxContainer/To" index="1"]
+[node name="IDTo" type="SpinBox" parent="VBoxContainer/To" index="1"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
-placeholder_text = "10"
+max_value = 8192.0
+value = 1.0

@@ -22,7 +22,7 @@ var characters = [
 
 
 func _ready():
-	type = "LINE"
+	type = DUPA_Lib.NodeType.LINE
 	var char_index = 0
 	for ch in characters:
 		character_drop.add_item(ch, char_index)

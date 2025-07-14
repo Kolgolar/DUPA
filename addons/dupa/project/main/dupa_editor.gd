@@ -64,11 +64,12 @@ func save_changes_to_timeline_file(path: String):
 	data[&"CONFIG"] = {
 		&"max_id": graph_edit.max_id,
 		&"dupa_version": DupaUtility.get_dupa_config_value(&"meta", &"version")}
-	data[&"TIMELINE"] = graph_edit.get_timeline()
+	data[&"TIMELINE"] = graph_edit.gen_timeline_data()
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var opening_err = file.get_open_error()
 	if opening_err == OK:
-		file.store_line(JSON.new().stringify(data))
+		var stringified_data := JSON.new().stringify(data, "\t")
+		file.store_line(stringified_data)
 		file.close()
 	else:
 		show_popup_error("Error on opening file to save timeline at: %s" % path)

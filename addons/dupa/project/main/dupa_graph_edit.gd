@@ -168,12 +168,12 @@ func _on_mouse_popup_id_pressed(id:int):
 	)
 
 
-func set_graph_node_param(graph_node_id: int, param_name: StringName, value):
-	_created_nodes[graph_node_id].set_param(param_name, value)
+func set_graph_node_param(graph_node_id_str: int, param_name: StringName, value):
+	_created_nodes[graph_node_id_str].set_param(param_name, value)
 
 
-func _get_graph_node_scene_path_by_type(type: DupaLib.NodeType) -> String:
-	var nt = DupaLib.NodeType
+func _get_graph_node_scene_path_by_type(type: DUPA_Lib.NodeType) -> String:
+	var nt = DUPA_Lib.NodeType
 	match type:
 			nt.LINE:
 				if _lite_line_nodes:
@@ -304,15 +304,16 @@ func _call_mouse_popup() -> void:
 
 
 #-------------------------------------------
-# Глобальные операции с нодами графа (например, удалить всё и т.д.)
+# Глобальные операции с нодами графа (например, 
+# генерация словаря с данными таймлайна, удалить всё и т.д.)
 #-------------------------------------------
 #region Global Operations
 
 
-func get_timeline() -> Dictionary:
+func gen_timeline_data() -> Dictionary:
 	var timeline := {}
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
-		timeline[str(node.id)] = node.gen_data()
+		timeline[node.id] = node.gen_data()
 	return timeline
 
 
@@ -327,31 +328,37 @@ func clear_nodes():
 func set_timeline(timeline: Dictionary, config: Dictionary):
 	max_id = config[&"max_id"]
 
-	var graph_names := {}
-	for graph_node_id in timeline:
-		var node_scene_path = _get_graph_node_scene_path_by_type(int(timeline[graph_node_id][&"type"]))
+	var graph_nodes_names: Dictionary[int, StringName] = {}
+	for graph_node_id_str in timeline:
+		var graph_node_id_int := int(graph_node_id_str)
+		var node_scene_path = _get_graph_node_scene_path_by_type(timeline[graph_node_id_str][&"type"])
 		
-		var node = _create_graph_node(node_scene_path, Vector2.ZERO, int(graph_node_id))
-		node.set_data(timeline[graph_node_id])
-		graph_names[graph_node_id] = node.name
+		var node = _create_graph_node(node_scene_path, Vector2.ZERO, graph_node_id_int)
+		node.set_data(timeline[graph_node_id_str])
+		graph_nodes_names[graph_node_id_int] = node.name
 	
-	for graph_node_id in timeline:
-		for tag in timeline[graph_node_id]:
-			var from_port_num := -1
-			match tag:
-				&"go_to":
-					from_port_num = 0
-				&"go_to_true":
-					from_port_num = 0
-				&"go_to_false":
-					from_port_num = 1
-				_:
-					pass
-			if from_port_num >= 0:
-				var go_to_count = 0
-				for go_to in timeline[graph_node_id][tag]: # get each in array
-					connect_node(graph_names[graph_node_id], from_port_num, graph_names[timeline[graph_node_id][tag][go_to_count]], 0)
-					go_to_count += 1
+
+	var set_go_to_nodes_connections = \
+		func foo(graph_node_id_str: StringName, tag: StringName, from_port: int):
+			if !timeline[graph_node_id_str].has(tag):
+				DUPA_Logger.add_error("Tag %s was not found in blueprint node data!" % tag)
+				return
+				
+			var graph_node_id_int := int(graph_node_id_str)
+			var go_to_nodes: PackedInt32Array = timeline[graph_node_id_str][tag]
+			for to_node_id in go_to_nodes: # Get each go_to node to connect to
+				connect_node(
+					graph_nodes_names[graph_node_id_int],
+					from_port,
+					graph_nodes_names[to_node_id],
+					DUPA_Lib.INPUT_PORT
+				)
+
+	for graph_node_id_str in timeline:
+		set_go_to_nodes_connections.call(graph_node_id_str, &"go_to", DUPA_Lib.OUTPUT_PORT)
+		var graph_node_type: DUPA_Lib.NodeType = timeline[graph_node_id_str].type
+		if graph_node_type != DUPA_Lib.NodeType.CONDITION: continue
+		set_go_to_nodes_connections.call(graph_node_id_str, &"go_to_false", DUPA_Lib.OUTPUT_FALSE_PORT)
 
 
 func validate_timeline() -> int:
@@ -360,7 +367,7 @@ func validate_timeline() -> int:
 		error.emit("Add start node to the graph!")
 		err = ERR_DOES_NOT_EXIST
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
-		var nt = DupaLib.NodeType
+		var nt = DUPA_Lib.NodeType
 		match node.type:
 			nt.LINE, nt.DYNAMIC_ID_LINE:
 				pass
@@ -399,13 +406,13 @@ func validate_timeline() -> int:
 #-------------------------------------------
 #region GraphNodes Signals
 
-func _on_graph_node_param_changed(param_name: StringName, new_value, prev_value, graph_node_id: int):
-	_actions_master.register_method_action("Param %s changed" % param_name, set_graph_node_param.bind(graph_node_id, param_name, new_value), set_graph_node_param.bind(graph_node_id, param_name, prev_value), false)
+func _on_graph_node_param_changed(param_name: StringName, new_value, prev_value, graph_node_id_str: int):
+	_actions_master.register_method_action("Param %s changed" % param_name, set_graph_node_param.bind(graph_node_id_str, param_name, new_value), set_graph_node_param.bind(graph_node_id_str, param_name, prev_value), false)
 
 
 func _configure_node_popup(node: DupaNodeBase):
 	_node_params_popup.set_item_checked(0, node.desc_visible)
-	if node.type == DupaLib.NodeType.LINE:
+	if node.type == DUPA_Lib.NodeType.LINE:
 		_node_params_popup.set_item_checked(1, node.line_voice_visible)
 
 
