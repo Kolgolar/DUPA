@@ -22,7 +22,7 @@ static func add_warning(msg_text: String, visibility := MsgVisibility.DEBUG):
 	_construct_entry(msg_text, visibility, LogType.WARNING)
 
 
-static func add_error(msg_text: String, visibility := MsgVisibility.DEBUG):
+static func add_err(msg_text: String, visibility := MsgVisibility.DEBUG):
 	_construct_entry(msg_text, visibility, LogType.ERROR)
 
 #

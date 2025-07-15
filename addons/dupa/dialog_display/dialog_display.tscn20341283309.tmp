@@ -1,12 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://dy43nh0u0nnxi"]
+[gd_scene load_steps=12 format=3 uid="uid://dy43nh0u0nnxi"]
 
 [ext_resource type="Script" uid="uid://c7k22qfj3vt1x" path="res://addons/dupa/dialog_display/dialog_display.gd" id="1_78dbh"]
 [ext_resource type="Script" uid="uid://ctep1vm1hjgyr" path="res://addons/dupa/dialog_display/game_logic_interactor_test.gd" id="2_1mc6u"]
 [ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/project/assets/styles/line_panel_default.tres" id="3_77qm7"]
-[ext_resource type="Script" uid="uid://d2lp1a2nwjlqe" path="res://addons/dupa/dialog_display/localization_master.gd" id="3_iqrb1"]
 [ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/dialog_display/dialog_choice_button.tscn" id="3_y48j5"]
 [ext_resource type="Script" uid="uid://dwl6uovyl4o1q" path="res://addons/dupa/dialog_display/choices_controller.gd" id="4_iqrb1"]
-[ext_resource type="PackedScene" uid="uid://c6rhlgjdp8e5x" path="res://addons/dupa/dialog_display/dialog_choice_button_toggle.tscn" id="5_20ru8"]
 [ext_resource type="Texture2D" uid="uid://bhk1jvu3ta0jn" path="res://addons/dupa/project/assets/btn_undo.png" id="6_4ejs7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_77qm7"]
@@ -39,7 +37,7 @@ border_width_left = 10
 border_width_right = 10
 border_color = Color(0.945098, 0.572549, 1, 1)
 
-[node name="DialogDisplay" type="MarginContainer" node_paths=PackedStringArray("localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
+[node name="DialogDisplay" type="MarginContainer" node_paths=PackedStringArray("dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -48,20 +46,22 @@ grow_vertical = 2
 script = ExtResource("1_78dbh")
 blueprint_file = "res://addons/dupa/blueprint_fixed_ids.json"
 on_dialog_finished = 4
+clear_speaker_panel_on_proceeding = null
 line_showing_speed = 40.0
-print_player_line_after_choice = true
+auto_show_choices = null
+end_sentence_pause_length = null
+comma_pause_length = null
+player_choice_line_preview_mode = null
+print_player_line_after_choice = null
 debug_mode = true
 ignore_no_localization = false
 ignore_no_speaker_data = false
 speaker_placeholder_name = "[b][i]<Character name>[/i][/b]"
-localization_master = NodePath("LocalizationMaster")
 dialog_panel = NodePath("Frame/GridContainer/LinePanel")
 speaker_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerName")
 speaker_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerLine")
 choices_controller = NodePath("Frame/GridContainer/ChoicesController")
-
-[node name="LocalizationMaster" type="Node" parent="."]
-script = ExtResource("3_iqrb1")
+dialog_choice_button = ExtResource("3_y48j5")
 
 [node name="GameLogicInteractor" type="Node" parent="."]
 script = ExtResource("2_1mc6u")
@@ -78,17 +78,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ChoicesController" type="Control" parent="Frame/GridContainer" node_paths=PackedStringArray("choices_container", "choice_full_line_button", "choice_full_line")]
+[node name="ChoicesController" type="Control" parent="Frame/GridContainer" node_paths=PackedStringArray("choices_container", "choice_full_line")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("4_iqrb1")
 choices_container = NodePath("GridContainer/ChoicesContainer")
-choice_full_line_button = NodePath("GridContainer/ChoiceFullLineZone/ChoiceFullLine")
-choice_full_line = NodePath("GridContainer/ChoiceFullLineZone/ChoiceFullLine/MarginContainer/ChoiceFullLine")
-dialog_choice_button = ExtResource("3_y48j5")
-dialog_choice_button_toggle = ExtResource("5_20ru8")
+choice_full_line = NodePath("GridContainer/ChoiceFullLineZone/ChoiceFullLine")
 
 [node name="GridContainer" type="GridContainer" parent="Frame/GridContainer/ChoicesController"]
 layout_mode = 1

@@ -314,6 +314,20 @@ func gen_timeline_data() -> Dictionary:
 	var timeline := {}
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		timeline[node.id] = node.gen_data()
+	
+	# Marks choice nodes. Adds "is_choice" field to a LINE nodes data in save file
+	for node in timeline:
+		var graph_node_data = timeline[node]
+		if graph_node_data.type == DUPA_Lib.NodeType.CONDITION:
+			continue
+		var connected_nodes_ids = graph_node_data.go_to
+		if connected_nodes_ids.size() <= 1: continue
+		for choice_node_id in connected_nodes_ids:
+			assert(
+				timeline[choice_node_id].type == DUPA_Lib.NodeType.LINE,
+				"Only a LINE node can represent choice"
+			)
+			timeline[choice_node_id][&"is_choice"] = true
 	return timeline
 
 
@@ -341,7 +355,7 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 	var set_go_to_nodes_connections = \
 		func foo(graph_node_id_str: StringName, tag: StringName, from_port: int):
 			if !timeline[graph_node_id_str].has(tag):
-				DUPA_Logger.add_error("Tag %s was not found in blueprint node data!" % tag)
+				DUPA_Logger.add_err("Tag %s was not found in blueprint node data!" % tag)
 				return
 				
 			var graph_node_id_int := int(graph_node_id_str)

@@ -12,14 +12,14 @@ script = ExtResource("1")
 mode = 0
 _mobile_mode = true
 _drag_player_line_prompt_to_coursor = false
-_character_text = NodePath("Frame/MainContainer/TextPanel/MarginContainer/VBoxContainer/CharacterText")
-_player_choices_container = NodePath("Frame/MainContainer/ChoicesArea/ChoicesZone/ChoicesContainer")
-_player_line = NodePath("Frame/SelectLine/PlayerLine")
 _timeline = "C:\\Godot\\Projects\\Knuckle Buster\\game\\dupa\\intro\\intro_coach.json"
-_next_line_button = NodePath("Frame/MainContainer/TextPanel/NextLine")
 _voice_lines_directory = "C:\\Godot\\Projects\\Knuckle Buster\\game\\dupa\\intro\\audio"
 _proceed_on_voice_end = true
 _proceed_on_text_finished = true
+_character_text = NodePath("Frame/MainContainer/TextPanel/MarginContainer/VBoxContainer/CharacterText")
+_player_choices_container = NodePath("Frame/MainContainer/ChoicesArea/ChoicesZone/ChoicesContainer")
+_player_line = NodePath("Frame/SelectLine/PlayerLine")
+_next_line_button = NodePath("Frame/MainContainer/TextPanel/NextLine")
 
 [node name="Frame" type="Button" parent="."]
 anchors_preset = 15
