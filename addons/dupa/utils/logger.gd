@@ -1,3 +1,4 @@
+@tool
 class_name DUPA_Logger
 extends Node
 
