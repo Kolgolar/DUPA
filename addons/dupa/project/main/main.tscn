@@ -159,6 +159,7 @@ text = "SAVE AS"
 [node name="Spacer" type="Control" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Clear" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(125, 35)

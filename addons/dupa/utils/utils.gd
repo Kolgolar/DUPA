@@ -2,6 +2,25 @@ class_name DUPA_Utils
 extends Node
 
 
+## Converts to String, Bool or Int
+static func convert_to_determined_type(value: String) -> Variant:
+	var set_to: Variant
+	if value.begins_with('"'):
+		value = value.trim_prefix('"')
+		value = value.trim_suffix('"')
+		set_to = str(value)
+	else:
+		match value.to_upper():
+			"TRUE":
+				set_to = true
+			"FALSE":
+				set_to = false
+			_:
+				set_to = int(value)
+
+	return set_to
+
+
 static func separate_line_to_sentences(line: String) -> Array:
 	var regex = RegEx.new()
 	regex.compile(".*?[.!?\\n]+(?:\\s+|$)")

@@ -17,16 +17,24 @@ signal dialog_started
 signal dialog_ended
 signal line_tags_detected(tags: PackedStringArray)
 
+signal action_set(var_name: StringName, value: Variant)
+signal action_call(func_name: StringName, arg: Variant)
+signal action_condition(bool_var_name: StringName, return_to: Callable)
+signal action_msg(msg: StringName, value: Variant)
+
+
 enum Tag {EMOTE}
 enum PlayerChoiceLinePreviewMode {
 	DISABLED, ## Full player lines should be displayed on choice buttons.[br]
 	SHOW_ON_HOVER, ## The choice buttons should contain the brief of the choice lines, while the full line will be displayed in the separate panel if a mouse cursor is hovering the choice button.[br]
 	SHOW_ON_PRESS ## The same as the previous, but the full choice line will be displayed on PRESSING the choice button.[br]
 }
-enum DeleteOnFinishMode {
-	NEVER,
-	KEEP_IF_DEBUG,
-	ALWAYS,
+enum OnDialogFinished {
+	DO_NOTHING,
+	HIDE,
+	HIDE_IF_NOT_DEBUG,
+	DELETE,
+	DELETE_IF_NOT_DEBUG,
 }
 
 var _blueprint_config: Dictionary
@@ -42,15 +50,9 @@ var _visible_characters_tween: Tween
 #@export var blueprint: DUPA_Blueprint
 @export_file var blueprint_file: String
 @export var game_logic_interactor_script: Script
-@export var delete_on_finished := DeleteOnFinishMode.KEEP_IF_DEBUG
+@export var on_dialog_finished := OnDialogFinished.DO_NOTHING
+@export var clear_speaker_panel_on_proceeding := true
 @export_range(1, 1000, 1, "suffix:chars/s") var line_showing_speed := 30.
-
-# TODO: Динамически подбирать размер кнопок выбора реплики в зависимости от их количества
-@export_category("Display nodes")
-#@export var text_panel: Control ## The node that holds the line and the speaker's name 
-@export var speaker_name: RichTextLabel ## The RichTextLabel that displays the speaker's name.
-@export var speaker_line: RichTextLabel ## The RichTextLable that displays the line.
-@export var choices_container: Control ## The node that should hold the choice buttons.
 
 @export_category("Choices")
 @export var player_choice_line_preview_mode: PlayerChoiceLinePreviewMode = PlayerChoiceLinePreviewMode.SHOW_ON_HOVER
@@ -61,6 +63,16 @@ var _visible_characters_tween: Tween
 @export var debug_mode := false
 @export var ignore_no_localization := true
 @export var ignore_no_speaker_data := true
+@export var speaker_placeholder_name := "[b][i]Character name[/i][/b]"
+
+# TODO: Динамически подбирать размер кнопок выбора реплики в зависимости от их количества
+@export_category("Node references")
+#@export var text_panel: Control ## The node that holds the line and the speaker's name 
+@export var speaker_name: RichTextLabel ## The RichTextLabel that displays the speaker's name.
+@export var speaker_line: RichTextLabel ## The RichTextLable that displays the line.
+@export var choices_container: Control ## The node that should hold the choice buttons.
+@export var choice_full_line: Control
+@export var dialog_choice_button: PackedScene
 
 #@export_category("Other")
 
@@ -74,6 +86,8 @@ func _ready() -> void:
 	%ChoicesContainer.set_mode(player_choice_line_preview_mode)
 	if debug_mode:
 		start_dialog()
+	
+	#_remove_all_choices()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -170,11 +184,13 @@ func _construct_dialog_data(blueprint_data: Dictionary) -> Array[DN_Base]:
 	return dialog_data.values()
 
 
-func stop_dialog(should_delete := true) -> void:
+func stop_dialog(action_on_finished := on_dialog_finished) -> void:
 	dialog_ended.emit()
 	DUPA_Logger.add_msg("Dialog ended!")
-	if should_delete:
+	if action_on_finished == OnDialogFinished.DELETE || action_on_finished == OnDialogFinished.DELETE_IF_NOT_DEBUG && !debug_mode:
 		queue_free()
+	elif action_on_finished == OnDialogFinished.HIDE || action_on_finished == OnDialogFinished.HIDE_IF_NOT_DEBUG && !debug_mode:
+		hide()
 
 
 func _set_game_logic_interactor_script() -> void:
@@ -194,10 +210,7 @@ func _proceed_dialog(go_to_nodes: Array[DN_Base]) -> void:
 			
 	#var go_to_nodes: Array[DN_Base] = _curr_dialog_node.go_to
 	if go_to_nodes.size() == 0:
-		stop_dialog(
-			delete_on_finished == DeleteOnFinishMode.ALWAYS ||\
-			delete_on_finished == DeleteOnFinishMode.KEEP_IF_DEBUG && !debug_mode
-		)
+		call_deferred("stop_dialog", on_dialog_finished)
 		return
 
 	if go_to_nodes.size() == 1:
@@ -213,28 +226,43 @@ func _go_to_node(dialog_node: DN_Base) -> void:
 	var go_to_nodes: Array[DN_Base] = _curr_dialog_node.go_to
 	var nd := DUPA_Lib.NodeType
 	var instant_proceed := true
+	_show_line(null)
+	DUPA_Logger.add_msg("Processing the %s node (ID: %s)..." % [
+		DUPA_Lib.NODE_NAMES[dialog_node.type], dialog_node.id
+	])
 	match _curr_dialog_node.type:
 		nd.LINE || nd.DYNAMIC_ID_LINE:
 			_show_line(_curr_dialog_node)
 			instant_proceed = false
-		nd.CALLER:
-			# TODO: Some logic...
-			pass
 		nd.SETTER:
-			# TODO: Some logic...
-			print("KOK")
-			pass
+			var cdn := (_curr_dialog_node as DN_Setter)
+			var var_name: StringName = cdn.var_name
+			var value_str: String = cdn.var_value
+			var value_typed := DUPA_Utils.convert_to_determined_type(value_str)
+			action_set.emit(var_name, value_typed)
+			if action_set.get_connections().size() == 0:
+				DUPA_Logger.add_error("The signal 'action_set' has no connections!")
+		nd.CALLER:
+			var cdn := (_curr_dialog_node as DN_Caller)
+			var func_name: StringName = _curr_dialog_node.var_name
+			var args_str: String = _curr_dialog_node.var_value
+			var args_typed := []
+			if !args_str.is_empty():
+				for arg in args_str.split(",", false):
+					args_typed.append(DUPA_Utils.convert_to_determined_type(arg))
+			action_call.emit(func_name, args_typed)
+			if action_call.get_connections().size() == 0:
+				DUPA_Logger.add_error("The signal 'action_call' has no connections!")
 		nd.CONDITION:
 			var go_to_false_nodes: Array[DN_Base] = _curr_dialog_node.go_to_false
 			if go_to_nodes.size() < 1 && go_to_false_nodes.size() < 1:
 				DUPA_Logger.add_error("Condition node hasn't any attached output!")
 				return
 			instant_proceed = false
-			# TODO: Some logic...
-	
-	DUPA_Logger.add_msg("Reading the %s node (ID: %s)." % [
-		DUPA_Lib.NODE_NAMES[dialog_node.type], dialog_node.id
-	])
+			var var_name: StringName = _curr_dialog_node.var_name
+			action_condition.emit(var_name, _condition_return)
+			if action_condition.get_connections().size() == 0:
+				DUPA_Logger.add_error("The signal 'action_condition' has no connections!")
 
 	# Immediatly proceed dialog, if current node is not line/dynamic id line
 	if instant_proceed:
@@ -243,11 +271,25 @@ func _go_to_node(dialog_node: DN_Base) -> void:
 	
 	#DUPA_Logger.add_error("For some reason DUPA couldn't handle node of a type '%s'..." % _curr_dialog_node.type)
 
+func _condition_return(value: bool) -> void:
+	if value == null:
+		DUPA_Logger.add_warning("Condition variable is null!", DUPA_Logger.MsgVisibility.ESSENTIAL)
+	var next_dialog_nodes: Array[DN_Base]
+	if value:
+		next_dialog_nodes = _curr_dialog_node.go_to
+	else:
+		next_dialog_nodes = _curr_dialog_node.go_to_false
+	_proceed_dialog(next_dialog_nodes)
+
 
 func _show_line(dialog_node: DN_LineBase):
+	if !dialog_node:
+		if clear_speaker_panel_on_proceeding:
+			speaker_line.text = ""
+			speaker_name.text = ""
+		return
 	var line_id = _curr_dialog_node.get_line_id()
 	DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
-	#var speaker = _curr_dialog_node.character
 	speaker_line.text = line_id
 	speaker_line.visible_characters = 0
 	var parsed_text_length: int = speaker_line.get_parsed_text().length()
@@ -261,8 +303,10 @@ func _show_line(dialog_node: DN_LineBase):
 	if !speaker:
 		if !ignore_no_speaker_data:
 			DUPA_Logger.add_error("No speaker data was found for the node (ID: %s)." % _curr_dialog_node.id)
+		speaker_name.text = speaker_placeholder_name
 		return
 	if speaker.localization_file:
+		#var speaker = _curr_dialog_node.character
 		pass
 	elif !ignore_no_localization:
 		DUPA_Logger.add_error("No localization file was found for speaker '%s'." % speaker.id_name)
@@ -270,8 +314,91 @@ func _show_line(dialog_node: DN_LineBase):
 		#_visible_characters_tween.tween_method(_play_char_showing_sound, 0.0, time, time)
 
 
-func _show_choices(dialog_nodes: Array[DN_Base]):
+func _remove_all_choices() -> void:
+	for b in choices_container.get_children():
+		queue_free()
+
+
+func _show_choices(dialog_nodes: Array[DN_Base]) -> void:
 	DUPA_Logger.add_msg("Showing choices.")
+	_remove_all_choices()
+	for n in dialog_nodes:
+		var dn := n as DN_Line 
+		var line_id: StringName = dn.line_id
+		var line_text := get_line_localized_text(line_id, null)
+		var regex = RegEx.new()
+		regex.compile("(?<=^\\[choice:).*(?=\\])")
+		var result := regex.search(line_text)
+		var shorted_line_text := ""
+		if result:
+			shorted_line_text = result.get_string().strip_edges()
+			#if shorted_line_text.is_empty():
+				#DUPA_Logger.add_error("The result button text is empty!")
+			regex.compile("(?<=\\]).*")
+			var only_text = regex.search(line_text)
+			if only_text:
+				line_text = only_text.get_string().strip_edges()
+				#if line_text.is_empty():
+					#DUPA_Logger.add_error("The result line text is empty!")
+		
+		if shorted_line_text.is_empty():
+			#DUPA_Logger.add_error("The result button text is empty!")
+			#if !line_text.is_empty():
+			shorted_line_text = line_text
+			line_text = ""
+		
+		var button: Button = dialog_choice_button.instantiate()
+		#if !(button is Button):
+			#DUPA_Logger.add_error("Check if 'dialog_choice_button' is a Button node.")
+		button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		if player_choice_line_preview_mode == PlayerChoiceLinePreviewMode.DISABLED && !line_text.is_empty():
+			button.text = line_text
+		else:
+			button.text = shorted_line_text
+		choices_container.add_child(button)
+		match player_choice_line_preview_mode:
+			PlayerChoiceLinePreviewMode.DISABLED:
+				button.toggle_mode = false
+				button.pressed.connect(_on_choice_button_pressed.bind(dn, button))
+			PlayerChoiceLinePreviewMode.SHOW_ON_HOVER:
+				button.toggle_mode = false
+				button.pressed.connect(_on_choice_button_pressed.bind(dn, button))
+				button.mouse_entered.connect(_on_choice_button_mouse_entered.bind(dn, button))
+				button.mouse_exited.connect(_on_choice_button_mouse_exited.bind(dn, button))
+			PlayerChoiceLinePreviewMode.SHOW_ON_PRESS:
+				button.toggle_mode = true
+				button.toggled.connect(_on_choice_button_toggled.bind(dn, button))
+				
+
+func _on_choice_full_line_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_choice_button_toggled(button_toggled: bool, dialog_node: DN_LineBase, button: Button) -> void:
+	pass
+
+
+func _on_choice_button_mouse_entered(dialog_node: DN_LineBase, button: Button) -> void:
+	choice_full_line.show()
+
+
+func _on_choice_button_mouse_exited(dialog_node: DN_LineBase, button: Button) -> void:
+	choice_full_line.hide()
+
+
+func _on_choice_button_pressed(dialog_node: DN_LineBase, button: Button) -> void:
+	pass
+
+
+func get_line_localized_text(line_id: StringName, speaker: DUPA_SpeakerData = null) -> String:
+	var line_text := ""
+	if !speaker:
+		if _csv_data.has(line_id):
+			line_text = _csv_data[line_id]
+	else:
+		# TODO: Some code here...
+		pass
+	return line_text
 
 
 func _change_visible_characters(value : int) -> void:
@@ -381,6 +508,12 @@ class DN_Line:
 	
 	func get_line_id() -> Variant:
 		return line_id
+	
+	func get_tags() -> PackedStringArray:
+		return []
+	
+	func get_short_choice_text(line: String) -> String:
+		return ""
 
 
 class DN_DynamicIdLine:

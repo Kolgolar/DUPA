@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://dy43nh0u0nnxi"]
+[gd_scene load_steps=12 format=3 uid="uid://dy43nh0u0nnxi"]
 
 [ext_resource type="Script" uid="uid://c7k22qfj3vt1x" path="res://addons/dupa/dialog_display/dialog_display.gd" id="1_78dbh"]
 [ext_resource type="Script" uid="uid://ctep1vm1hjgyr" path="res://addons/dupa/dialog_display/game_logic_interactor_test.gd" id="2_1mc6u"]
 [ext_resource type="Script" uid="uid://bywjmn0gqr71s" path="res://addons/dupa/dialog_display/choices_container.gd" id="2_i8mom"]
 [ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/project/assets/styles/line_panel_default.tres" id="3_77qm7"]
-[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/project/dialog_controller/dialog_choice_button.tscn" id="3_y48j5"]
+[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/dialog_display/dialog_choice_button.tscn" id="3_y48j5"]
+[ext_resource type="Script" uid="uid://bboj8m15r7iuy" path="res://addons/dupa/dialog_display/choice_full_line.gd" id="5_4ejs7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_77qm7"]
 
@@ -36,7 +37,7 @@ border_width_left = 10
 border_width_right = 10
 border_color = Color(0.945098, 0.572549, 1, 1)
 
-[node name="DialogDisplay" type="MarginContainer" node_paths=PackedStringArray("speaker_name", "speaker_line", "choices_container")]
+[node name="DialogDisplay" type="MarginContainer" node_paths=PackedStringArray("speaker_name", "speaker_line", "choices_container", "choice_full_line")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -44,17 +45,20 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_78dbh")
 blueprint_file = "res://addons/dupa/blueprint_fixed_ids_4.json"
-game_logic_interactor_script = ExtResource("2_1mc6u")
+on_dialog_finished = 4
 line_showing_speed = 40.0
-speaker_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerName")
-speaker_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerLine")
-choices_container = NodePath("Frame/GridContainer/ChoicesArea/GridContainer/ChoicesContainer")
 debug_mode = true
 ignore_no_localization = false
 ignore_no_speaker_data = false
+speaker_placeholder_name = "[b][i]<Character name>[/i][/b]"
+speaker_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerName")
+speaker_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerLine")
+choices_container = NodePath("Frame/GridContainer/ChoicesArea/GridContainer/ChoicesContainer")
+choice_full_line = NodePath("Frame/GridContainer/ChoicesArea/GridContainer/ChoiceFullLineZone/ChoiceFullLine")
+dialog_choice_button = ExtResource("3_y48j5")
 
 [node name="GameLogicInteractor" type="Node" parent="."]
-unique_name_in_owner = true
+script = ExtResource("2_1mc6u")
 
 [node name="Frame" type="Control" parent="."]
 layout_mode = 2
@@ -104,13 +108,13 @@ text = "Choice2"
 layout_mode = 2
 text = "Choice2"
 
-[node name="ChoiceLineZone" type="Control" parent="Frame/GridContainer/ChoicesArea/GridContainer"]
+[node name="ChoiceFullLineZone" type="Control" parent="Frame/GridContainer/ChoicesArea/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="SelectLine" type="Button" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceLineZone"]
+[node name="ChoiceFullLine" type="Button" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceFullLineZone"]
 custom_minimum_size = Vector2(700, 160)
 layout_mode = 1
 anchors_preset = 8
@@ -130,9 +134,10 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_hvqfc")
 theme_override_styles/hover = SubResource("StyleBoxFlat_fbfi0")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_y48j5")
 theme_override_styles/normal = SubResource("StyleBoxFlat_77qm7")
+script = ExtResource("5_4ejs7")
 metadata/_edit_group_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceLineZone/SelectLine"]
+[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceFullLineZone/ChoiceFullLine"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -145,7 +150,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 70
 theme_override_constants/margin_bottom = 5
 
-[node name="PlayerLine" type="RichTextLabel" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceLineZone/SelectLine/MarginContainer"]
+[node name="ChoiceFullLine" type="RichTextLabel" parent="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceFullLineZone/ChoiceFullLine/MarginContainer"]
 layout_mode = 2
 focus_mode = 2
 mouse_filter = 2
@@ -210,3 +215,6 @@ text = "Test test test test test test test test test test test test test test te
 scroll_active = false
 autowrap_mode = 2
 visible_characters_behavior = 1
+
+[connection signal="action_condition" from="." to="GameLogicInteractor" method="_on_dialog_display_action_condition"]
+[connection signal="pressed" from="Frame/GridContainer/ChoicesArea/GridContainer/ChoiceFullLineZone/ChoiceFullLine" to="." method="_on_choice_full_line_pressed"]

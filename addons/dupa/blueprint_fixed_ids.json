@@ -10,79 +10,33 @@
 			"go_to": [
 				2
 			],
-			"offset_x": 280.0,
-			"offset_y": 240.0,
-			"source": "res://sosat/lezhat",
+			"offset_x": 428.0,
+			"offset_y": 310.0,
+			"source": "",
 			"type": 1
 		},
 		"2": {
 			"desc": "",
 			"desc_visible": false,
 			"go_to": [
-				3,
-				4,
-				5
+				7,
+				8,
+				9
 			],
 			"is_player": false,
-			"line_text": "hello",
-			"offset_x": 760.0,
-			"offset_y": 120.0,
-			"type": 2
-		},
-		"3": {
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [],
-			"is_player": false,
-			"line_text": "haha",
-			"offset_x": 1297.0,
-			"offset_y": -115.5,
-			"type": 2
-		},
-		"4": {
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [
-				6
-			],
-			"is_player": false,
-			"line_text": "hehe",
-			"offset_x": 1320.0,
-			"offset_y": 100.0,
-			"type": 2
-		},
-		"5": {
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [],
-			"is_player": false,
-			"line_text": "heehee",
-			"offset_x": 1340.0,
+			"line_id": "fsdfdsf",
+			"offset_x": 860.0,
 			"offset_y": 320.0,
 			"type": 2
-		},
-		"6": {
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [
-				7
-			],
-			"go_to_false": [
-				8
-			],
-			"offset_x": 1800.0,
-			"offset_y": 120.0,
-			"type": 6,
-			"var_name": "sosal"
 		},
 		"7": {
 			"desc": "",
 			"desc_visible": false,
 			"go_to": [],
 			"is_player": false,
-			"line_text": "uhhh",
-			"offset_x": 2320.0,
-			"offset_y": -100.0,
+			"line_id": "123",
+			"offset_x": 1407.41088867188,
+			"offset_y": 11.2673034667969,
 			"type": 2
 		},
 		"8": {
@@ -90,9 +44,19 @@
 			"desc_visible": false,
 			"go_to": [],
 			"is_player": false,
-			"line_text": "yay",
-			"offset_x": 2340.0,
-			"offset_y": 320.0,
+			"line_id": "456",
+			"offset_x": 1472.13757324219,
+			"offset_y": 263.138153076172,
+			"type": 2
+		},
+		"9": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"is_player": false,
+			"line_id": "789",
+			"offset_x": 1425.703125,
+			"offset_y": 478.424438476563,
 			"type": 2
 		}
 	}

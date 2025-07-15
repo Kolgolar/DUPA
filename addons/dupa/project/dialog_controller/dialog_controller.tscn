@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c8dmr5o5thh70"]
 
 [ext_resource type="Script" uid="uid://bmlwvs4vm6qio" path="res://addons/dupa/project/dialog_controller/dialog_controller.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/project/dialog_controller/dialog_choice_button.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/dialog_display/dialog_choice_button.tscn" id="2"]
 [ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/project/assets/styles/line_panel_default.tres" id="4_13dyn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jd040"]
