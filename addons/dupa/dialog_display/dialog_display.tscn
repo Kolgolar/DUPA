@@ -48,7 +48,6 @@ grow_vertical = 2
 script = ExtResource("1_78dbh")
 blueprint_file = "res://addons/dupa/blueprint_fixed_ids.json"
 on_dialog_finished = 4
-line_showing_speed = 40.0
 print_player_line_after_choice = true
 debug_mode = true
 ignore_no_localization = false

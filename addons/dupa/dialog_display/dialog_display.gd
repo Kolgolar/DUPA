@@ -49,7 +49,7 @@ var _is_dialog_ended := false
 @export var clear_speaker_panel_on_proceeding := true
 ## Controls the speed at which line is printing.[br]
 ## If 0, then line prints instantly.
-@export_range(0, 1000, 1, "suffix:chars/s") var line_showing_speed := 30.
+@export_range(0, 1000, 1, "suffix:chars/s") var line_showing_speed := 60.
 ## If [b]true[/b], the choice buttons will be showed [b]immediately[/b] after the previous node was fully processed, while [b]keeping line panel VISIBLE[/b].[br]
 ## If [b]false[/b], the choice buttons will be shown only [b]after user forced dialog processing[/b] (pressed LMB and etc.). [b]The dialog panel will be HIDDEN[/b] while choices are on the screen.
 @export var auto_show_choices := true
