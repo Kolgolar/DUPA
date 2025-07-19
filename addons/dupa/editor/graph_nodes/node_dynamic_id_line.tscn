@@ -1,0 +1,92 @@
+[gd_scene load_steps=3 format=3 uid="uid://ba10pgdqmhk1w"]
+
+[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/editor/graph_nodes/node_base.tscn" id="1"]
+[ext_resource type="Script" uid="uid://r8ia32vvrer7" path="res://addons/dupa/editor/graph_nodes/node_dynamic_id_line.gd" id="2"]
+
+[node name="DynamicLineNodeLite" node_paths=PackedStringArray("id_base", "id_from", "id_to", "speaker", "custom_speaker_name_label", "custom_speaker_name_line") instance=ExtResource("1")]
+offset_right = 384.0
+offset_bottom = 106.0
+theme_type_variation = &"GraphNodeDynamicIDLine"
+title = "Dynamic ID Line"
+slot/4/left_enabled = false
+slot/4/left_type = 0
+slot/4/left_color = Color(1, 1, 1, 1)
+slot/4/left_icon = null
+slot/4/right_enabled = false
+slot/4/right_type = 0
+slot/4/right_color = Color(1, 1, 1, 1)
+slot/4/right_icon = null
+slot/4/draw_stylebox = true
+script = ExtResource("2")
+id_base = NodePath("VBoxContainer/GridContainer/IDBase")
+id_from = NodePath("VBoxContainer/GridContainer/IDFrom")
+id_to = NodePath("VBoxContainer/GridContainer/IDTo")
+speaker = NodePath("VBoxContainer/GridContainer/Speaker")
+custom_speaker_name_label = NodePath("VBoxContainer/GridContainer/CustomSpeakerNameLabel")
+custom_speaker_name_line = NodePath("VBoxContainer/GridContainer/CustomSpeakerNameField")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="5"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" index="0"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer" index="0"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Player speaking"
+
+[node name="IsPlayerLine" type="CheckButton" parent="VBoxContainer/GridContainer" index="1"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="2"]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+text = "Base"
+vertical_alignment = 1
+
+[node name="IDBase" type="LineEdit" parent="VBoxContainer/GridContainer" index="3"]
+custom_minimum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "line_character_"
+
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="4"]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+text = "From"
+vertical_alignment = 1
+
+[node name="IDFrom" type="SpinBox" parent="VBoxContainer/GridContainer" index="5"]
+custom_minimum_size = Vector2(250, 32)
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="VBoxContainer/GridContainer" index="6"]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+text = "To"
+vertical_alignment = 1
+
+[node name="IDTo" type="SpinBox" parent="VBoxContainer/GridContainer" index="7"]
+custom_minimum_size = Vector2(250, 32)
+layout_mode = 2
+max_value = 8192.0
+value = 1.0
+
+[node name="Label5" type="Label" parent="VBoxContainer/GridContainer" index="8"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Speaker"
+
+[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="9"]
+layout_mode = 2
+clip_text = true
+fit_to_longest_item = false
+
+[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="10"]
+layout_mode = 2
+text = "Cust. speaker"
+
+[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="11"]
+layout_mode = 2
+placeholder_text = "Custom speaker name"

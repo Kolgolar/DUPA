@@ -1,0 +1,257 @@
+[gd_scene load_steps=14 format=3 uid="uid://dy43nh0u0nnxi"]
+
+[ext_resource type="Script" uid="uid://c7k22qfj3vt1x" path="res://addons/dupa/viewer/dialog_viewer.gd" id="1_sqql4"]
+[ext_resource type="Script" uid="uid://d2lp1a2nwjlqe" path="res://addons/dupa/viewer/localization_master.gd" id="2_2ssqh"]
+[ext_resource type="Script" uid="uid://ctep1vm1hjgyr" path="res://addons/dupa/viewer/game_logic_interactor_test.gd" id="3_gajwf"]
+[ext_resource type="Script" uid="uid://dwl6uovyl4o1q" path="res://addons/dupa/viewer/choices_controller.gd" id="4_wgkms"]
+[ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/viewer/dialog_choice_button.tscn" id="5_hyojp"]
+[ext_resource type="PackedScene" uid="uid://c6rhlgjdp8e5x" path="res://addons/dupa/viewer/dialog_choice_button_toggle.tscn" id="6_ruihl"]
+[ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/common/ui/styles/line_panel_default.tres" id="7_qc6np"]
+[ext_resource type="Texture2D" uid="uid://bhk1jvu3ta0jn" path="res://addons/dupa/common/ui/textures/btn_undo.png" id="8_1l4f4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_77qm7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvqfc"]
+bg_color = Color(0.172549, 0.152941, 0.235294, 1)
+skew = Vector2(0.25, 0)
+border_width_left = 10
+border_width_right = 10
+border_color = Color(0.945098, 0.572549, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbfi0"]
+bg_color = Color(0.243137, 0.243137, 0.345098, 0.968627)
+skew = Vector2(0.25, 0)
+border_width_left = 10
+border_width_right = 10
+border_color = Color(0.945098, 0.572549, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y48j5"]
+bg_color = Color(0.196078, 0.176471, 0.270588, 1)
+skew = Vector2(0.25, 0)
+border_width_left = 10
+border_width_right = 10
+border_color = Color(0.945098, 0.572549, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_77qm7"]
+bg_color = Color(0.243137, 0.243137, 0.345098, 0.784314)
+skew = Vector2(0.25, 0)
+border_width_left = 10
+border_width_right = 10
+border_color = Color(0.945098, 0.572549, 1, 1)
+
+[node name="DialogViewer" type="MarginContainer" node_paths=PackedStringArray("localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sqql4")
+blueprint_file = "res://addons/dupa/test.json"
+on_dialog_finished = 4
+print_player_line_after_choice = true
+debug_mode = true
+ignore_no_localization = false
+ignore_no_speaker_data = false
+speaker_placeholder_name = "[b][i]<Character name>[/i][/b]"
+localization_master = NodePath("LocalizationMaster")
+dialog_panel = NodePath("Frame/GridContainer/LinePanel")
+speaker_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerName")
+speaker_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerLine")
+choices_controller = NodePath("Frame/GridContainer/ChoicesController")
+
+[node name="GameLogicInteractor" type="Node" parent="."]
+script = ExtResource("3_gajwf")
+
+[node name="LocalizationMaster" type="Node" parent="."]
+script = ExtResource("2_2ssqh")
+
+[node name="Frame" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="GridContainer" type="GridContainer" parent="Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChoicesController" type="Control" parent="Frame/GridContainer" node_paths=PackedStringArray("choices_container", "choice_full_line_button", "choice_full_line")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("4_wgkms")
+choices_container = NodePath("GridContainer/ChoicesContainer")
+choice_full_line_button = NodePath("GridContainer/ChoiceFullLineZone/ChoiceFullLine")
+choice_full_line = NodePath("GridContainer/ChoiceFullLineZone/ChoiceFullLine/MarginContainer/ChoiceFullLine")
+dialog_choice_button = ExtResource("5_hyojp")
+dialog_choice_button_toggle = ExtResource("6_ruihl")
+
+[node name="GridContainer" type="GridContainer" parent="Frame/GridContainer/ChoicesController"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 2
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="Frame/GridContainer/ChoicesController/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Choice0" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
+layout_mode = 2
+text = "Choice1"
+
+[node name="Choice1" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
+layout_mode = 2
+text = "Choice2"
+
+[node name="Choice2" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
+layout_mode = 2
+text = "Choice2"
+
+[node name="ChoiceFullLineZone" type="Control" parent="Frame/GridContainer/ChoicesController/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ChoiceFullLine" type="Button" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone"]
+custom_minimum_size = Vector2(700, 160)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -165.0
+offset_right = 400.0
+offset_bottom = 165.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_77qm7")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_hvqfc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fbfi0")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_y48j5")
+theme_override_styles/normal = SubResource("StyleBoxFlat_77qm7")
+metadata/_edit_group_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 70
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 70
+theme_override_constants/margin_bottom = 5
+
+[node name="ChoiceFullLine" type="RichTextLabel" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine/MarginContainer"]
+layout_mode = 2
+focus_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/bold_italics_font_size = 27
+theme_override_font_sizes/italics_font_size = 27
+theme_override_font_sizes/mono_font_size = 27
+theme_override_font_sizes/normal_font_size = 27
+theme_override_font_sizes/bold_font_size = 27
+bbcode_enabled = true
+text = "Player's answer full text"
+fit_content = true
+scroll_active = false
+selection_enabled = true
+
+[node name="LinePanel" type="PanelContainer" parent="Frame/GridContainer"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("7_qc6np")
+
+[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/LinePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Frame/GridContainer/LinePanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SpeakerName" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+mouse_filter = 1
+theme_override_font_sizes/bold_italics_font_size = 30
+theme_override_font_sizes/italics_font_size = 30
+theme_override_font_sizes/mono_font_size = 30
+theme_override_font_sizes/normal_font_size = 30
+theme_override_font_sizes/bold_font_size = 30
+bbcode_enabled = true
+text = "[i][b]Character name:[/b][/i]"
+fit_content = true
+scroll_active = false
+
+[node name="SpeakerLine" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+theme_override_font_sizes/bold_italics_font_size = 27
+theme_override_font_sizes/italics_font_size = 27
+theme_override_font_sizes/mono_font_size = 27
+theme_override_font_sizes/normal_font_size = 27
+theme_override_font_sizes/bold_font_size = 27
+bbcode_enabled = true
+text = "Test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test"
+scroll_active = false
+autowrap_mode = 2
+visible_characters_behavior = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 0
+alignment = 1
+
+[node name="Spacer" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="LabelDebug" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 30
+text = "DEBUG MODE"
+horizontal_alignment = 1
+
+[node name="RestartDebug" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 10
+icon = ExtResource("8_1l4f4")
+flat = true
+expand_icon = true
+
+[connection signal="action_call" from="." to="GameLogicInteractor" method="_on_dialog_viewer_action_call"]
+[connection signal="action_message" from="." to="GameLogicInteractor" method="_on_dialog_viewer_action_message"]
+[connection signal="action_set" from="." to="GameLogicInteractor" method="_on_dialog_viewer_action_set"]
+[connection signal="get_bool" from="." to="GameLogicInteractor" method="_on_dialog_viewer_get_bool"]
+[connection signal="pressed" from="HBoxContainer/RestartDebug" to="." method="_on_restart_debug_pressed"]

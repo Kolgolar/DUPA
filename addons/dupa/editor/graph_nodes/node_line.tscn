@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://d27yly1pgog0"]
+
+[ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/editor/graph_nodes/node_base.tscn" id="1"]
+[ext_resource type="Script" uid="uid://ccbkaqk0f6dnt" path="res://addons/dupa/editor/graph_nodes/node_line.gd" id="2"]
+
+[node name="LineNode" node_paths=PackedStringArray("line_id", "speaker", "custom_speaker_name_label", "custom_speaker_name_line") instance=ExtResource("1")]
+offset_right = 384.0
+offset_bottom = 106.0
+title = "Line"
+slot/4/left_enabled = false
+slot/4/left_type = 0
+slot/4/left_color = Color(1, 1, 1, 1)
+slot/4/left_icon = null
+slot/4/right_enabled = false
+slot/4/right_type = 0
+slot/4/right_color = Color(1, 1, 1, 1)
+slot/4/right_icon = null
+slot/4/draw_stylebox = true
+script = ExtResource("2")
+line_id = NodePath("VBoxContainer/GridContainer/LineID")
+speaker = NodePath("VBoxContainer/GridContainer/Speaker")
+custom_speaker_name_label = NodePath("VBoxContainer/GridContainer/CustomSpeakerNameLabel")
+custom_speaker_name_line = NodePath("VBoxContainer/GridContainer/CustomSpeakerNameField")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="5"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" index="0"]
+layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="0"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Text"
+
+[node name="LineID" type="LineEdit" parent="VBoxContainer/GridContainer" index="1"]
+custom_minimum_size = Vector2(250, 32)
+layout_mode = 2
+placeholder_text = "Line ID or text"
+
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="2"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Speaker"
+
+[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="3"]
+layout_mode = 2
+clip_text = true
+fit_to_longest_item = false
+
+[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="4"]
+layout_mode = 2
+text = "Name"
+
+[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="5"]
+layout_mode = 2
+placeholder_text = "Custom speaker name"

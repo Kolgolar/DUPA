@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="DUPA_SpeakerData" load_steps=2 format=3 uid="uid://e1dxf61u0sg2"]
 
-[ext_resource type="Script" uid="uid://bu3cmf0eaxfoq" path="res://addons/dupa/dialog_display/speaker_data.gd" id="1_yaajt"]
+[ext_resource type="Script" uid="uid://bu3cmf0eaxfoq" path="res://addons/dupa/viewer/resources/speaker_data.gd" id="1_yaajt"]
 
 [resource]
 script = ExtResource("1_yaajt")
-id_name = ""
+id_name = "Sas"
 voicelines_folder = null
 char_printing_sounds_folder = null
 localization_file = null

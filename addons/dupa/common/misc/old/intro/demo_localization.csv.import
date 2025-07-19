@@ -1,0 +1,15 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cn7oeqjw0ne4d"
+valid=false
+
+[deps]
+
+source_file="res://addons/dupa/common/misc/old/intro/demo_localization.csv"
+
+[params]
+
+compress=true
+delimiter=0

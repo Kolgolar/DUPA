@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dvsbvurbdecex" path="res://addons/_Godot-IDE_/plugins/fancy_search_files/gui/main.gd" id="1_0f0lw"]
 [ext_resource type="Texture2D" uid="uid://816fejewtbfj" path="res://addons/_Godot-IDE_/shared_resources/search.svg" id="2_fowvl"]
-[ext_resource type="Script" uid="uid://cpdqmdfvgpxmv" path="res://addons/_Godot-IDE_/plugins/fancy_search_files/gui/button.gd" id="2_ydlx0"]
+[ext_resource type="Script" uid="uid://cpdqmdfvgpxmv" path="res://addons/_Godot-IDE_/plugins/fancy_search_files/gui/close.gd" id="2_ydlx0"]
 [ext_resource type="Script" uid="uid://bx6ivdaldbcf8" path="res://addons/_Godot-IDE_/plugins/fancy_search_files/gui/line_edit.gd" id="3_5ntm4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nf02n"]

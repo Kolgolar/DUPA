@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://mtg8m7hkwny7"]
-
-[ext_resource type="Script" uid="uid://b343w8cj3a8ut" path="res://dupa/dialogs_variables_base.gd" id="1_bbnag"]
-
-[node name="DialogVariables" type="Node"]
-script = ExtResource("1_bbnag")

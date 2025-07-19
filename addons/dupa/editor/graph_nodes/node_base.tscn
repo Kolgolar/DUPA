@@ -1,0 +1,95 @@
+[gd_scene load_steps=4 format=3 uid="uid://nytw3aaj0cds"]
+
+[ext_resource type="Theme" uid="uid://jknpp178i5kk" path="res://addons/dupa/common/ui/styles/dupa.tres" id="1_lgxxj"]
+[ext_resource type="Script" uid="uid://drpw46gjkuqrf" path="res://addons/dupa/editor/graph_nodes/node_base.gd" id="2_gd61k"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_4djmp"]
+color = Color(1, 1, 1, 1)
+grow_begin = -7.0
+grow_end = -7.0
+thickness = 4
+
+[node name="DefaultNode" type="GraphNode" node_paths=PackedStringArray("description") groups=["graph_nodes"]]
+offset_right = 380.0
+offset_bottom = 180.0
+theme = ExtResource("1_lgxxj")
+theme_override_constants/separation = 0
+title = "NEW"
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+slot/1/left_enabled = true
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = true
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
+script = ExtResource("2_gd61k")
+description = NodePath("HBoxContainer/MainColumn/Description")
+metadata/_edit_lock_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="MainColumn" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Description" type="TextEdit" parent="HBoxContainer/MainColumn"]
+custom_minimum_size = Vector2(350, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.948052, 0.870558, 0.523905, 1)
+placeholder_text = "(No description)"
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="HSeparator" type="HSeparator" parent="."]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_4djmp")
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ID" type="Label" parent="."]
+unique_name_in_owner = true
+self_modulate = Color(1, 1, 1, 0.466667)
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "ID: 34"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="resize_request" from="." to="." method="_on_GraphNode_resize_request"]

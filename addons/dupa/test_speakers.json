@@ -1,0 +1,39 @@
+{
+	"CONFIG": {
+		"dupa_version": "0.3",
+		"max_id": 1,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/char_demo/char_demo_speaker_data.tres",
+				"uid": 2581786297851539510
+			},
+			{
+				"path": "res://dupa/speakers/char_demo_2/char_demo_speaker_data_2.tres",
+				"uid": 334652732110534711
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": 574.0,
+			"offset_y": 269.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"offset_x": 1055.0,
+			"offset_y": 195.0,
+			"speaker_idx": 0,
+			"type": 2
+		}
+	}
+}

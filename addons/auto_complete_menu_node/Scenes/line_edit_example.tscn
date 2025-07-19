@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3 uid="uid://bal2cvrrckfs1"]
+
+[ext_resource type="Script" uid="uid://bded4o6fkftky" path="res://addons/auto_complete_menu_node/Scripts/auto_complete_assistant.gd" id="1_qnd4x"]
+[ext_resource type="Theme" uid="uid://d1ff85lu8qqwm" path="res://addons/auto_complete_menu_node/Assets/base_theme.tres" id="2_2iona"]
+
+[node name="LineEditExample" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AutoCompleteAssistant" type="Node" parent="." node_paths=PackedStringArray("line_edits", "menu_location_node")]
+script = ExtResource("1_qnd4x")
+line_edits = [NodePath("../FullCoverageTestControl/LineEdit")]
+menu_location_node = NodePath("../FullCoverageTestControl")
+terms_file_path = "res://addons/auto_complete_menu_node/example_terms_file.json"
+use_edit_font_size = true
+
+[node name="FullCoverageTestControl" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.50575, 0.64078, 0.432909, 1)
+
+[node name="LineEdit" type="LineEdit" parent="FullCoverageTestControl"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.45
+anchor_right = 0.6
+anchor_bottom = 0.5
+offset_left = -6.88
+offset_top = 25.58
+offset_right = -6.88
+offset_bottom = 56.58
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_top = NodePath("/root/@EditorNode@16914/@Panel@13/@VBoxContainer@14/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@25/DockVSplitCenter/@VSplitContainer@52/@VBoxContainer@53/@PanelContainer@98/MainScreen/@CanvasItemEditor@9272/@VSplitContainer@9094/@HSplitContainer@9096/@HSplitContainer@9098/@Control@9099/@SubViewportContainer@9100/@SubViewport@9101/LineEditExample/AutoCompleteAssistant/CompleteMenu/ScrollContainer/OptionHolder/@ColorRect@17331/Button")
+theme = ExtResource("2_2iona")
+placeholder_text = "Insert Text"
+
+[node name="OutOfCoverageTestControl" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_right = 0.5
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2

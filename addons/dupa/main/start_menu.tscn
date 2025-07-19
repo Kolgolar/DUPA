@@ -1,0 +1,100 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc20cfsm4d8wj"]
+
+[ext_resource type="Texture2D" uid="uid://cvupxw7p3ljqu" path="res://addons/dupa/common/ui/textures/dupa.png" id="1_lpyfo"]
+[ext_resource type="Script" uid="uid://lqi64g30qbg1" path="res://addons/dupa/main/start_menu.gd" id="1_pct73"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rg07"]
+bg_color = Color(0.163992, 0.215785, 0.242031, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.670588, 0.290196, 0.553369, 0.447059)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StartMenu" type="PanelContainer"]
+custom_minimum_size = Vector2(400, 400)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4rg07")
+script = ExtResource("1_pct73")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+alignment = 1
+
+[node name="Headline" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "Welcome to DUPA!"
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("1_lpyfo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+
+[node name="New" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+theme_type_variation = &"ButtonStartMenu"
+text = "New"
+
+[node name="Open" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+theme_type_variation = &"ButtonStartMenu"
+text = "Open"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Help" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+theme_type_variation = &"ButtonStartMenu"
+text = "Help"
+
+[node name="Exit" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+theme_type_variation = &"ButtonStartMenu"
+text = "Exit"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/Buttons"]
+layout_mode = 2
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/New" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/Open" to="." method="_on_open_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/Help" to="." method="_on_help_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/Exit" to="." method="_on_exit_pressed"]
