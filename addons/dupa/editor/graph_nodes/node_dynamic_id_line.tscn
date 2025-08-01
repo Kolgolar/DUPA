@@ -32,61 +32,53 @@ layout_mode = 2
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/GridContainer" index="0"]
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-text = "Player speaking"
-
-[node name="IsPlayerLine" type="CheckButton" parent="VBoxContainer/GridContainer" index="1"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="2"]
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="0"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 text = "Base"
 vertical_alignment = 1
 
-[node name="IDBase" type="LineEdit" parent="VBoxContainer/GridContainer" index="3"]
+[node name="IDBase" type="LineEdit" parent="VBoxContainer/GridContainer" index="1"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "line_character_"
 
-[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="4"]
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="2"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 text = "From"
 vertical_alignment = 1
 
-[node name="IDFrom" type="SpinBox" parent="VBoxContainer/GridContainer" index="5"]
+[node name="IDFrom" type="SpinBox" parent="VBoxContainer/GridContainer" index="3"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 
-[node name="Label4" type="Label" parent="VBoxContainer/GridContainer" index="6"]
+[node name="Label4" type="Label" parent="VBoxContainer/GridContainer" index="4"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 text = "To"
 vertical_alignment = 1
 
-[node name="IDTo" type="SpinBox" parent="VBoxContainer/GridContainer" index="7"]
+[node name="IDTo" type="SpinBox" parent="VBoxContainer/GridContainer" index="5"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 max_value = 8192.0
 value = 1.0
 
-[node name="Label5" type="Label" parent="VBoxContainer/GridContainer" index="8"]
+[node name="Label5" type="Label" parent="VBoxContainer/GridContainer" index="6"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Speaker"
 
-[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="9"]
+[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="7"]
 layout_mode = 2
 clip_text = true
 fit_to_longest_item = false
 
-[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="10"]
+[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="8"]
 layout_mode = 2
 text = "Cust. speaker"
 
-[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="11"]
+[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="9"]
 layout_mode = 2
 placeholder_text = "Custom speaker name"

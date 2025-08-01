@@ -70,7 +70,7 @@ func save_changes_to_timeline_file(path: String):
 	data[&"CONFIG"] = {
 		&"max_id": graph_edit.max_id,
 		&"dupa_version": DUPA_Utils.get_dupa_config_value(&"meta", &"version"),
-		&"speakers": graph_edit.get_all_speakers_paths(),
+		&"speakers": graph_edit.get_used_speakers_paths(),
 	}
 	data[&"TIMELINE"] = graph_edit.get_timeline()
 	var file = FileAccess.open(path, FileAccess.WRITE)
@@ -208,7 +208,7 @@ func new_timeline():
 		# TODO: Соответственно, нужен механизм туду реду, чтобы определять, были
 		# ли совершены действия, которые не были сохранены.
 		pass
-	graph_edit.find_all_speakers()
+	graph_edit.find_avaliable_speakers()
 	show()
 	reset()
 
@@ -230,7 +230,8 @@ func _on_refresh_speakers_pressed() -> void:
 		"ВНИМАНИЕ:
 		Сделай бэкап перед тем, как обновлять список спикеров.
 		Я эту фигню ещё нормально не реализовал."
-	DUPA_Utils.create_confirmation_dialog(backup_warning, self, graph_edit.check_for_speakers_changes)
+	DUPA_Utils.create_confirmation_dialog(backup_warning, self, graph_edit.find_avaliable_speakers)
+	
 
 
 #--------------------------------------------

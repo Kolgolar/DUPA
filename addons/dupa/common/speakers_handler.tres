@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="DUPA_SpeakersHandler" load_steps=5 format=3 uid="uid://dn26t37rcgnh3"]
+[gd_resource type="Resource" script_class="DUPA_SpeakersHandler" load_steps=6 format=3 uid="uid://dn26t37rcgnh3"]
 
 [ext_resource type="Script" uid="uid://bhsig5pnitno7" path="res://addons/dupa/common/speakers_handler.gd" id="1_k7xot"]
 [ext_resource type="Script" uid="uid://bu3cmf0eaxfoq" path="res://addons/dupa/viewer/resources/speaker_data.gd" id="2_0g24k"]
 [ext_resource type="Resource" uid="uid://bc1vv4pi766d3" path="res://dupa/speakers/char_demo/char_demo_speaker_data.tres" id="3_pg76t"]
 [ext_resource type="Resource" uid="uid://e1dxf61u0sg2" path="res://dupa/speakers/char_demo_2/char_demo_speaker_data_2.tres" id="4_sjt7i"]
+[ext_resource type="Resource" uid="uid://cph4duxynjebk" path="res://dupa/speakers/char_demo_3/char_demo_speaker_data_3.tres" id="5_0g24k"]
 
 [resource]
 script = ExtResource("1_k7xot")
 search_speakers_at = "res://dupa/speakers"
 max_search_depth = 2
-speakers = Array[ExtResource("2_0g24k")]([ExtResource("3_pg76t"), ExtResource("4_sjt7i")])
+speakers = Array[ExtResource("2_0g24k")]([ExtResource("3_pg76t"), ExtResource("4_sjt7i"), ExtResource("5_0g24k")])

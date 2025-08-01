@@ -7,7 +7,7 @@ signal error(error_text: String)
 @export var _lite_line_nodes := false
 @export var _actions_master: ActionsMaster
 @export_dir var speakers_root_folder := "res://"
-@export var all_speakers: Array[DUPA_SpeakerData]
+@export var avaliable_speakers: Array[DUPA_SpeakerData]
 
 var dialog = {}
 var max_id := 0
@@ -30,32 +30,60 @@ func _ready() -> void:
 	_node_params_popup.hide()
 
 
-func check_for_speakers_changes() -> void:
-	pass
-
-
-func find_all_speakers() -> void:
-	if all_speakers.is_empty():
+func find_avaliable_speakers() -> void:
+	print("Searching...")
+	var prev_speakers: Array[DUPA_SpeakerData] = []
+	if !avaliable_speakers.is_empty():
+		prev_speakers = avaliable_speakers.duplicate()
+		avaliable_speakers.clear()
+		
 		DUPA_Utils.find_all_resources(
-			all_speakers,
+			avaliable_speakers,
 			"DUPA_SpeakerData",
 			speakers_root_folder,
 			5
 		)
-	_cache_all_speakers_names()
+	_cache_avaliable_speakers_names()
+	
+
+	if prev_speakers.size() > 0:
+		var speakers_map: Dictionary[int, int]
+		for id in prev_speakers.size():
+			var new_speaker_id = avaliable_speakers.find(prev_speakers[id])
+			speakers_map[id] = new_speaker_id
+			if new_speaker_id == -1:
+				DUPA_Utils.create_confirmation_dialog(
+					"WARNING!!! For some reason speaker data at %s was not found! The line nodes, that reference that speaker, will not behave as expected." % prev_speakers[id].id_name,
+					self
+				)
+		var line_nodes := _get_all_graph_nodes_of_types([DUPA_Lib.NodeType.LINE])
+		
+		for node in line_nodes:
+			if node is DUPA_GraphNodeLine:
+				var set_to_idx := -1
+				if speakers_map.has(node.speaker_idx):
+					set_to_idx = speakers_map[node.speaker_idx]
+				node.fill_speakers_list(_cached_speakers_names)
+				node.speaker_idx = set_to_idx
+			elif node is DUPA_GraphNodeDynamicIDLine:
+				pass
 
 
-func _cache_all_speakers_names() -> void:
-	_cached_speakers_names.clear()
-	_cached_speakers_names = all_speakers.map(
-		func(sp): return "%s [%s]" % [sp.id_name, sp.resource_path]
-	)
-
-
-func get_all_speakers_paths() -> Array[Dictionary]:
+func get_used_speakers_paths() -> Array[Dictionary]:
+	# Find which speakers are actually used in dialog
+	var used_speakers: PackedInt32Array
+	for node in _get_all_graph_nodes_of_types([DUPA_Lib.NodeType.LINE, DUPA_Lib.NodeType.DYNAMIC_ID_LINE]):
+		if node is DUPA_GraphNodeLine:
+			var sidx = node.speaker_idx
+			if sidx >= 0 && !used_speakers.has(sidx):
+				used_speakers.append(sidx)
+		elif node is DUPA_GraphNodeDynamicIDLine:
+			pass
+			# TODO: Логика для динамик айди. Нужна поддержка нескольких персов
+			
 	var paths: Array[Dictionary] = []
-	for speaker in all_speakers:
-		var res_path: String = speaker.resource_path
+	for id in used_speakers:
+		var res_path: String = avaliable_speakers[id].resource_path
 		var res_unqique_id: int = ResourceLoader.get_resource_uid(res_path)
 		if !ResourceUID.has_id(res_unqique_id):
 			DUPA_Logger.add_msg("Generating UID for %s." % res_path)
@@ -63,12 +91,19 @@ func get_all_speakers_paths() -> Array[Dictionary]:
 			ResourceUID.add_id(res_unqique_id, res_path)
 		paths.append({
 			"path": res_path,
-			"uid": res_unqique_id
+			"uid": ResourceUID.id_to_text(res_unqique_id)
 		})
 	return paths
 		
 
-	#return PackedStringArray(all_speakers.map(func(elem):
+func _cache_avaliable_speakers_names() -> void:
+	_cached_speakers_names.clear()
+	_cached_speakers_names = avaliable_speakers.map(
+		func(sp): return "%s [%s]" % [sp.id_name, sp.resource_path]
+	)
+
+
+	#return PackedStringArray(avaliable_speakers.map(func(elem):
 			#return (elem as DUPA_SpeakerData).resource_path)
 	#)
 
@@ -318,7 +353,16 @@ func _remove_focused_nodes_connections(act_name := "Remove node(s) connections")
 		true
 	)
 
-	
+
+func _get_all_graph_nodes_of_types(types: Array[DUPA_Lib.NodeType]) -> Array[DUPA_GraphNodeBase]:
+	var graph_nodes = get_children()
+	var found_nodes: Array[DUPA_GraphNodeBase]
+	for type in types:
+		found_nodes.append_array(
+			graph_nodes.filter(func(node): return node is DUPA_GraphNodeBase && node.type == type))
+	return found_nodes
+
+
 func _call_mouse_popup() -> void:
 	_mouse_popup.position = get_global_mouse_position()
 	_mouse_popup.popup()
@@ -367,20 +411,19 @@ func clear_nodes():
 func set_timeline(timeline: Dictionary, config: Dictionary):
 	max_id = config[&"max_id"]
 	var speakers = config[&"speakers"]
-	all_speakers.clear()
-	# Do not use map, because all_speakers is typed array
+	avaliable_speakers.clear()
+	# Do not use map, because avaliable_speakers is typed array
 	for sp in speakers:
 		var speaker_data: DUPA_SpeakerData
-		var uid_path: String = ResourceUID.id_to_text(sp.uid)
-		if FileAccess.file_exists(uid_path):
-			speaker_data = load(uid_path)
+		if FileAccess.file_exists(sp.uid):
+			speaker_data = load(sp.uid)
 		else:
-			DUPA_Logger.add_warning("Speaker data was not found at %s. Searching by relative path..." % uid_path)
+			DUPA_Logger.add_warning("Speaker data was not found at %s. Searching by relative path...")
 			speaker_data = load(sp.path)
 		if !speaker_data:
 			DUPA_Utils.create_confirmation_dialog("Speaker data was not found at %s. Perhaps it was deleted. You may try to manually update path to the file in .json file." % sp.path, self)
-		all_speakers.append(speaker_data)
-	_cache_all_speakers_names()
+		avaliable_speakers.append(speaker_data)
+	_cache_avaliable_speakers_names()
 	var graph_nodes_names: Dictionary[int, StringName] = {}
 	for graph_node_id_str in timeline:
 		var graph_node_id_int := int(graph_node_id_str)
@@ -388,6 +431,8 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 		
 		var node = _create_graph_node(node_scene_path, Vector2.ZERO, graph_node_id_int)
 		node.set_data(timeline[graph_node_id_str])
+		if node is DUPA_GraphNodeLineBase:
+			node.fill_speakers_list(_cached_speakers_names)
 		graph_nodes_names[graph_node_id_int] = node.name
 	
 
@@ -437,14 +482,6 @@ func validate_timeline() -> int:
 				if not connected:
 					error.emit("Start node should have at least 1 connection!")
 					err = ERR_DOES_NOT_EXIST
-			#nt.SETTER:
-				#if node.var_name.text.is_empty() or node.var_value.text.is_empty():
-					#error.emit("Setter node '" + node.title + "' has empty parameters!")
-					#err = ERR_INVALID_DATA
-			#nt.CALLER:
-				#if node.var_name.text.is_empty():
-					#error.emit("Caller node '" + node.title + "' has empty function name!")
-					#err = ERR_INVALID_DATA
 			nt.ACTION:
 				if node.arg_name.text.is_empty():
 					error.emit("Action node '" + node.title + "' has empty arg name!")

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DUPA_SpeakerData" load_steps=2 format=3 uid="uid://cph4duxynjebk"]
+
+[ext_resource type="Script" uid="uid://bu3cmf0eaxfoq" path="res://addons/dupa/viewer/resources/speaker_data.gd" id="1_2kreg"]
+
+[resource]
+script = ExtResource("1_2kreg")
+id_name = "Sasai"
+voicelines_folder = null
+char_printing_sounds_folder = null
+localization_file = null
+name_color = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://bu3cmf0eaxfoq"

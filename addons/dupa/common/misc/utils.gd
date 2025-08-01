@@ -27,8 +27,8 @@ on_cancel_pressed: Callable = func(): pass):
 	return confirmation_dialog
 
 
-static func wait(time: float, node: Node):
-	await node.get_tree().create_timer(time).timeout
+#static func wait(time: float, node: Node):
+	#await node.get_tree().create_timer(time).timeout
 
 
 static func is_inside_control(pos: Vector2, control: Control) -> bool:
@@ -115,7 +115,7 @@ static func find_all_resources(
 		resource_class_name := "",
 		search_root := "res://",
 		max_depth := 5
-	):
+	) -> void:
 	
 	var pattern := 'script_class\\s*=\\s*"' + resource_class_name + '"'
 	var regex := RegEx.new()
@@ -124,7 +124,7 @@ static func find_all_resources(
 	_scan_recursive(write_to, search_root, regex, 0, max_depth)
 
 
-static func _scan_recursive(write_to: Array[DUPA_SpeakerData], path: String, regex: RegEx, depth: int, max_depth: int) -> void:
+static func _scan_recursive(write_to: Array, path: String, regex: RegEx, depth: int, max_depth: int) -> void:
 	if depth > max_depth:
 		return
 
