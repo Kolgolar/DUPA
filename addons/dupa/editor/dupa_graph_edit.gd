@@ -381,14 +381,28 @@ func _call_mouse_popup() -> void:
 func get_timeline() -> Dictionary:
 	var timeline := {}
 	var config_speakers := {}
+	var used_speakers: PackedInt32Array
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		timeline[node.id] = node.gen_data()
+		
+		if node.type == DUPA_Lib.NodeType.LINE:
+			var sidx = node.speaker_idx
+			if !used_speakers.has(sidx):
+				used_speakers.append(sidx)
+		elif node.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
+			pass
 	
 	# Marks choice nodes. Adds "is_choice" field to a LINE nodes data in save file
-	for node in timeline:
-		var graph_node_data = timeline[node]
+	for node_id in timeline:
+		var graph_node_data = timeline[node_id]
 		if graph_node_data.type == DUPA_Lib.NodeType.CONDITION:
 			continue
+		
+		if graph_node_data.type == DUPA_Lib.NodeType.LINE:
+			graph_node_data.speaker_idx = used_speakers.find(graph_node_data.speaker_idx)
+		elif graph_node_data.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
+			pass
+			
 		var connected_nodes_ids = graph_node_data.go_to
 		if connected_nodes_ids.size() <= 1: continue
 		for choice_node_id in connected_nodes_ids:

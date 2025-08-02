@@ -10,10 +10,11 @@ extends DUPA_GraphNodeBase
 #TODO: Добавить подобные поля во все ноды? Или не нужно, пусть это будет только для реально нужных?
 @onready var speaker_idx:
 	set(idx):
-		speaker.set_deferred("selected", idx)
-		_speaker_selected(idx)
+		var list_idx = idx + 1
+		speaker.set_deferred("selected", list_idx)
+		_speaker_selected(list_idx)
 	get:
-		return speaker.get_selected_id()
+		return speaker.selected - 1
 		
 
 func _ready() -> void:
@@ -39,6 +40,10 @@ func set_param(param_name: StringName, value):
 
 func gen_data(allow_empty := false) -> Dictionary:
 	var data := super()
+	# Shifts the speaker_idx by 1 so it points at the corresponding element
+	# at "speakers_paths" value at the .json save file. We need to do this, because
+	# we always have <CUSTOM> element at index 0, so indexes of all other elements
+	# shift by 1.
 	data[&"speaker_idx"] = speaker_idx
 	data[&"custom_speaker_name"] = custom_speaker_name_line.text
 	return data
@@ -46,7 +51,7 @@ func gen_data(allow_empty := false) -> Dictionary:
 
 func _reset_speakers_list() -> void:
 	speaker.clear()
-	speaker.add_item(&"<CUSTOM>", -1)
+	speaker.add_item(&"<CUSTOM>")
 
 
 func _get_fields_to_track() -> Array[Control]:

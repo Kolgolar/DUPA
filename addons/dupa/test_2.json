@@ -4,8 +4,8 @@
 		"max_id": 4,
 		"speakers": [
 			{
-				"path": "res://dupa/speakers/char_demo_2/char_demo_speaker_data_2.tres",
-				"uid": "uid://e1dxf61u0sg2"
+				"path": "res://dupa/speakers/char_demo/char_demo_speaker_data.tres",
+				"uid": "uid://bc1vv4pi766d3"
 			}
 		]
 	},
@@ -16,8 +16,8 @@
 			"go_to": [
 				1
 			],
-			"offset_x": 400.0,
-			"offset_y": 380.0,
+			"offset_x": 180.0,
+			"offset_y": 360.0,
 			"source": "",
 			"type": 1
 		},
@@ -29,9 +29,9 @@
 				2
 			],
 			"line_id": "test_1",
-			"offset_x": 860.0,
-			"offset_y": 380.0,
-			"speaker_idx": 1,
+			"offset_x": 640.0,
+			"offset_y": 320.0,
+			"speaker_idx": 0,
 			"type": 2
 		},
 		"2": {
@@ -43,9 +43,9 @@
 				4
 			],
 			"line_id": "test_2",
-			"offset_x": 1340.0,
-			"offset_y": 380.0,
-			"speaker_idx": 1,
+			"offset_x": 1120.0,
+			"offset_y": 320.0,
+			"speaker_idx": 0,
 			"type": 2
 		},
 		"3": {
@@ -55,9 +55,9 @@
 			"go_to": [],
 			"is_choice": true,
 			"line_id": "choice_1",
-			"offset_x": 1840.0,
-			"offset_y": 260.0,
-			"speaker_idx": 1,
+			"offset_x": 1580.0,
+			"offset_y": 140.0,
+			"speaker_idx": 0,
 			"type": 2
 		},
 		"4": {
@@ -67,9 +67,9 @@
 			"go_to": [],
 			"is_choice": true,
 			"line_id": "choice_2",
-			"offset_x": 1840.0,
-			"offset_y": 500.0,
-			"speaker_idx": 1,
+			"offset_x": 1560.0,
+			"offset_y": 440.0,
+			"speaker_idx": 0,
 			"type": 2
 		}
 	}
