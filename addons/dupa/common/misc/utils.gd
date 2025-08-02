@@ -57,14 +57,14 @@ static func load_speakers_data_from_config(speakers: Array, append_error_popup_t
 	return data
 
 
-static func read_localization_csv_file(file_path: String, primary_locale := "en", fallback_locale := "en") -> Dictionary[String, Dictionary]:
+static func read_localization_csv_file(file_path: String, primary_locale := "ru", fallback_locale := "en") -> Dictionary[String, Dictionary]:
 	if file_path.is_empty():
 		push_error("File path is empty!")
 		return {}
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var err = FileAccess.get_open_error()
 	if err != OK:
-		push_error("CSV файл не найден: %s. Ошибка: %s" % [file_path, err])
+		push_error("csv-file was not found: %s. Error code: %s" % [file_path, err])
 		return {}
 		
 	var data: Dictionary[String, Dictionary]
@@ -86,11 +86,11 @@ static func read_localization_csv_file(file_path: String, primary_locale := "en"
 					id_column = row.find("id")
 					
 					if primary_locale_column < 0:
-						push_error("Primary locale '%s' column was not found!" % primary_locale_column)
+						push_error("Primary locale '%s' column was not found!" % primary_locale)
 					if fallback_locale_column < 0:
-						push_error("Fallback locale column '%s' was not found!" % fallback_locale_column)
+						push_error("Fallback locale column '%s' was not found!" % fallback_locale)
 					if tags_column < 0:
-						push_error("'tags' column was not found!" % tags_column)
+						push_error("'tags' column was not found!")
 					if id_column < 0:
 						push_error("ID column was not found!")
 						break
@@ -100,12 +100,18 @@ static func read_localization_csv_file(file_path: String, primary_locale := "en"
 				
 				var id = row[id_column]
 				if id == "": continue # Если id пустой
+				var localized_line = row[primary_locale_column]
 				data[id] = {
 					&"tags": row[tags_column],
-					&"line": row[primary_locale_column],
+					&"line": localized_line,
 				}
-				if primary_locale != fallback_locale:
-					data[id][&"fallback_line"] = row[fallback_locale_column] 
+				if primary_locale != fallback_locale && localized_line.is_empty():
+					push_error("Line '%s' does not have a text for the current locale. Trying to use the fallback locale instead." % id)
+					localized_line = row[fallback_locale_column]
+					if localized_line.is_empty():
+						push_error("Fallback locale has an empty line too :(")
+					else:
+						data[id][&"line"] = localized_line
 		file.close()
 	
 	return data

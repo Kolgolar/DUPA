@@ -6,6 +6,7 @@ enum PlayerChoiceLinePreviewMode {
 	DISABLED, ## Full player lines should be displayed on choice buttons.[br]
 	SHOW_ON_HOVER, ## The choice buttons should contain the brief of the choice lines, while the full line will be displayed in the separate panel if a mouse cursor is hovering the choice button.[br]
 	SHOW_ON_PRESS ## The same as the previous, but the full choice line will be displayed on PRESSING the choice button, so the final choice should be done by pressing on the full choice line.[br]
+	# TODO: SHOW_ON_PRESS_IF_MOBILE
 }
 
 var localization_master: DUPA_LocalizationMaster

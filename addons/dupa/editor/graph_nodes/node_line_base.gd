@@ -1,6 +1,8 @@
 class_name DUPA_GraphNodeLineBase
 extends DUPA_GraphNodeBase
 
+static var SPEAKER_CUSTOM = -1
+
 #const CUSTOM_SPEAKER_ID := 9999
 # TODO: Сделать приватными все поля, указывающие на ноды, т.к. на них не должна быть возможность
 # ссылаться извне.
@@ -61,7 +63,7 @@ func _get_fields_to_track() -> Array[Control]:
 
 
 func _speaker_selected(idx: int) -> void:
-	var show_custom_speaker_fields = idx == -1
+	var show_custom_speaker_fields = idx == SPEAKER_CUSTOM
 	custom_speaker_name_label.visible = show_custom_speaker_fields
 	custom_speaker_name_line.visible = show_custom_speaker_fields
 

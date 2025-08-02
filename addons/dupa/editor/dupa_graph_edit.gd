@@ -51,7 +51,7 @@ func find_avaliable_speakers() -> void:
 		for id in prev_speakers.size():
 			var new_speaker_id = avaliable_speakers.find(prev_speakers[id])
 			speakers_map[id] = new_speaker_id
-			if new_speaker_id == -1:
+			if new_speaker_id < 0:
 				DUPA_Utils.create_confirmation_dialog(
 					"WARNING!!! For some reason speaker data at %s was not found! The line nodes, that reference that speaker, will not behave as expected." % prev_speakers[id].id_name,
 					self

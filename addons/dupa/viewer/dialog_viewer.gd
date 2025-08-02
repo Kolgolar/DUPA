@@ -34,7 +34,6 @@ enum OnDialogFinished {
 }
 
 var _blueprint_config: Dictionary
-#var _csv_data: Dictionary
 
 var _dialog_data: Array[DUPA_Lib.DN_Base]
 var _dialog_speakers: Array[DUPA_SpeakerData]
@@ -145,12 +144,7 @@ func start_dialog(blueprint_file := blueprint_file) -> void:
 	_dialog_data = _construct_dialog_data(blueprint_data)
 	# The start node is always expected to be first because of id == 0
 	_curr_dialog_node = _dialog_data[0]
-	
-	# TODO: Избавиться от одного _csv_data, вместо этого открывать файлы
-	# с репликами персонажей, участвующих в диалоге
-	#_csv_data = DUPA_Utils.read_localization_csv_file(blueprint_data[start_node][&"source"])
 	_check_next_step(_curr_dialog_node.go_to)
-	
 	dialog_started.emit()
 
 
@@ -174,7 +168,6 @@ func reset_all() -> void:
 	if _visible_characters_tween:
 		_visible_characters_tween.kill()
 	_blueprint_config.clear()
-	#_csv_data.clear()
 	choices_controller.clear()
 	speaker_line.text = ""
 	speaker_name.text = ""
@@ -226,15 +219,6 @@ func _construct_dialog_data(blueprint_data: Dictionary) -> Array[DUPA_Lib.DN_Bas
 	return dialog_data.values()
 
 
-#func _set_game_logic_interactor_script() -> void:
-	#var base_script := game_logic_interactor_script.get_base_script()
-	#if base_script:
-		#if base_script.get_global_name() == &"DUPA_GameLogicInteractor":
-			#%GameLogicInteractor.set_script(game_logic_interactor_script)
-			#return
-	#push_error("Can't assign to the Game Logic Interactor script that does not inherits [b]DUPA_GameLogicInteractor[/b] class!")
-
-
 func _check_next_step(go_to_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 	if _curr_dialog_node is DUPA_Lib.DN_DynamicIdLine:
 		if _curr_dialog_node.are_lines_left():
@@ -284,7 +268,7 @@ func _go_to_node(dialog_node: DUPA_Lib.DN_Base) -> void:
 		nd.CONDITION:
 			var go_to_false_nodes: Array[DUPA_Lib.DN_Base] = _curr_dialog_node.go_to_false
 			if go_to_nodes.size() < 1 && go_to_false_nodes.size() < 1:
-				printerr(false, "Condition node hasn't any attached output!")
+				push_error(false, "Condition node hasn't any attached output!")
 				return
 			instant_proceed = false
 			var var_name: StringName = _curr_dialog_node.var_name
@@ -295,9 +279,8 @@ func _go_to_node(dialog_node: DUPA_Lib.DN_Base) -> void:
 	# Immediatly proceed dialog, if current node is not line/dynamic id line
 	if instant_proceed:
 		_check_next_step(_curr_dialog_node.go_to)
-	
-	
 	#push_error("For some reason DUPA couldn't handle node of a type '%s'..." % _curr_dialog_node.type)
+
 
 func _condition_return(value: bool) -> void:
 	if value == null:
@@ -314,20 +297,25 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 	dialog_panel.show()
 	assert(dialog_node, "Dialog node data is null!")
 	var line_text := ""
+	# NOTE: Реплика хранится внутри ноды только в случае DN_LineChoice!
 	# Assuming that .line_full and line_choice variables was assigned before
 	if dialog_node is DUPA_Lib.DN_LineChoice:
 		line_text = dialog_node.line_full
 		if line_text.is_empty():
 			line_text = dialog_node.line_choice
 		DUPA_Logger.add_msg("Printing the choice.")
-	else:
+	elif dialog_node is DUPA_Lib.DN_Line:
 		var line_id = _curr_dialog_node.get_line_id()
 		DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
 		var speaker = dialog_node.speaker
-		# TODO: Нужно ли дополнительно проверять, найдена ли реплика?
-		line_text = localization_master.speakers_localization[speaker][line_id][&"line"]
-		# NOTE: Сама реплика НЕ храниться внутри DN_Line, а только внутри DN_LineChoice
-		#line_text = line_id
+		var speaker_localization = localization_master.speakers_localization[speaker]
+		assert(
+			speaker_localization.has(line_id),
+			"Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id]
+		)
+		line_text = speaker_localization[line_id][&"line"]
+	elif dialog_node is DUPA_Lib.DN_DynamicIdLine:
+		pass
 		
 	speaker_line.text = line_text
 	
@@ -373,7 +361,7 @@ func _show_choices(dialog_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 		)
 		var speaker = dialog_node.speaker
 		var line_id = dialog_node.get_line_id()
-		# TODO: Нужно ли дополнительно проверять, найдена ли реплика?
+		# TODO: Дублирует аналогичный код в show_choices(), мб заменить общей функцией?
 		var speaker_localization = localization_master.speakers_localization[speaker]
 		assert(
 			speaker_localization.has(line_id),
@@ -382,18 +370,6 @@ func _show_choices(dialog_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 		var line = speaker_localization[line_id][&"line"]
 		dialog_node.line_full = line
 	choices_controller.show_choices(dialog_nodes)
-
-
-# TODO: Отдельная нода для хранения локализаций и возвращения реплик
-#func get_line_localized_text(line_id: StringName, speaker: DUPA_SpeakerData = null) -> String:
-	#var line_text := ""
-	#if !speaker:
-		#if _csv_data.has(line_id):
-			#line_text = _csv_data[line_id]
-	#else:
-		## TODO: Some code here...
-		#pass
-	#return line_text
 
 
 func _change_visible_characters(value : int) -> void:

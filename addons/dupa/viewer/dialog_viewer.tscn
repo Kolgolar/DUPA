@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dy43nh0u0nnxi"]
+[gd_scene load_steps=19 format=3 uid="uid://dy43nh0u0nnxi"]
 
 [ext_resource type="Script" uid="uid://c7k22qfj3vt1x" path="res://addons/dupa/viewer/dialog_viewer.gd" id="1_sqql4"]
 [ext_resource type="Script" uid="uid://d2lp1a2nwjlqe" path="res://addons/dupa/viewer/localization_master.gd" id="2_2ssqh"]
@@ -7,37 +7,18 @@
 [ext_resource type="PackedScene" uid="uid://btnlpvuiepr3q" path="res://addons/dupa/viewer/dialog_choice_button.tscn" id="5_hyojp"]
 [ext_resource type="PackedScene" uid="uid://c6rhlgjdp8e5x" path="res://addons/dupa/viewer/dialog_choice_button_toggle.tscn" id="6_ruihl"]
 [ext_resource type="StyleBox" uid="uid://jpytvi75xvt8" path="res://addons/dupa/common/ui/styles/line_panel_default.tres" id="7_qc6np"]
+[ext_resource type="StyleBox" uid="uid://ue2oufb5rs2x" path="res://addons/dupa/common/ui/styles/choice_button/choice_button_disabled.tres" id="7_s7mvp"]
 [ext_resource type="Texture2D" uid="uid://bhk1jvu3ta0jn" path="res://addons/dupa/common/ui/textures/btn_undo.png" id="8_1l4f4"]
+[ext_resource type="StyleBox" uid="uid://d4cwhi5t5iyru" path="res://addons/dupa/common/ui/styles/choice_button/choice_button_hover_pressed.tres" id="8_dkh4y"]
+[ext_resource type="StyleBox" uid="uid://o77piu2f5jef" path="res://addons/dupa/common/ui/styles/choice_button/choice_button_hover.tres" id="9_r6aic"]
+[ext_resource type="StyleBox" uid="uid://1kpugnnwspdm" path="res://addons/dupa/common/ui/styles/choice_button/choice_button_pressed.tres" id="10_xw8o8"]
+[ext_resource type="StyleBox" uid="uid://2r5uo6t23eqf" path="res://addons/dupa/common/ui/styles/choice_button/choice_button_normal.tres" id="11_at8nk"]
+[ext_resource type="StyleBox" uid="uid://x2b4t3jb1d0t" path="res://addons/dupa/common/ui/styles/choice_full_line/choice_full_line_hover_pressed.tres" id="12_s30vo"]
+[ext_resource type="StyleBox" uid="uid://clxdrat15yhoo" path="res://addons/dupa/common/ui/styles/choice_full_line/choice_full_line_hover.tres" id="13_fbsev"]
+[ext_resource type="StyleBox" uid="uid://bypa344mrgb7d" path="res://addons/dupa/common/ui/styles/choice_full_line/choice_full_line_pressed.tres" id="14_7p0me"]
+[ext_resource type="StyleBox" uid="uid://cpjx3py1mjgk3" path="res://addons/dupa/common/ui/styles/choice_full_line/choice_full_line_normal.tres" id="15_yvtco"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_77qm7"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvqfc"]
-bg_color = Color(0.172549, 0.152941, 0.235294, 1)
-skew = Vector2(0.25, 0)
-border_width_left = 10
-border_width_right = 10
-border_color = Color(0.945098, 0.572549, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbfi0"]
-bg_color = Color(0.243137, 0.243137, 0.345098, 0.968627)
-skew = Vector2(0.25, 0)
-border_width_left = 10
-border_width_right = 10
-border_color = Color(0.945098, 0.572549, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y48j5"]
-bg_color = Color(0.196078, 0.176471, 0.270588, 1)
-skew = Vector2(0.25, 0)
-border_width_left = 10
-border_width_right = 10
-border_color = Color(0.945098, 0.572549, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_77qm7"]
-bg_color = Color(0.243137, 0.243137, 0.345098, 0.784314)
-skew = Vector2(0.25, 0)
-border_width_left = 10
-border_width_right = 10
-border_color = Color(0.945098, 0.572549, 1, 1)
 
 [node name="DialogViewer" type="MarginContainer" node_paths=PackedStringArray("localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
 anchors_preset = 15
@@ -111,6 +92,11 @@ text = "Choice1"
 
 [node name="Choice1" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
 layout_mode = 2
+theme_override_styles/disabled = ExtResource("7_s7mvp")
+theme_override_styles/hover_pressed = ExtResource("8_dkh4y")
+theme_override_styles/hover = ExtResource("9_r6aic")
+theme_override_styles/pressed = ExtResource("10_xw8o8")
+theme_override_styles/normal = ExtResource("11_at8nk")
 text = "Choice2"
 
 [node name="Choice2" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
@@ -138,10 +124,10 @@ offset_bottom = 165.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_77qm7")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_hvqfc")
-theme_override_styles/hover = SubResource("StyleBoxFlat_fbfi0")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_y48j5")
-theme_override_styles/normal = SubResource("StyleBoxFlat_77qm7")
+theme_override_styles/hover_pressed = ExtResource("12_s30vo")
+theme_override_styles/hover = ExtResource("13_fbsev")
+theme_override_styles/pressed = ExtResource("14_7p0me")
+theme_override_styles/normal = ExtResource("15_yvtco")
 metadata/_edit_group_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine"]
