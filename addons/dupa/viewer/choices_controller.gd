@@ -41,7 +41,7 @@ func show_choices(dialog_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 		var dialog_node := n as DUPA_Lib.DN_LineChoice
 		var line_id: StringName = dialog_node.line_id
 		#var line_full := get_line_localized_text(line_id, null)
-		var line_full: String = line_id
+		var line_full: String = dialog_node.line_full
 		var regex = RegEx.new()
 		regex.compile("(?<=^\\[choice:).*(?=\\])")
 		var result := regex.search(line_full)

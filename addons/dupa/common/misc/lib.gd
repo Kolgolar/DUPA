@@ -107,13 +107,13 @@ class DN_LineBase:
 	extends DN_Base
 	var speaker: DUPA_SpeakerData
 	#var tags: PackedStringArray
-	var is_player: bool # FIXME: УБРАТЬ! Уже есть SpeakerData
+	#var is_player: bool # FIXME: УБРАТЬ! Уже есть SpeakerData
 	
 	func _init(data: Dictionary) -> void:
 		super(data)
 		#character = data.character
 		#tags = data.tags
-		is_player = data.is_player
+		#is_player = data.is_player
 	
 	func get_line_id() -> Variant:
 		return null

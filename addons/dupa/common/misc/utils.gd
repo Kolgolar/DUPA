@@ -37,31 +37,75 @@ static func is_inside_control(pos: Vector2, control: Control) -> bool:
 	return pos.x >= c_pos.x && pos.x <= c_pos.x + c_size.x && pos.y >= c_pos.y && pos.y <= c_pos.y + c_size.y
 
 
-static func read_csv_file(file_path: String) -> Dictionary:
+static func load_speakers_data_from_config(speakers: Array, append_error_popup_to: Node = null) -> Array[DUPA_SpeakerData]: 
+	var data: Array[DUPA_SpeakerData]
+	var speaker_data: DUPA_SpeakerData
+	# Does not use .map(), because avaliable_speakers is typed array
+	for sp in speakers:
+		if FileAccess.file_exists(sp.uid):
+			speaker_data = load(sp.uid)
+		else:
+			DUPA_Logger.add_warning("Speaker data was not found at %s. Searching by relative path..." % sp.uid)
+			speaker_data = load(sp.path)
+			if !speaker_data:
+				if append_error_popup_to:
+					DUPA_Utils.create_confirmation_dialog("Speaker data was not found at %s. Perhaps it was deleted. You may try to manually update path to the file in .json file." % sp.path, append_error_popup_to)
+				else:
+					DUPA_Logger.add_warning("Speaker data was not found at %s." % sp.path)
+		if speaker_data:
+			data.append(speaker_data)
+	return data
+
+
+static func read_localization_csv_file(file_path: String, primary_locale := "en", fallback_locale := "en") -> Dictionary[String, Dictionary]:
+	if file_path.is_empty():
+		push_error("File path is empty!")
+		return {}
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	var err = FileAccess.get_open_error()
 	if err != OK:
-		push_error("CSV файл не найден: %s. Ошибка: %d", [file_path, err])
+		push_error("CSV файл не найден: %s. Ошибка: %s" % [file_path, err])
 		return {}
 		
-	var data = {}
+	var data: Dictionary[String, Dictionary]
 	if err == 0:
 		var is_first_line := true
+		var fallback_locale_column := -1
+		var primary_locale_column := -1
+		var tags_column := -1
+		var id_column := -1
 		while not file.eof_reached():
 			var line = file.get_line().strip_edges()
-			if is_first_line:
-				is_first_line = false
-				continue
 			if line != "":  # Пропустить пустые строки
-				var row := line.split(";")  # Разделить строку по табам
-				if row[1] == "": continue # Если id пустой
-				var id = row[1]
-				row.remove_at(0) # Удаляем комментарий
-				row.remove_at(0)
+				var row: Array = line.split(";")  # Разделить строку по столбцам
+				if is_first_line:
+					is_first_line = false
+					primary_locale_column = row.find(primary_locale)
+					fallback_locale_column = row.find(fallback_locale)
+					tags_column = row.find("tags")
+					id_column = row.find("id")
+					
+					if primary_locale_column < 0:
+						push_error("Primary locale '%s' column was not found!" % primary_locale_column)
+					if fallback_locale_column < 0:
+						push_error("Fallback locale column '%s' was not found!" % fallback_locale_column)
+					if tags_column < 0:
+						push_error("'tags' column was not found!" % tags_column)
+					if id_column < 0:
+						push_error("ID column was not found!")
+						break
+					if primary_locale_column < 0 && fallback_locale_column < 0:
+						break
+					continue
+				
+				var id = row[id_column]
+				if id == "": continue # Если id пустой
 				data[id] = {
-					"tags": row[0],
-					"line": row[1],
+					&"tags": row[tags_column],
+					&"line": row[primary_locale_column],
 				}
+				if primary_locale != fallback_locale:
+					data[id][&"fallback_line"] = row[fallback_locale_column] 
 		file.close()
 	
 	return data

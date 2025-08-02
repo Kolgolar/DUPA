@@ -1,0 +1,6 @@
+﻿comments;id;tags;ru;en
+;name;;Перс;Pers
+;test_1;;Привет!;Hi!
+;test_2;;Оно работает?;Does it work?
+;choice_1;;[choice:Выбор 1] Выбор номер один;[choice:Choice 1]The choice number one
+;choice_2;;[choice: Выбор 2]Выбор номер два;[choice:Choice 2] The choice number two

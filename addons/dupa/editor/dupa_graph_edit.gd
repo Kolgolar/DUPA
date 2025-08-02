@@ -33,16 +33,16 @@ func _ready() -> void:
 func find_avaliable_speakers() -> void:
 	print("Searching...")
 	var prev_speakers: Array[DUPA_SpeakerData] = []
-	if !avaliable_speakers.is_empty():
-		prev_speakers = avaliable_speakers.duplicate()
-		avaliable_speakers.clear()
-		
-		DUPA_Utils.find_all_resources(
-			avaliable_speakers,
-			"DUPA_SpeakerData",
-			speakers_root_folder,
-			5
-		)
+	#if !avaliable_speakers.is_empty():
+	prev_speakers = avaliable_speakers.duplicate()
+	avaliable_speakers.clear()
+	
+	DUPA_Utils.find_all_resources(
+		avaliable_speakers,
+		"DUPA_SpeakerData",
+		speakers_root_folder,
+		5
+	)
 	_cache_avaliable_speakers_names()
 	
 
@@ -411,18 +411,7 @@ func clear_nodes():
 func set_timeline(timeline: Dictionary, config: Dictionary):
 	max_id = config[&"max_id"]
 	var speakers = config[&"speakers"]
-	avaliable_speakers.clear()
-	# Do not use map, because avaliable_speakers is typed array
-	for sp in speakers:
-		var speaker_data: DUPA_SpeakerData
-		if FileAccess.file_exists(sp.uid):
-			speaker_data = load(sp.uid)
-		else:
-			DUPA_Logger.add_warning("Speaker data was not found at %s. Searching by relative path...")
-			speaker_data = load(sp.path)
-		if !speaker_data:
-			DUPA_Utils.create_confirmation_dialog("Speaker data was not found at %s. Perhaps it was deleted. You may try to manually update path to the file in .json file." % sp.path, self)
-		avaliable_speakers.append(speaker_data)
+	avaliable_speakers = DUPA_Utils.load_speakers_data_from_config(speakers, self)
 	_cache_avaliable_speakers_names()
 	var graph_nodes_names: Dictionary[int, StringName] = {}
 	for graph_node_id_str in timeline:

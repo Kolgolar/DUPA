@@ -1,0 +1,15 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cfbdt80h2kv5g"
+valid=false
+
+[deps]
+
+source_file="res://dupa/speakers/char_demo/char_demo.csv"
+
+[params]
+
+compress=true
+delimiter=0

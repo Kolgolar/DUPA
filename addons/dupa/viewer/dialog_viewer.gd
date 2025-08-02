@@ -34,9 +34,10 @@ enum OnDialogFinished {
 }
 
 var _blueprint_config: Dictionary
-var _csv_data: Dictionary
+#var _csv_data: Dictionary
 
 var _dialog_data: Array[DUPA_Lib.DN_Base]
+var _dialog_speakers: Array[DUPA_SpeakerData]
 var _curr_dialog_node: DUPA_Lib.DN_Base
 var _visible_characters_tween: Tween
 var _is_dialog_ended := false
@@ -135,14 +136,19 @@ func start_dialog(blueprint_file := blueprint_file) -> void:
 		blueprint_data[start_node].has(&"source"),
 		"The blueprint does not have a start node!"
 	)
-	
+	var speakers_paths = _blueprint_config[&"speakers"]
+	var speakers_data := DUPA_Utils.load_speakers_data_from_config(speakers_paths)
+	for speaker in speakers_data:
+		localization_master.create_speaker_localization(speaker)
+		_dialog_speakers.append(speaker)
+		
 	_dialog_data = _construct_dialog_data(blueprint_data)
 	# The start node is always expected to be first because of id == 0
 	_curr_dialog_node = _dialog_data[0]
 	
 	# TODO: Избавиться от одного _csv_data, вместо этого открывать файлы
 	# с репликами персонажей, участвующих в диалоге
-	_csv_data = DUPA_Utils.read_csv_file(blueprint_data[start_node][&"source"])
+	#_csv_data = DUPA_Utils.read_localization_csv_file(blueprint_data[start_node][&"source"])
 	_check_next_step(_curr_dialog_node.go_to)
 	
 	dialog_started.emit()
@@ -168,7 +174,7 @@ func reset_all() -> void:
 	if _visible_characters_tween:
 		_visible_characters_tween.kill()
 	_blueprint_config.clear()
-	_csv_data.clear()
+	#_csv_data.clear()
 	choices_controller.clear()
 	speaker_line.text = ""
 	speaker_name.text = ""
@@ -195,6 +201,7 @@ func _construct_dialog_data(blueprint_data: Dictionary) -> Array[DUPA_Lib.DN_Bas
 					dialog_node = DUPA_Lib.DN_LineChoice.new(blueprint_node_data)
 				else:
 					dialog_node = DUPA_Lib.DN_Line.new(blueprint_node_data)
+				dialog_node.speaker = _dialog_speakers[blueprint_node_data.speaker_idx]
 			DUPA_Lib.NodeType.DYNAMIC_ID_LINE: # TODO: Заменить DYNAMIC_LINE на DYNAMIC_ID_LINE
 				dialog_node = DUPA_Lib.DN_DynamicIdLine.new(blueprint_node_data)
 			DUPA_Lib.NodeType.CONDITION:
@@ -307,6 +314,7 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 	dialog_panel.show()
 	assert(dialog_node, "Dialog node data is null!")
 	var line_text := ""
+	# Assuming that .line_full and line_choice variables was assigned before
 	if dialog_node is DUPA_Lib.DN_LineChoice:
 		line_text = dialog_node.line_full
 		if line_text.is_empty():
@@ -315,7 +323,11 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 	else:
 		var line_id = _curr_dialog_node.get_line_id()
 		DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
-		line_text = line_id
+		var speaker = dialog_node.speaker
+		# TODO: Нужно ли дополнительно проверять, найдена ли реплика?
+		line_text = localization_master.speakers_localization[speaker][line_id][&"line"]
+		# NOTE: Сама реплика НЕ храниться внутри DN_Line, а только внутри DN_LineChoice
+		#line_text = line_id
 		
 	speaker_line.text = line_text
 	
@@ -336,31 +348,52 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 		if !ignore_no_speaker_data:
 			push_error("No speaker data was found for the node (ID: %s)." % _curr_dialog_node.id)
 		speaker_name.text = speaker_placeholder_name
-		return
-	if speaker.localization_file:
+	else:
+		var sp_name_data: Dictionary = localization_master.speakers_localization[speaker].get(&"name", {})
+		if sp_name_data.is_empty():
+			push_error("The ID 'name' was not found in localization! Can't define the speaker's name.")
+			speaker_name.text = speaker_placeholder_name
+		else:
+			speaker_name.text = sp_name_data[&"line"]
+	if localization_master.speakers_localization.has(speaker):
 		#var speaker = _curr_dialog_node.character
 		pass
 	elif !ignore_no_localization:
-		push_error("No localization file was found for speaker '%s'." % speaker.id_name)
+		pass
 	#if !_is_player_speaking:
 		#_visible_characters_tween.tween_method(_play_char_showing_sound, 0.0, time, time)
 
 
 func _show_choices(dialog_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 	dialog_panel.visible = auto_show_choices
+	for dialog_node in dialog_nodes:
+		assert(
+			dialog_node is DUPA_Lib.DN_LineBase,
+			"The dialog node (ID: %s) assigned as a choice node, which is forbidden. Probably there is a problem in the blueprint." % dialog_node.id
+		)
+		var speaker = dialog_node.speaker
+		var line_id = dialog_node.get_line_id()
+		# TODO: Нужно ли дополнительно проверять, найдена ли реплика?
+		var speaker_localization = localization_master.speakers_localization[speaker]
+		assert(
+			speaker_localization.has(line_id),
+			"Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id]
+		)
+		var line = speaker_localization[line_id][&"line"]
+		dialog_node.line_full = line
 	choices_controller.show_choices(dialog_nodes)
 
 
 # TODO: Отдельная нода для хранения локализаций и возвращения реплик
-func get_line_localized_text(line_id: StringName, speaker: DUPA_SpeakerData = null) -> String:
-	var line_text := ""
-	if !speaker:
-		if _csv_data.has(line_id):
-			line_text = _csv_data[line_id]
-	else:
-		# TODO: Some code here...
-		pass
-	return line_text
+#func get_line_localized_text(line_id: StringName, speaker: DUPA_SpeakerData = null) -> String:
+	#var line_text := ""
+	#if !speaker:
+		#if _csv_data.has(line_id):
+			#line_text = _csv_data[line_id]
+	#else:
+		## TODO: Some code here...
+		#pass
+	#return line_text
 
 
 func _change_visible_characters(value : int) -> void:
