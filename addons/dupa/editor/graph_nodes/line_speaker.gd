@@ -7,8 +7,17 @@ signal speaker_selected(idx: int)
 @export var custom_speaker_container: BoxContainer
 @export var custom_speaker_name_line: LineEdit
 @export var remove_button: Button
+@export var allow_custom_speaker := true:
+	set(value):
+		allow_custom_speaker = value
+		if allow_custom_speaker:
+			shift = 1
+		else:
+			shift = 0
 # TODO: Сделать приватными все поля, указывающие на ноды, т.к. на них не должна быть возможность
 # ссылаться извне.
+
+var shift := 1
 
 @onready var removable := false:
 	set(value):
@@ -22,11 +31,11 @@ signal speaker_selected(idx: int)
 	# we always have <CUSTOM> element at index 0, so indexes of all other elements
 	# shift by 1.
 	set(idx):
-		var list_idx = idx + 1
+		var list_idx = idx + shift
 		speaker.selected = list_idx
 		_speaker_selected(idx)
 	get:
-		return speaker.selected - 1
+		return speaker.selected - shift
 
 @onready var custom_speaker_name := "":
 	set(value):
@@ -37,7 +46,7 @@ signal speaker_selected(idx: int)
 
 func _ready() -> void:
 	speaker.item_selected.connect(_on_speaker_item_selected)
-	#custom_speaker_container.hide()
+	custom_speaker_container.visible = allow_custom_speaker
 
 
 func update_speakers_list(all_speakers: PackedStringArray, speakers_map: Dictionary[int, int] = {}) -> void:
@@ -55,7 +64,8 @@ func update_speakers_list(all_speakers: PackedStringArray, speakers_map: Diction
 
 func reset_speakers_list() -> void:
 	speaker.clear()
-	speaker.add_item(&"<CUSTOM>")
+	if allow_custom_speaker:
+		speaker.add_item(&"<CUSTOM>")
 
 
 func _speaker_selected(idx: int) -> void:
@@ -65,7 +75,7 @@ func _speaker_selected(idx: int) -> void:
 
 
 func _on_speaker_item_selected(idx: int) -> void:
-	_speaker_selected(idx - 1)
+	_speaker_selected(idx - shift)
 
 
 func _on_remove_pressed() -> void:

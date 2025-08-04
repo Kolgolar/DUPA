@@ -1,11 +1,11 @@
 {
 	"CONFIG": {
-		"dupa_version": "0.3",
-		"max_id": 9,
+		"dupa_version": "1.0 alpha",
+		"max_id": 10,
 		"speakers": [
 			{
-				"path": "res://dupa/speakers/char_demo_3/char_demo_speaker_data_3.tres",
-				"uid": "uid://cph4duxynjebk"
+				"path": "res://dupa/speakers/char_demo/char_demo_speaker_data.tres",
+				"uid": "uid://bc1vv4pi766d3"
 			},
 			{
 				"path": "res://dupa/speakers/char_demo_2/char_demo_speaker_data_2.tres",
@@ -18,7 +18,7 @@
 			"desc": "",
 			"desc_visible": false,
 			"go_to": [
-				1
+				10
 			],
 			"offset_x": -80.0,
 			"offset_y": 280.0,
@@ -26,81 +26,36 @@
 			"type": 1
 		},
 		"1": {
-			"base": "",
+			"base": "dynamic_",
 			"custom_speaker_name": [],
 			"desc": "123",
 			"desc_visible": true,
-			"from": 0,
-			"go_to": [
-				9
-			],
-			"offset_x": 400.0,
-			"offset_y": 220.0,
+			"from": 1,
+			"go_to": [],
+			"offset_x": 880.0,
+			"offset_y": 140.0,
 			"speaker_idx": [
-				1,
 				0
 			],
-			"to": 1,
+			"to": 3,
 			"type": 3
 		},
-		"5": {
-			"action_type": 0,
-			"arg_name": "",
-			"arg_value": "",
+		"10": {
+			"base": "sas_",
+			"custom_speaker_name": [],
 			"desc": "",
 			"desc_visible": false,
+			"from": 1,
 			"go_to": [
-				6
+				1
 			],
-			"offset_x": 800.0,
-			"offset_y": 780.0,
-			"type": 5
-		},
-		"6": {
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [
-				7
+			"offset_x": 400.0,
+			"offset_y": 200.0,
+			"speaker_idx": [
+				1
 			],
-			"go_to_false": [
-				8
-			],
-			"offset_x": 1260.0,
-			"offset_y": 760.0,
-			"type": 4,
-			"var_name": ""
-		},
-		"7": {
-			"custom_speaker_name": "sdfsdf",
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [],
-			"offset_x": 1860.0,
-			"offset_y": 600.0,
-			"speaker_idx": 0,
-			"type": 2
-		},
-		"8": {
-			"custom_speaker_name": "sfsdf",
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [],
-			"offset_x": 1880.0,
-			"offset_y": 880.0,
-			"speaker_idx": -1,
-			"type": 2
-		},
-		"9": {
-			"custom_speaker_name": "",
-			"desc": "",
-			"desc_visible": false,
-			"go_to": [
-				5
-			],
-			"offset_x": 906.999328613281,
-			"offset_y": 232.818450927734,
-			"speaker_idx": 1,
-			"type": 2
+			"to": 3,
+			"type": 3
 		}
 	}
 }

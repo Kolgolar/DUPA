@@ -8,5 +8,5 @@ id_name = "Kek"
 voicelines_folder = null
 char_printing_sounds_folder = null
 localization_file = "uid://cfbdt80h2kv5g"
-name_color = Color(1, 1, 1, 1)
+name_color = Color(0.335266, 0.744392, 0.293868, 1)
 metadata/_custom_type_script = "uid://bu3cmf0eaxfoq"

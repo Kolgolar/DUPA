@@ -183,7 +183,7 @@ static func _scan_recursive(write_to: Array, path: String, regex: RegEx, depth: 
 		push_error("Can't open the directory: %s" % path)
 		return
 
-	DUPA_Logger.add_msg("Scanning folder: %s" % path)
+	#DUPA_Logger.add_msg("Scanning folder: %s" % path)
 	
 	var entries := dir.get_directories()
 	for folder in entries:
@@ -197,7 +197,7 @@ static func _scan_recursive(write_to: Array, path: String, regex: RegEx, depth: 
 		if !file.ends_with(".tres"):
 			continue
 		var file_path := path.path_join(file)
-		DUPA_Logger.add_msg("Open file: %s" % file_path)
+		#DUPA_Logger.add_msg("Open file: %s" % file_path)
 		
 		var content := FileAccess.get_file_as_string(file_path)
 		var regex_result := regex.search(content)
@@ -205,6 +205,6 @@ static func _scan_recursive(write_to: Array, path: String, regex: RegEx, depth: 
 		if regex_result:
 			#var resource_class := regex_result.get_string(1)
 			#if resource_class == SPEAKER_DATA_CLASS_STR:
-			DUPA_Logger.add_msg("Appending resource: %s" % file_path)
+			#DUPA_Logger.add_msg("Appending resource: %s" % file_path)
 			var speaker_data: DUPA_SpeakerData = load(file_path)
 			write_to.append(speaker_data)

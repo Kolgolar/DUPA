@@ -117,6 +117,7 @@ func _on_speaker_removed(speaker: Control) -> void:
 
 func _on_add_speaker_pressed() -> void:
 	var new_speaker = SPEAKER_DATA.instantiate()
+	new_speaker.allow_custom_speaker = false
 	speakers_container.add_child(new_speaker)
 	new_speaker.update_speakers_list(all_speakers)
 	new_speaker.removed.connect(_on_speaker_removed.bind(new_speaker))

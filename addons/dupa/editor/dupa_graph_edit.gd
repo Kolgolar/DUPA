@@ -5,6 +5,7 @@ signal avaliable_speakers_changed(speakers_map: Dictionary[int, int])
 
 @export var _mouse_popup: PopupMenu
 @export var _node_params_popup: PopupMenu
+@export var connection_popup: PopupMenu
 @export var _lite_line_nodes := false
 @export var _actions_master: ActionsMaster
 @export_dir var speakers_root_folder := "res://"
@@ -23,7 +24,6 @@ var _from_node_to_empty: String
 var _slot_to_connect: int
 var _created_nodes: Dictionary[int, GraphNode]
 var _deleted_nodes: Dictionary[int, Dictionary]
-#var _cached_speakers_names: PackedStringArray
 
 
 
@@ -32,7 +32,7 @@ func _ready() -> void:
 
 
 func find_avaliable_speakers() -> void:
-	print("Searching...")
+	DUPA_Logger.add_msg("Searching for all avaliable speakers.")
 	var prev_speakers: Array[DUPA_SpeakerData] = []
 	#if !avaliable_speakers.is_empty():
 	prev_speakers = avaliable_speakers.duplicate()
@@ -44,6 +44,12 @@ func find_avaliable_speakers() -> void:
 		speakers_root_folder,
 		5
 	)
+	var q := avaliable_speakers.size()
+	var data := avaliable_speakers.map(
+		func(speaker: DUPA_SpeakerData):
+			return "%s. Localization path: <%s>" % [speaker.id_name, speaker.localization_file]
+	)
+	DUPA_Logger.add_msg("\nFound %s speakers:\n%s" % [q, "\n".join(data)])
 	_cache_avaliable_speakers_as_names()
 	
 
@@ -59,18 +65,6 @@ func find_avaliable_speakers() -> void:
 			)
 		
 	avaliable_speakers_changed.emit(speakers_map)
-		
-		#var line_nodes := _get_all_graph_nodes_of_types([DUPA_Lib.NodeType.LINE])
-		#for node in line_nodes:
-			#if node is DUPA_GraphNodeLine:
-				#var set_to_idx := -1
-				#if speakers_map.has(node.speaker_idx):
-					#set_to_idx = speakers_map[node.speaker_idx]
-				##node.fill_speakers_list(_cached_speakers_names)
-				#node.refresh_speakers_list()
-				#node.speaker_idx = set_to_idx
-			#elif node is DUPA_GraphNodeDynamicIDLine:
-				#pass
 
 
 func get_used_speakers_paths() -> Array[Dictionary]:
@@ -103,8 +97,46 @@ func get_used_speakers_paths() -> Array[Dictionary]:
 
 func _cache_avaliable_speakers_as_names() -> void:
 	DUPA_GraphNodeLineBase.all_speakers = avaliable_speakers.map(
-		func(sp): return "%s [%s]" % [sp.id_name, sp.resource_path]
+		#func(sp): return "%s [%s]" % [sp.id_name, sp.resource_path]
+		func(sp): return "%s" % sp.id_name
 	)
+
+
+
+#-------------------------------------------
+# Методы, вызываемые для операций Undo/Redo
+#-------------------------------------------
+#region Connections
+
+func _get_connection_at_pos(pos: Vector2) -> Dictionary:
+	var cursor_zone := 50.
+	var conn = get_connections_intersecting_with_rect(
+		Rect2(get_global_mouse_position(), Vector2(cursor_zone, cursor_zone))
+	)
+	if conn.size() > 0:
+		return conn[0]
+	return {}
+	
+
+func _show_connection_popup(conn: Dictionary, pos: Vector2) -> void:
+	var popup := PopupMenu.new()
+	add_child(popup)
+	popup.add_icon_item(preload("res://addons/dupa/common/ui/textures/cross_red.png"), "Remove connection")
+	popup.set_position(pos)
+	popup.popup()
+	popup.id_pressed.connect(_on_connection_popup_id_pressed.bind(conn))
+
+
+func _on_connection_popup_id_pressed(id: int, conn: Dictionary) -> void:
+	if id == 0:
+		_actions_master.register_method_action(
+			"Remove connection",
+			disconnect_node.bind(conn.from_node, conn.from_port, conn.to_node, conn.to_port),
+			connect_node.bind(conn.from_node, conn.from_port, conn.to_node, conn.to_port)
+		)
+
+
+#endregion
 
 
 
@@ -446,6 +478,8 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 		if graph_node_type != DUPA_Lib.NodeType.CONDITION: continue
 		set_go_to_nodes_connections.call(graph_node_id_str, &"go_to_false", DUPA_Lib.OUTPUT_FALSE_PORT)
 
+	find_avaliable_speakers()
+	
 
 func validate_timeline() -> int:
 	var err := OK
@@ -577,7 +611,12 @@ func _on_popup_request(at_position: Vector2) -> void:
 	if _rmb_on_node_was_pressed:
 		_rmb_on_node_was_pressed = false
 	else:
-		_call_mouse_popup()
+		var mouse_pos = get_local_mouse_position()
+		var connection = _get_connection_at_pos(mouse_pos)
+		if connection:
+			_show_connection_popup(connection, mouse_pos)
+		else:
+			_call_mouse_popup()
 
 #endregion
 

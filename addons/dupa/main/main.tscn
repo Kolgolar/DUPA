@@ -102,7 +102,7 @@ _actions_master = NodePath("ActionsMaster")
 [node name="ActionsMaster" type="Node" parent="Editor"]
 script = ExtResource("6_6v7uy")
 
-[node name="GraphEdit" type="GraphEdit" parent="Editor" node_paths=PackedStringArray("_mouse_popup", "_node_params_popup", "_actions_master")]
+[node name="GraphEdit" type="GraphEdit" parent="Editor" node_paths=PackedStringArray("_mouse_popup", "_node_params_popup", "connection_popup", "_actions_master")]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -118,6 +118,7 @@ show_zoom_label = true
 script = ExtResource("5_7dhgn")
 _mouse_popup = NodePath("../Popups/MousePopup")
 _node_params_popup = NodePath("../Popups/NodeParamsPopup")
+connection_popup = NodePath("../Popups/ConnectionPopup")
 _lite_line_nodes = true
 _actions_master = NodePath("../ActionsMaster")
 speakers_root_folder = "res://dupa/speakers"
@@ -169,6 +170,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="Clear" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(125, 35)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -180,6 +182,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="RefreshSpeakers" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
+visible = false
 layout_mode = 2
 text = "UPDATE SPEAKERS DATA"
 
@@ -220,7 +223,7 @@ size = Vector2i(343, 100)
 dialog_text = "Are you sure you want to delete all nodes?"
 
 [node name="MousePopup" type="PopupMenu" parent="Editor/Popups"]
-size = Vector2i(138, 170)
+size = Vector2i(159, 170)
 item_count = 5
 item_0/text = "+ Start"
 item_0/id = 0
@@ -252,8 +255,6 @@ grow_vertical = 2
 
 [node name="NodeParamsPopup" type="PopupMenu" parent="Editor/Popups"]
 size = Vector2i(236, 175)
-visible = true
-unfocusable = true
 item_count = 6
 item_0/text = "Show description field"
 item_0/checkable = 2
@@ -269,6 +270,14 @@ item_4/id = 4
 item_5/text = "DELETE"
 item_5/icon = ExtResource("3_y3mvl")
 item_5/id = 10
+
+[node name="ConnectionPopup" type="PopupMenu" parent="Editor/Popups"]
+auto_translate_mode = 1
+size = Vector2i(197, 36)
+item_count = 1
+item_0/text = "Remove connection"
+item_0/icon = ExtResource("3_y3mvl")
+item_0/id = 10
 
 [connection signal="create_timeline" from="StartScreen/StartPanels/StartMenu" to="." method="_on_create_timeline"]
 [connection signal="open_timeline" from="StartScreen/StartPanels/StartMenu" to="." method="_on_open_timeline"]
@@ -294,3 +303,4 @@ item_5/id = 10
 [connection signal="id_pressed" from="Editor/Popups/MousePopup" to="Editor/GraphEdit" method="_on_mouse_popup_id_pressed"]
 [connection signal="popup_hide" from="Editor/Popups/MousePopup" to="Editor/GraphEdit" method="_on_mouse_popup_popup_hide"]
 [connection signal="id_pressed" from="Editor/Popups/NodeParamsPopup" to="Editor/GraphEdit" method="_on_node_params_popup_id_pressed"]
+[connection signal="id_pressed" from="Editor/Popups/ConnectionPopup" to="Editor/GraphEdit" method="_on_connection_popup_id_pressed"]
