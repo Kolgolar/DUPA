@@ -119,7 +119,7 @@ class DN_Line:
 	
 	func _init(data: Dictionary) -> void:
 		super(data)
-		line_id = data.line_id
+		line_id = data.get(line_id, "")
 	
 	func get_line_id() -> Variant:
 		return line_id

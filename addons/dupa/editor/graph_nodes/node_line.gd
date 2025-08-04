@@ -14,6 +14,12 @@ extends DUPA_GraphNodeLineBase
 		speaker.speaker_idx = idx
 	get:
 		return speaker.speaker_idx
+@onready var custom_speaker_name: String:
+	set(value):
+		speaker.custom_speaker_name = value
+	get:
+		return speaker.custom_speaker_name
+
 
 
 func _ready():

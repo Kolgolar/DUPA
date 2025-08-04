@@ -415,14 +415,19 @@ func get_timeline() -> Dictionary:
 	var used_speakers: PackedInt32Array
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		timeline[node.id] = node.gen_data()
+		
 		# Remembers all used in the blueprint speakers
 		if node.type == DUPA_Lib.NodeType.LINE:
 			var sidx = node.speaker_idx
-			if !used_speakers.has(sidx):
+			if !used_speakers.has(sidx) && sidx >= 0:
 				used_speakers.append(sidx)
 		elif node.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
-			var sidxs = node.speaker_idx
+			#var sidxs: Array = node.speaker_idx
+			#used_speakers.append_array(sidxs.filter(func(value): return value >= 0))
+			# NOTE: Assumes that dynamic_id_line node can't have speaker_idxs lower than 0
+			var sidxs: PackedInt32Array = node.speaker_idx
 			used_speakers.append_array(sidxs)
+			
 			
 	for node_id in timeline:
 		var graph_node_data = timeline[node_id]
@@ -505,7 +510,11 @@ func validate_timeline() -> int:
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		var nt = DUPA_Lib.NodeType
 		match node.type:
-			nt.LINE, nt.DYNAMIC_ID_LINE:
+			nt.LINE:
+				node = node as DUPA_GraphNodeLine
+				if node.speaker_idx < 0 && node.custom_speaker_name.is_empty():
+					error.emit("Node %s has empty custom speaker name!" % node.id)
+			nt.DYNAMIC_ID_LINE:
 				pass
 			nt.CONDITION:
 				if node.condition_var.text.is_empty():

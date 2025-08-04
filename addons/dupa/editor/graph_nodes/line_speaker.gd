@@ -47,7 +47,7 @@ var shift := 1
 func _ready() -> void:
 	speaker.item_selected.connect(_on_speaker_item_selected)
 	custom_speaker_container.visible = allow_custom_speaker
-	#allow_custom_speaker = allow_custom_speaker
+	allow_custom_speaker = allow_custom_speaker
 
 
 func update_speakers_list(all_speakers: PackedStringArray, speakers_map: Dictionary[int, int] = {}) -> void:
