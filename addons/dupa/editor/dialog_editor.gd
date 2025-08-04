@@ -95,7 +95,8 @@ func save_blueprint_changes_to_file(path: String) -> void:
 		#saving_complete.emit(validation_err)
 	else:
 		#saving_complete.emit(OK)
-		_on_saving_complete.call()
+		if _on_saving_complete.is_valid():
+			_on_saving_complete.call()
 	
 	blueprint_file_path = path
 	_show_save_notify()

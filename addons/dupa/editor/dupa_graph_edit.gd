@@ -109,9 +109,9 @@ func _cache_avaliable_speakers_as_names() -> void:
 #region Connections
 
 func _get_connection_at_pos(pos: Vector2) -> Dictionary:
-	var cursor_zone := 50.
+	const cursor_zone := 100.
 	var conn = get_connections_intersecting_with_rect(
-		Rect2(get_global_mouse_position(), Vector2(cursor_zone, cursor_zone))
+		Rect2(get_local_mouse_position(), Vector2(cursor_zone, cursor_zone))
 	)
 	if conn.size() > 0:
 		return conn[0]
