@@ -1,6 +1,7 @@
 extends GraphEdit
 
 signal error(error_text: String)
+signal avaliable_speakers_changed(speakers_map: Dictionary[int, int])
 
 @export var _mouse_popup: PopupMenu
 @export var _node_params_popup: PopupMenu
@@ -22,7 +23,7 @@ var _from_node_to_empty: String
 var _slot_to_connect: int
 var _created_nodes: Dictionary[int, GraphNode]
 var _deleted_nodes: Dictionary[int, Dictionary]
-var _cached_speakers_names: PackedStringArray
+#var _cached_speakers_names: PackedStringArray
 
 
 
@@ -43,30 +44,33 @@ func find_avaliable_speakers() -> void:
 		speakers_root_folder,
 		5
 	)
-	_cache_avaliable_speakers_names()
+	_cache_avaliable_speakers_as_names()
 	
 
-	if prev_speakers.size() > 0:
-		var speakers_map: Dictionary[int, int]
-		for id in prev_speakers.size():
-			var new_speaker_id = avaliable_speakers.find(prev_speakers[id])
-			speakers_map[id] = new_speaker_id
-			if new_speaker_id < 0:
-				DUPA_Utils.create_confirmation_dialog(
-					"WARNING!!! For some reason speaker data at %s was not found! The line nodes, that reference that speaker, will not behave as expected." % prev_speakers[id].id_name,
-					self
-				)
-		var line_nodes := _get_all_graph_nodes_of_types([DUPA_Lib.NodeType.LINE])
+	#if prev_speakers.size() > 0:
+	var speakers_map: Dictionary[int, int]
+	for id in prev_speakers.size():
+		var new_speaker_id = avaliable_speakers.find(prev_speakers[id])
+		speakers_map[id] = new_speaker_id
+		if new_speaker_id < 0:
+			DUPA_Utils.create_confirmation_dialog(
+				"WARNING!!! For some reason speaker data at %s was not found! The line nodes, that reference that speaker, will not behave as expected." % prev_speakers[id].id_name,
+				self
+			)
 		
-		for node in line_nodes:
-			if node is DUPA_GraphNodeLine:
-				var set_to_idx := -1
-				if speakers_map.has(node.speaker_idx):
-					set_to_idx = speakers_map[node.speaker_idx]
-				node.fill_speakers_list(_cached_speakers_names)
-				node.speaker_idx = set_to_idx
-			elif node is DUPA_GraphNodeDynamicIDLine:
-				pass
+	avaliable_speakers_changed.emit(speakers_map)
+		
+		#var line_nodes := _get_all_graph_nodes_of_types([DUPA_Lib.NodeType.LINE])
+		#for node in line_nodes:
+			#if node is DUPA_GraphNodeLine:
+				#var set_to_idx := -1
+				#if speakers_map.has(node.speaker_idx):
+					#set_to_idx = speakers_map[node.speaker_idx]
+				##node.fill_speakers_list(_cached_speakers_names)
+				#node.refresh_speakers_list()
+				#node.speaker_idx = set_to_idx
+			#elif node is DUPA_GraphNodeDynamicIDLine:
+				#pass
 
 
 func get_used_speakers_paths() -> Array[Dictionary]:
@@ -78,8 +82,9 @@ func get_used_speakers_paths() -> Array[Dictionary]:
 			if sidx >= 0 && !used_speakers.has(sidx):
 				used_speakers.append(sidx)
 		elif node is DUPA_GraphNodeDynamicIDLine:
-			pass
-			# TODO: Логика для динамик айди. Нужна поддержка нескольких персов
+			for sidx in node.speaker_idx:
+				if sidx >= 0 && !used_speakers.has(sidx):
+					used_speakers.append(sidx)
 			
 	var paths: Array[Dictionary] = []
 	for id in used_speakers:
@@ -96,16 +101,11 @@ func get_used_speakers_paths() -> Array[Dictionary]:
 	return paths
 		
 
-func _cache_avaliable_speakers_names() -> void:
-	_cached_speakers_names.clear()
-	_cached_speakers_names = avaliable_speakers.map(
+func _cache_avaliable_speakers_as_names() -> void:
+	DUPA_GraphNodeLineBase.all_speakers = avaliable_speakers.map(
 		func(sp): return "%s [%s]" % [sp.id_name, sp.resource_path]
 	)
 
-
-	#return PackedStringArray(avaliable_speakers.map(func(elem):
-			#return (elem as DUPA_SpeakerData).resource_path)
-	#)
 
 
 #-------------------------------------------
@@ -194,8 +194,6 @@ func _on_node_params_popup_id_pressed(id: int) -> void:
 			_remove_focused_nodes_connections()
 		5:
 			print("Нужно выводить краткую справку по ноде")
-		6:
-			_context_menu_node.line_voice_visible = !_context_menu_node.line_voice_visible
 		10:
 			_delete_all_focused_nodes()
 		11:
@@ -253,6 +251,7 @@ func _get_graph_node_scene_path_by_type(type: DUPA_Lib.NodeType) -> String:
 
 func _create_graph_node(scene_path: String, pos := Vector2.ZERO, id := -1) -> GraphNode:
 	var node = load(scene_path).instantiate()
+	node.graph_edit = self
 	add_child(node)
 
 	if id == -1:
@@ -268,7 +267,7 @@ func _create_graph_node(scene_path: String, pos := Vector2.ZERO, id := -1) -> Gr
 	node.id = id
 	
 	if node is DUPA_GraphNodeLineBase:
-		node.fill_speakers_list(_cached_speakers_names)
+		avaliable_speakers_changed.connect(node._on_avaliable_speakers_changed)
 
 	node.rmb_pressed.connect(_on_graph_node_rmb_pressed.bind(node))
 	node.param_changed.connect(_on_graph_node_param_changed.bind(node.id))
@@ -384,25 +383,13 @@ func get_timeline() -> Dictionary:
 	var used_speakers: PackedInt32Array
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		timeline[node.id] = node.gen_data()
-		
-		if node.type == DUPA_Lib.NodeType.LINE:
-			var sidx = node.speaker_idx
-			if !used_speakers.has(sidx):
-				used_speakers.append(sidx)
-		elif node.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
-			pass
-	
+
 	# Marks choice nodes. Adds "is_choice" field to a LINE nodes data in save file
 	for node_id in timeline:
 		var graph_node_data = timeline[node_id]
 		if graph_node_data.type == DUPA_Lib.NodeType.CONDITION:
 			continue
 		
-		if graph_node_data.type == DUPA_Lib.NodeType.LINE:
-			graph_node_data.speaker_idx = used_speakers.find(graph_node_data.speaker_idx)
-		elif graph_node_data.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
-			pass
-			
 		var connected_nodes_ids = graph_node_data.go_to
 		if connected_nodes_ids.size() <= 1: continue
 		for choice_node_id in connected_nodes_ids:
@@ -426,7 +413,7 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 	max_id = config[&"max_id"]
 	var speakers = config[&"speakers"]
 	avaliable_speakers = DUPA_Utils.load_speakers_data_from_config(speakers, self)
-	_cache_avaliable_speakers_names()
+	_cache_avaliable_speakers_as_names()
 	var graph_nodes_names: Dictionary[int, StringName] = {}
 	for graph_node_id_str in timeline:
 		var graph_node_id_int := int(graph_node_id_str)
@@ -434,8 +421,6 @@ func set_timeline(timeline: Dictionary, config: Dictionary):
 		
 		var node = _create_graph_node(node_scene_path, Vector2.ZERO, graph_node_id_int)
 		node.set_data(timeline[graph_node_id_str])
-		if node is DUPA_GraphNodeLineBase:
-			node.fill_speakers_list(_cached_speakers_names)
 		graph_nodes_names[graph_node_id_int] = node.name
 	
 
@@ -512,8 +497,8 @@ func _on_graph_node_param_changed(param_name: StringName, new_value, prev_value,
 
 func _configure_node_popup(node: DUPA_GraphNodeBase):
 	_node_params_popup.set_item_checked(0, node.desc_visible)
-	if node.type == DUPA_Lib.NodeType.LINE:
-		_node_params_popup.set_item_checked(1, node.line_voice_visible)
+	#if node.type == DUPA_Lib.NodeType.LINE:
+		#_node_params_popup.set_item_checked(1, node.line_voice_visible)
 
 
 func _on_graph_node_rmb_pressed(node: GraphNode):

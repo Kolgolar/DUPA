@@ -4,8 +4,7 @@
 [ext_resource type="Script" uid="uid://cixnusabdulvu" path="res://addons/dupa/editor/graph_nodes/node_start.gd" id="2"]
 
 [node name="StartNode" node_paths=PackedStringArray("source") instance=ExtResource("1")]
-offset_right = 266.0
-offset_bottom = 82.0
+custom_minimum_size = Vector2(380, 0)
 theme_type_variation = &"GraphNodeStart"
 title = "Start"
 slot/1/left_enabled = false

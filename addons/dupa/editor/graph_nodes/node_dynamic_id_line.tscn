@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/editor/graph_nodes/node_base.tscn" id="1"]
 [ext_resource type="Script" uid="uid://r8ia32vvrer7" path="res://addons/dupa/editor/graph_nodes/node_dynamic_id_line.gd" id="2"]
 
-[node name="DynamicLineNodeLite" node_paths=PackedStringArray("id_base", "id_from", "id_to", "speaker", "custom_speaker_name_label", "custom_speaker_name_line") instance=ExtResource("1")]
+[node name="DynamicLineNodeLite" node_paths=PackedStringArray("id_base", "id_from", "id_to", "speakers_container") instance=ExtResource("1")]
 offset_right = 384.0
 offset_bottom = 106.0
 theme_type_variation = &"GraphNodeDynamicIDLine"
@@ -21,12 +21,11 @@ script = ExtResource("2")
 id_base = NodePath("VBoxContainer/GridContainer/IDBase")
 id_from = NodePath("VBoxContainer/GridContainer/IDFrom")
 id_to = NodePath("VBoxContainer/GridContainer/IDTo")
-speaker = NodePath("VBoxContainer/GridContainer/Speaker")
-custom_speaker_name_label = NodePath("VBoxContainer/GridContainer/CustomSpeakerNameLabel")
-custom_speaker_name_line = NodePath("VBoxContainer/GridContainer/CustomSpeakerNameField")
+speakers_container = NodePath("VBoxContainer/Speakers")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." index="5"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer" index="0"]
 layout_mode = 2
@@ -65,20 +64,13 @@ layout_mode = 2
 max_value = 8192.0
 value = 1.0
 
-[node name="Label5" type="Label" parent="VBoxContainer/GridContainer" index="6"]
-custom_minimum_size = Vector2(120, 0)
+[node name="Speakers" type="VBoxContainer" parent="VBoxContainer" index="1"]
 layout_mode = 2
-text = "Speaker"
+theme_override_constants/separation = 8
 
-[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="7"]
+[node name="AddSpeaker" type="Button" parent="VBoxContainer" index="2"]
 layout_mode = 2
-clip_text = true
-fit_to_longest_item = false
+size_flags_horizontal = 8
+text = "+ speaker"
 
-[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="8"]
-layout_mode = 2
-text = "Cust. speaker"
-
-[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="9"]
-layout_mode = 2
-placeholder_text = "Custom speaker name"
+[connection signal="pressed" from="VBoxContainer/AddSpeaker" to="." method="_on_add_speaker_pressed"]

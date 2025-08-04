@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://bimp1ileh7i72"]
+
+[ext_resource type="Script" uid="uid://d0fsv8gsbseje" path="res://addons/dupa/editor/graph_nodes/line_speaker.gd" id="1_5rm1o"]
+
+[node name="Speaker" type="VBoxContainer" node_paths=PackedStringArray("speaker", "custom_speaker_container", "custom_speaker_name_line", "remove_button")]
+theme_override_constants/separation = 8
+script = ExtResource("1_5rm1o")
+speaker = NodePath("Param/Speaker/Speaker")
+custom_speaker_container = NodePath("Custom")
+custom_speaker_name_line = NodePath("Custom/CustomSpeaker")
+remove_button = NodePath("Param/Speaker/Remove")
+
+[node name="Param" type="Label" parent="."]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Speaker"
+
+[node name="Speaker" type="HBoxContainer" parent="Param"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+offset_left = 124.0
+offset_top = -3.0
+offset_right = 374.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="Speaker" type="OptionButton" parent="Param/Speaker"]
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+fit_to_longest_item = false
+
+[node name="Remove" type="Button" parent="Param/Speaker"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "x"
+
+[node name="Custom" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CustomSpeaker" type="LineEdit" parent="Custom"]
+custom_minimum_size = Vector2(223, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+placeholder_text = "Custom name"
+
+[node name="Control" type="Control" parent="Custom"]
+custom_minimum_size = Vector2(23, 0)
+layout_mode = 2
+
+[connection signal="pressed" from="Param/Speaker/Remove" to="." method="_on_remove_pressed"]

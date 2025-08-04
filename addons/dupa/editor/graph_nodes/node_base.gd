@@ -12,7 +12,7 @@ signal param_changed(param: StringName, new_value, prev_value)
 @onready var _prev_pos_offset := position_offset
 @onready var type := DUPA_Lib.NodeType.BASE
 @onready var _cached_data := {}
-@onready var _graph_edit: GraphEdit = get_parent()
+@onready var graph_edit: GraphEdit
 
 var id: int:
 	set(value):
@@ -105,9 +105,9 @@ func delete() -> void:
 
 func _arrange_go_to(port_id := 0) -> Array:
 	var to_nodes_pos_y := {}
-	for connection in _graph_edit.get_connection_list():
+	for connection in graph_edit.get_connection_list():
 		if connection[&"from_node"] == self.name and connection[&"from_port"] == port_id:
-			var to_node : GraphNode = _graph_edit.get_node(NodePath(connection[&"to_node"]))
+			var to_node : GraphNode = graph_edit.get_node(NodePath(connection[&"to_node"]))
 			to_nodes_pos_y[to_node.position_offset.y] = to_node.id
 
 	var coords = to_nodes_pos_y.keys()

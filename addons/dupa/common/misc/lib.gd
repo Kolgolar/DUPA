@@ -49,11 +49,13 @@ class DN_Base: # Abstract
 	var id: int
 	var type: DUPA_Lib.NodeType
 	var go_to: Array[DN_Base]
+	#var tags: PackedStringArray
 	
 	func _init(data: Dictionary) -> void:
 		type = int(data.type)
 		id = int(data.id)
-		#go_to = data.go_to
+		#go_to = data.go_to TODO: Why??
+		#tags = data.tags
 
 # TODO: Скрыть приватные поля через _
 
@@ -105,15 +107,6 @@ class DN_Action:
 
 class DN_LineBase:
 	extends DN_Base
-	var speaker: DUPA_SpeakerData
-	#var tags: PackedStringArray
-	#var is_player: bool # FIXME: УБРАТЬ! Уже есть SpeakerData
-	
-	func _init(data: Dictionary) -> void:
-		super(data)
-		#character = data.character
-		#tags = data.tags
-		#is_player = data.is_player
 	
 	func get_line_id() -> Variant:
 		return null
@@ -122,6 +115,7 @@ class DN_LineBase:
 class DN_Line:
 	extends DN_LineBase
 	var line_id: StringName
+	var speaker: DUPA_SpeakerData
 	
 	func _init(data: Dictionary) -> void:
 		super(data)
@@ -143,6 +137,7 @@ class DN_DynamicIdLine:
 	var from: int
 	var to: int
 	var count: int
+	var speakers: Array[DUPA_SpeakerData]
 	
 	func _init(data: Dictionary) -> void:
 		super(data)
@@ -165,8 +160,8 @@ class DN_DynamicIdLine:
 		return full_id
 	
 	
-	func foo():
-		pass
+	#func foo():
+		#pass
 		# TODO: Всякий индивидуальный функционал нод, типа получения по порядку реплик
 		# из 
 
