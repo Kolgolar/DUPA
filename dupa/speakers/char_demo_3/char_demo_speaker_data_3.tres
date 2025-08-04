@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_2kreg")
 id_name = "Sasai"
-voicelines_folder = null
-char_printing_sounds_folder = null
-localization_file = null
+voicelines_folder = ""
+char_printing_sounds_folder = ""
+localization_file = ""
 name_color = Color(1, 1, 1, 1)
 metadata/_custom_type_script = "uid://bu3cmf0eaxfoq"

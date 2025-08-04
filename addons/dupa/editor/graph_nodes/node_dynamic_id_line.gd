@@ -7,6 +7,7 @@ const SPEAKER_DATA := preload("res://addons/dupa/editor/graph_nodes/line_speaker
 @export var id_from: SpinBox
 @export var id_to: SpinBox
 @export var speakers_container: BoxContainer
+@export var random_check_button: CheckButton
 
 var _speakers: Array[BoxContainer]
 
@@ -51,6 +52,8 @@ func set_param(param_name: StringName, value):
 			id_from.value = int(value)
 		&"to":
 			id_to.value = int(value)
+		&"is_random":
+			random_check_button.button_pressed = value
 		&"speaker_idx":
 			speaker_idx = value
 		&"custom_speaker_name":
@@ -65,6 +68,7 @@ func gen_data(allow_empty := false) -> Dictionary:
 	data[&"base"] = id_base.text
 	data[&"from"] = int(id_from.value)
 	data[&"to"] = int(id_to.value)
+	data[&"is_random"] = random_check_button.button_pressed
 	var all_speakers_idx: PackedInt32Array
 	var all_speakers_custon_names: PackedStringArray
 	for speaker in _speakers:

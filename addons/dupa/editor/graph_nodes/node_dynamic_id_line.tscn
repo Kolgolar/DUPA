@@ -1,9 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://ba10pgdqmhk1w"]
+[gd_scene load_steps=7 format=3 uid="uid://ba10pgdqmhk1w"]
 
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/editor/graph_nodes/node_base.tscn" id="1"]
 [ext_resource type="Script" uid="uid://r8ia32vvrer7" path="res://addons/dupa/editor/graph_nodes/node_dynamic_id_line.gd" id="2"]
 
-[node name="DynamicLineNodeLite" node_paths=PackedStringArray("id_base", "id_from", "id_to", "speakers_container") instance=ExtResource("1")]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xghn0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_284d1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pjbiq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wm7y5"]
+
+[node name="DynamicLineNodeLite" node_paths=PackedStringArray("id_base", "id_from", "id_to", "speakers_container", "random_check_button") instance=ExtResource("1")]
 offset_right = 384.0
 offset_bottom = 106.0
 theme_type_variation = &"GraphNodeDynamicIDLine"
@@ -22,6 +30,7 @@ id_base = NodePath("VBoxContainer/GridContainer/IDBase")
 id_from = NodePath("VBoxContainer/GridContainer/IDFrom")
 id_to = NodePath("VBoxContainer/GridContainer/IDTo")
 speakers_container = NodePath("VBoxContainer/Speakers")
+random_check_button = NodePath("VBoxContainer/GridContainer/RandomCheckButton")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." index="5"]
 layout_mode = 2
@@ -31,34 +40,46 @@ theme_override_constants/separation = 10
 layout_mode = 2
 columns = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="0"]
+[node name="RandomLabel" type="Label" parent="VBoxContainer/GridContainer" index="0"]
+layout_mode = 2
+text = "Random"
+
+[node name="RandomCheckButton" type="CheckButton" parent="VBoxContainer/GridContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_xghn0")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_284d1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pjbiq")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_wm7y5")
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="2"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 text = "Base"
 vertical_alignment = 1
 
-[node name="IDBase" type="LineEdit" parent="VBoxContainer/GridContainer" index="1"]
+[node name="IDBase" type="LineEdit" parent="VBoxContainer/GridContainer" index="3"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 placeholder_text = "line_character_"
 
-[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="2"]
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="4"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 text = "From"
 vertical_alignment = 1
 
-[node name="IDFrom" type="SpinBox" parent="VBoxContainer/GridContainer" index="3"]
+[node name="IDFrom" type="SpinBox" parent="VBoxContainer/GridContainer" index="5"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 
-[node name="Label4" type="Label" parent="VBoxContainer/GridContainer" index="4"]
+[node name="Label4" type="Label" parent="VBoxContainer/GridContainer" index="6"]
 custom_minimum_size = Vector2(120, 32)
 layout_mode = 2
 text = "To"
 vertical_alignment = 1
 
-[node name="IDTo" type="SpinBox" parent="VBoxContainer/GridContainer" index="5"]
+[node name="IDTo" type="SpinBox" parent="VBoxContainer/GridContainer" index="7"]
 custom_minimum_size = Vector2(250, 32)
 layout_mode = 2
 max_value = 8192.0

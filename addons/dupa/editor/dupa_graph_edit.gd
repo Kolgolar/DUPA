@@ -104,7 +104,7 @@ func _cache_avaliable_speakers_as_names() -> void:
 
 
 #-------------------------------------------
-# Методы, вызываемые для операций Undo/Redo
+# Управление соединениями между нодами
 #-------------------------------------------
 #region Connections
 
@@ -415,13 +415,29 @@ func get_timeline() -> Dictionary:
 	var used_speakers: PackedInt32Array
 	for node in get_tree().get_nodes_in_group(&"graph_nodes"):
 		timeline[node.id] = node.gen_data()
-
-	# Marks choice nodes. Adds "is_choice" field to a LINE nodes data in save file
+		# Remembers all used in the blueprint speakers
+		if node.type == DUPA_Lib.NodeType.LINE:
+			var sidx = node.speaker_idx
+			if !used_speakers.has(sidx):
+				used_speakers.append(sidx)
+		elif node.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
+			var sidxs = node.speaker_idx
+			used_speakers.append_array(sidxs)
+			
 	for node_id in timeline:
 		var graph_node_data = timeline[node_id]
 		if graph_node_data.type == DUPA_Lib.NodeType.CONDITION:
 			continue
 		
+		# Changes line nodes speakers idxs depends on used_speakers array
+		if graph_node_data.type == DUPA_Lib.NodeType.LINE:
+			graph_node_data.speaker_idx = used_speakers.find(graph_node_data.speaker_idx)
+		elif graph_node_data.type == DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
+			var sidxs = graph_node_data.speaker_idx
+			for i in sidxs.size():
+				sidxs[i] = used_speakers.find(sidxs[i])
+		
+		# Marks choice nodes. Adds "is_choice" field to a LINE nodes data in save file
 		var connected_nodes_ids = graph_node_data.go_to
 		if connected_nodes_ids.size() <= 1: continue
 		for choice_node_id in connected_nodes_ids:

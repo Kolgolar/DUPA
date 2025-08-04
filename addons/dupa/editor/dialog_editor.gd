@@ -25,6 +25,9 @@ var blueprint_file_path := "":
 	set(value):
 		can_launch_viewer = value
 		%LaunchViewer.disabled = !value
+		# TODO: Как-то не очень красиво сделано
+		if !can_launch_viewer:
+			_on_saving_complete = Callable()
 		
 var _on_saving_complete: Callable
 
@@ -92,10 +95,10 @@ func save_blueprint_changes_to_file(path: String) -> void:
 	if validation_err != OK:
 		printerr("Error on validation!")
 		show_popup_error("---> Saving complete, but you must resolve errors!")
-		#saving_complete.emit(validation_err)
+		_on_saving_complete = Callable()
 	else:
 		#saving_complete.emit(OK)
-		if _on_saving_complete.is_valid():
+		if !_on_saving_complete.is_null():
 			_on_saving_complete.call()
 	
 	blueprint_file_path = path
@@ -202,20 +205,6 @@ func _on_launch_viewer_pressed() -> void:
 	_on_save_pressed()
 	
 #endregion
-
-
-
-#--------------------------------------------
-# Тестирование диалога
-#--------------------------------------------
-
-#region Testing
-
-#func _launch_viewer(blueprint_path: String) -> void:
-	#pass
-	
-#endregion
-
 
 
 

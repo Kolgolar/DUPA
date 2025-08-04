@@ -138,6 +138,7 @@ class DN_DynamicIdLine:
 	var to: int
 	var count: int
 	var speakers: Array[DUPA_SpeakerData]
+	var is_random := false
 	
 	func _init(data: Dictionary) -> void:
 		super(data)
@@ -145,6 +146,7 @@ class DN_DynamicIdLine:
 		from = int(data.from)
 		to = int(data.to)
 		count = from
+		is_random = data.is_random
 	
 	
 	func are_lines_left() -> bool:
@@ -152,6 +154,11 @@ class DN_DynamicIdLine:
 	
 	
 	func get_line_id() -> Variant:
+		if is_random:
+			var rnd: int = randi_range(from, to)
+			count = to + 1
+			return base + str(rnd)
+			
 		if !are_lines_left:
 			DUPA_Logger.add_err("No lines left to show with DynamicIDLine!")
 			return ""
