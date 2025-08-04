@@ -20,7 +20,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_77qm7"]
 
-[node name="DialogViewer" type="MarginContainer" node_paths=PackedStringArray("localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
+[node name="DialogViewer" type="MarginContainer" node_paths=PackedStringArray("dialog_end_label", "localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,6 +30,7 @@ script = ExtResource("1_sqql4")
 blueprint_file = "res://addons/dupa/dynamic.json"
 on_dialog_finished = 4
 print_player_line_after_choice = true
+dialog_end_label = NodePath("DialogEnded")
 debug_mode = true
 ignore_no_localization = false
 ignore_no_speaker_data = false
@@ -235,6 +236,15 @@ size_flags_horizontal = 10
 icon = ExtResource("8_1l4f4")
 flat = true
 expand_icon = true
+
+[node name="DialogEnded" type="Label" parent="."]
+visible = false
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 50
+text = "Dialog has ended."
+horizontal_alignment = 1
 
 [connection signal="action_call" from="." to="GameLogicInteractor" method="_on_dialog_viewer_action_call"]
 [connection signal="action_message" from="." to="GameLogicInteractor" method="_on_dialog_viewer_action_message"]

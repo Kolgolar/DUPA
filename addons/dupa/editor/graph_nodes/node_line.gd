@@ -44,7 +44,6 @@ func gen_data(allow_empty := false) -> Dictionary:
 	if not line_id.text.is_empty() || allow_empty:
 		data[&"line_id"] = line_id.text
 	data[&"speaker_idx"] = speaker_idx
-	print(speaker_idx)
 	data[&"custom_speaker_name"] = speaker.custom_speaker_name
 	return data
 

@@ -135,6 +135,12 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_constants/separation = 10
 
+[node name="MainMenu" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(125, 35)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "MENU"
+
 [node name="New" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
@@ -185,6 +191,12 @@ mouse_filter = 2
 visible = false
 layout_mode = 2
 text = "UPDATE SPEAKERS DATA"
+
+[node name="LaunchViewer" type="Button" parent="Editor/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "⯈ TEST"
 
 [node name="GraphActions" type="HBoxContainer" parent="Editor/VBoxContainer"]
 layout_mode = 2
@@ -281,6 +293,8 @@ item_0/id = 10
 
 [connection signal="create_timeline" from="StartScreen/StartPanels/StartMenu" to="." method="_on_create_timeline"]
 [connection signal="open_timeline" from="StartScreen/StartPanels/StartMenu" to="." method="_on_open_timeline"]
+[connection signal="main_menu_requested" from="Editor" to="." method="_on_editor_main_menu_requested"]
+[connection signal="viewer_requested" from="Editor" to="." method="_on_editor_viewer_requested"]
 [connection signal="connection_from_empty" from="Editor/GraphEdit" to="Editor/GraphEdit" method="_on_connection_from_empty"]
 [connection signal="connection_request" from="Editor/GraphEdit" to="Editor/GraphEdit" method="_on_connection_request"]
 [connection signal="connection_to_empty" from="Editor/GraphEdit" to="Editor/GraphEdit" method="_on_connection_to_empty"]
@@ -291,12 +305,14 @@ item_0/id = 10
 [connection signal="node_deselected" from="Editor/GraphEdit" to="Editor/GraphEdit" method="_on_node_deselected"]
 [connection signal="node_selected" from="Editor/GraphEdit" to="Editor/GraphEdit" method="_on_node_selected"]
 [connection signal="popup_request" from="Editor/GraphEdit" to="Editor/GraphEdit" method="_on_popup_request"]
+[connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/MainMenu" to="Editor" method="_on_main_menu_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/New" to="Editor" method="_on_new_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/OpenNew" to="Editor" method="_on_open_new_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/Save" to="Editor" method="_on_save_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/SaveAs" to="Editor" method="_on_save_as_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/Clear" to="Editor" method="_on_clear_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/RefreshSpeakers" to="Editor" method="_on_refresh_speakers_pressed"]
+[connection signal="pressed" from="Editor/VBoxContainer/HBoxContainer/LaunchViewer" to="Editor" method="_on_launch_viewer_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/GraphActions/UndoAction" to="Editor" method="_on_undo_action_pressed"]
 [connection signal="pressed" from="Editor/VBoxContainer/GraphActions/RedoAction" to="Editor" method="_on_redo_action_pressed"]
 [connection signal="confirmed" from="Editor/Popups/Deletion" to="Editor" method="_on_deletion_confirmed"]

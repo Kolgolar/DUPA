@@ -56,6 +56,7 @@ var _is_dialog_ended := false
 @export var auto_show_choices := true
 ## Should the choosen line be printed in the dialog box after it was selected
 @export var print_player_line_after_choice := false
+@export var dialog_end_label: Label
 
 @export_category("Printing")
 @export_range(0., 2.0, 0.01) var end_sentence_pause_length := 0.08
@@ -151,6 +152,8 @@ func start_dialog(blueprint_file := blueprint_file) -> void:
 func stop_dialog(action_on_finished := on_dialog_finished) -> void:
 	speaker_line.text = ""
 	speaker_name.text = ""
+	if debug_mode:
+		dialog_end_label.show()
 	dialog_ended.emit()
 	_is_dialog_ended = true
 	DUPA_Logger.add_msg("Dialog ended!")
@@ -161,6 +164,7 @@ func stop_dialog(action_on_finished := on_dialog_finished) -> void:
 
 
 func reset_all() -> void:
+	dialog_end_label.hide()
 	dialog_panel.hide()
 	_is_dialog_ended = false
 	_dialog_data.clear()

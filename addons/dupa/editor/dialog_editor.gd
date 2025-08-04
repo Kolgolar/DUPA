@@ -1,5 +1,9 @@
 extends Control
 
+#signal saving_complete(err_code: int)
+signal viewer_requested(blueprint_file_path: String)
+signal main_menu_requested
+
 @export var _compare_versions := true
 
 @export var graph_edit: GraphEdit
@@ -7,15 +11,23 @@ extends Control
 @export var error_popup_label: RichTextLabel
 @export var deletion_popup: ConfirmationDialog
 
-var timeline_file_path := "":
+var blueprint_file_path := "":
 	set(value):
-		timeline_file_path = value
+		blueprint_file_path = value
 		if value.is_empty():
 			%TimelineName.text = "(not saved!)"
 		else:
 			%TimelineName.text = value.get_file()
 
 @export var _actions_master: ActionsMaster
+
+@onready var can_launch_viewer := true:
+	set(value):
+		can_launch_viewer = value
+		%LaunchViewer.disabled = !value
+		
+var _on_saving_complete: Callable
+
 
 
 func _ready():
@@ -38,8 +50,10 @@ func _input(event):
 
 
 func reset() -> void:
+	# TODO: graph_edit.reset()
 	graph_edit.clear_nodes()
-	timeline_file_path = ""
+	can_launch_viewer = true
+	blueprint_file_path = ""
 	#_set_filename("(not saved!)")
 
 
@@ -48,7 +62,7 @@ func reset() -> void:
 #--------------------------------------------
 #region Saving&Loading
 
-func save_changes_to_timeline_file(path: String):
+func save_blueprint_changes_to_file(path: String) -> void:
 	error_popup_label.text = ""
 	var validation_err = graph_edit.validate_timeline()
 	var fn = path.get_file()
@@ -78,8 +92,17 @@ func save_changes_to_timeline_file(path: String):
 	if validation_err != OK:
 		printerr("Error on validation!")
 		show_popup_error("---> Saving complete, but you must resolve errors!")
+		#saving_complete.emit(validation_err)
+	else:
+		#saving_complete.emit(OK)
+		_on_saving_complete.call()
 	
-	timeline_file_path = path
+	blueprint_file_path = path
+	_show_save_notify()
+
+
+
+func _show_save_notify() -> void:
 	%SaveNotify.show()
 	await get_tree().create_timer(3.0).timeout
 	%SaveNotify.hide()
@@ -135,7 +158,7 @@ func open_timeline_file(path: String):
 
 func _load_timeline(path: String, timeline: Dictionary, config: Dictionary):
 	reset()
-	timeline_file_path = path
+	blueprint_file_path = path
 	graph_edit.set_timeline(timeline, config)
 	show()
 
@@ -144,9 +167,14 @@ func _on_dupa_file_manager_file_selected(path: String) -> void:
 	open_timeline_file(path)
 
 
-func _create_timeline_file():
-	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, save_changes_to_timeline_file)
+func _create_blueprint_file():
+	var fm = DupaFileManager.create(DupaFileManager.FileManagerMode.SAVE_TIMELINE, true, save_blueprint_changes_to_file)
 	add_child(fm)
+	fm.canceled.connect(_on_blueprint_file_creating_canceled)
+
+
+func _on_blueprint_file_creating_canceled() -> void:
+	_on_saving_complete = Callable()
 
 
 # Сигналы от кнопок интерфейса:
@@ -156,18 +184,37 @@ func _on_open_new_pressed():
 	add_child(fm)
 
 
-func _on_save_pressed():
-	if !timeline_file_path:
-		_create_timeline_file()
+func _on_save_pressed() -> void:
+	if !blueprint_file_path:
+		_create_blueprint_file()
 		return
 
-	save_changes_to_timeline_file(timeline_file_path)
+	save_blueprint_changes_to_file(blueprint_file_path)
 
 
 func _on_save_as_pressed():
-	_create_timeline_file()
+	_create_blueprint_file()
 
+
+func _on_launch_viewer_pressed() -> void:
+	_on_saving_complete = func(): viewer_requested.emit(blueprint_file_path)
+	_on_save_pressed()
+	
 #endregion
+
+
+
+#--------------------------------------------
+# Тестирование диалога
+#--------------------------------------------
+
+#region Testing
+
+#func _launch_viewer(blueprint_path: String) -> void:
+	#pass
+	
+#endregion
+
 
 
 
@@ -194,7 +241,7 @@ func _on_dupa_graph_edit_error(error_text: String) -> void:
 
 
 func new_timeline():
-	if timeline_file_path.is_empty():
+	if blueprint_file_path.is_empty():
 		# TODO: Стыбзить из лмстудио код создания конфёрм попапов
 		# Спросить, точно ли пользователь хочет создать новый таймлайн, ведь тут есть
 		# несохранённые изменения
@@ -224,7 +271,10 @@ func _on_refresh_speakers_pressed() -> void:
 		Сделай бэкап перед тем, как обновлять список спикеров.
 		Я эту фигню ещё нормально не реализовал."
 	DUPA_Utils.create_confirmation_dialog(backup_warning, self, graph_edit.find_avaliable_speakers)
-	
+
+
+func _on_main_menu_pressed() -> void:
+	main_menu_requested.emit()
 
 
 #--------------------------------------------

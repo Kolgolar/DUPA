@@ -1,6 +1,6 @@
 {
 	"CONFIG": {
-		"dupa_version": "0.3",
+		"dupa_version": "1.0 alpha",
 		"max_id": 4,
 		"speakers": [
 			{
@@ -55,7 +55,7 @@
 			"go_to": [],
 			"is_choice": true,
 			"line_id": "choice_1",
-			"offset_x": 1580.0,
+			"offset_x": 1600.0,
 			"offset_y": 140.0,
 			"speaker_idx": 0,
 			"type": 2
@@ -67,8 +67,8 @@
 			"go_to": [],
 			"is_choice": true,
 			"line_id": "choice_2",
-			"offset_x": 1560.0,
-			"offset_y": 440.0,
+			"offset_x": 1580.0,
+			"offset_y": 520.0,
 			"speaker_idx": 0,
 			"type": 2
 		}
