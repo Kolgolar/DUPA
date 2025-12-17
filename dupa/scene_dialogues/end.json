@@ -1,0 +1,101 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 8,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/news/speaker_news.tres",
+				"uid": "uid://cw7cyvnwpdkk3"
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				8
+			],
+			"offset_x": -1060.0,
+			"offset_y": 460.0,
+			"source": "",
+			"type": 1
+		},
+		"2": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				3
+			],
+			"line_id": "news_3",
+			"offset_x": 600.0,
+			"offset_y": 480.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"3": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				4
+			],
+			"line_id": "news_4",
+			"offset_x": 1200.0,
+			"offset_y": 480.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"4": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				6
+			],
+			"line_id": "news_5",
+			"offset_x": 1720.0,
+			"offset_y": 480.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"6": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "news_6",
+			"offset_x": 2200.0,
+			"offset_y": 480.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"7": {
+			"action_type": 0,
+			"arg_name": "play_sound",
+			"arg_value": "\"MeatEnd\"",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"offset_x": 20.0,
+			"offset_y": 480.0,
+			"type": 5
+		},
+		"8": {
+			"action_type": 0,
+			"arg_name": "ChangeBackEternal",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				7
+			],
+			"offset_x": -540.0,
+			"offset_y": 460.0,
+			"type": 5
+		}
+	}
+}

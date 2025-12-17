@@ -1,0 +1,31 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 1,
+		"speakers": []
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": 460.0,
+			"offset_y": 460.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "321",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "123",
+			"offset_x": 1020.0,
+			"offset_y": 380.0,
+			"speaker_idx": -1,
+			"type": 2
+		}
+	}
+}

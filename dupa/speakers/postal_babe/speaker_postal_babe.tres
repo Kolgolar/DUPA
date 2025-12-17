@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DUPA_SpeakerData" load_steps=2 format=3 uid="uid://j08jrjflxbtt"]
+
+[ext_resource type="Script" uid="uid://bu3cmf0eaxfoq" path="res://addons/dupa/viewer/resources/speaker_data.gd" id="1_k33b2"]
+
+[resource]
+script = ExtResource("1_k33b2")
+id_name = "Postal Babe"
+voicelines_folder = ""
+char_printing_sounds_folder = ""
+localization_file = "res://dupa/speakers/postal_babe/postal_babe_lines.csv"
+name_color = Color(0.335266, 0.744392, 0.293868, 1)
+metadata/_custom_type_script = "uid://bu3cmf0eaxfoq"

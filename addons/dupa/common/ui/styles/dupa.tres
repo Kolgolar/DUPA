@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=38 format=3 uid="uid://jknpp178i5kk"]
+[gd_resource type="Theme" load_steps=41 format=3 uid="uid://jknpp178i5kk"]
 
 [ext_resource type="Texture2D" uid="uid://bhkor0xepb430" path="res://addons/dupa/common/ui/textures/node_port.png" id="1_7w0sm"]
 [ext_resource type="StyleBox" uid="uid://cqu2m638jayp2" path="res://addons/dupa/common/ui/styles/graph_node_panel_default.tres" id="2_26fas"]
@@ -330,6 +330,29 @@ bg_color = Color(0.0941176, 0.227451, 0.188235, 1)
 [sub_resource type="StyleBoxFlat" id="18"]
 bg_color = Color(0.0196078, 0.0470588, 0.0392157, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_akvgw"]
+bg_color = Color(0.17653933, 0.41463175, 0.54752064, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ngjwu"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.03835623, 0.1335348, 0.20808762, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
 [sub_resource type="StyleBoxFlat" id="11"]
 content_margin_left = 12.0
 content_margin_right = 12.0
@@ -340,7 +363,11 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
+[sub_resource type="SystemFont" id="SystemFont_rsffb"]
+font_names = PackedStringArray("Arial")
+
 [resource]
+default_font = SubResource("SystemFont_rsffb")
 default_font_size = 18
 Button/colors/font_color = Color(0, 1, 0.976471, 1)
 Button/colors/font_color_disabled = Color(0, 1, 0.976471, 0.266667)
@@ -401,6 +428,8 @@ OptionButton/styles/hover = SubResource("17")
 OptionButton/styles/normal = SubResource("16")
 OptionButton/styles/pressed = SubResource("18")
 PopupMenu/font_sizes/font_size = 20
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_akvgw")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_ngjwu")
 TextEdit/colors/font_color = Color(1, 1, 1, 1)
 TextEdit/font_sizes/font_size = 20
 TextEdit/styles/normal = SubResource("11")

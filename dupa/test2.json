@@ -1,0 +1,71 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 4,
+		"speakers": []
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": 440.0,
+			"offset_y": 440.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "Бейба",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2,
+				3,
+				4
+			],
+			"line_id": "Сак",
+			"offset_x": 960.0,
+			"offset_y": 400.0,
+			"speaker_idx": -1,
+			"type": 2
+		},
+		"2": {
+			"custom_speaker_name": "Дуд",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"is_choice": true,
+			"line_id": "Май",
+			"offset_x": 1460.0,
+			"offset_y": 200.0,
+			"speaker_idx": -1,
+			"type": 2
+		},
+		"3": {
+			"custom_speaker_name": "Дуд",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"is_choice": true,
+			"line_id": "Мой",
+			"offset_x": 1480.0,
+			"offset_y": 440.0,
+			"speaker_idx": -1,
+			"type": 2
+		},
+		"4": {
+			"custom_speaker_name": "Дуд",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"is_choice": true,
+			"line_id": "Мий",
+			"offset_x": 1460.0,
+			"offset_y": 680.0,
+			"speaker_idx": -1,
+			"type": 2
+		}
+	}
+}

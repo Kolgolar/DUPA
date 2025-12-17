@@ -1,0 +1,36 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 11,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/bobby/speaker_bobby.tres",
+				"uid": "uid://dh888n744g3hi"
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				11
+			],
+			"offset_x": -980.0,
+			"offset_y": 400.0,
+			"source": "",
+			"type": 1
+		},
+		"11": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "l_2_out_b_1",
+			"offset_x": -400.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		}
+	}
+}

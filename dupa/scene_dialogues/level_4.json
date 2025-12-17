@@ -1,0 +1,213 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 15,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/dudette/speaker_dudette.tres",
+				"uid": "uid://hlh8m0a0rqrq"
+			},
+			{
+				"path": "res://dupa/speakers/handy/speaker_handy.tres",
+				"uid": "uid://uf5xd46ig6m8"
+			},
+			{
+				"path": "res://dupa/speakers/bruh/speaker_bruh.tres",
+				"uid": "uid://bngj0j7runba3"
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				13
+			],
+			"offset_x": -1560.0,
+			"offset_y": 400.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				3
+			],
+			"line_id": "l_4_in_d_1",
+			"offset_x": -400.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"3": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				4
+			],
+			"line_id": "milk",
+			"offset_x": 80.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"4": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				5
+			],
+			"line_id": "milk",
+			"offset_x": 80.0,
+			"offset_y": 600.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"5": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				8
+			],
+			"line_id": "milk",
+			"offset_x": 80.0,
+			"offset_y": 800.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"6": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				9
+			],
+			"line_id": "milk",
+			"offset_x": 80.0,
+			"offset_y": 1400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"7": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				6
+			],
+			"line_id": "milk",
+			"offset_x": 80.0,
+			"offset_y": 1200.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"8": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				7
+			],
+			"line_id": "milk",
+			"offset_x": 80.0,
+			"offset_y": 1000.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"9": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				10
+			],
+			"line_id": "paradise",
+			"offset_x": 600.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"10": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				14
+			],
+			"line_id": "l_4_in_h_1",
+			"offset_x": 1200.0,
+			"offset_y": 400.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"11": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "l_4_in_h_2",
+			"offset_x": 2980.0,
+			"offset_y": 420.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"12": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				11
+			],
+			"line_id": "silence",
+			"offset_x": 2400.0,
+			"offset_y": 420.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"13": {
+			"action_type": 0,
+			"arg_name": "play_sound",
+			"arg_value": "\"SMS\"",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": -1000.0,
+			"offset_y": 400.0,
+			"type": 5
+		},
+		"14": {
+			"action_type": 0,
+			"arg_name": "play_sound",
+			"arg_value": "\"Fingers\"",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				15
+			],
+			"offset_x": 1200.0,
+			"offset_y": 600.0,
+			"type": 5
+		},
+		"15": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				12
+			],
+			"line_id": "l_4_in_h_1_c",
+			"offset_x": 1800.0,
+			"offset_y": 420.0,
+			"speaker_idx": 1,
+			"type": 2
+		}
+	}
+}

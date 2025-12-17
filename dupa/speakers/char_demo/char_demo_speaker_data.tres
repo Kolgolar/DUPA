@@ -7,6 +7,6 @@ script = ExtResource("1_t6iat")
 id_name = "Kek"
 voicelines_folder = ""
 char_printing_sounds_folder = ""
-localization_file = "uid://cfbdt80h2kv5g"
+localization_file = "res://dupa/speakers/char_demo/char_demo.csv"
 name_color = Color(0.335266, 0.744392, 0.293868, 1)
 metadata/_custom_type_script = "uid://bu3cmf0eaxfoq"

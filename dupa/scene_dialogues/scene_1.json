@@ -1,0 +1,92 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 5,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/handy/speaker_handy.tres",
+				"uid": "uid://uf5xd46ig6m8"
+			},
+			{
+				"path": "res://dupa/speakers/bruh/speaker_bruh.tres",
+				"uid": "uid://bngj0j7runba3"
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": 340.0,
+			"offset_y": 280.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"line_id": "scene1_1",
+			"offset_x": 840.0,
+			"offset_y": 280.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"2": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				3
+			],
+			"line_id": "silence",
+			"offset_x": 1380.0,
+			"offset_y": 280.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"3": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				4
+			],
+			"line_id": "scene1_2",
+			"offset_x": 1920.0,
+			"offset_y": 280.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"4": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				5
+			],
+			"line_id": "silence",
+			"offset_x": 2500.0,
+			"offset_y": 280.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"5": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "scene1_3",
+			"offset_x": 3040.0,
+			"offset_y": 280.0,
+			"speaker_idx": 0,
+			"type": 2
+		}
+	}
+}

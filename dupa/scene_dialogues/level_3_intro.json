@@ -1,0 +1,222 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 14,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/handy/speaker_handy.tres",
+				"uid": "uid://uf5xd46ig6m8"
+			},
+			{
+				"path": "res://dupa/speakers/dudette/speaker_dudette.tres",
+				"uid": "uid://hlh8m0a0rqrq"
+			},
+			{
+				"path": "res://dupa/speakers/bruh/speaker_bruh.tres",
+				"uid": "uid://bngj0j7runba3"
+			},
+			{
+				"path": "res://dupa/speakers/narrator/speaker_narrator.tres",
+				"uid": "uid://c7fdde6dygs5v"
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": -400.0,
+			"offset_y": 400.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				14
+			],
+			"line_id": "l_3_in_h_1",
+			"offset_x": 180.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"2": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				3,
+				4,
+				5
+			],
+			"line_id": "l_3_in_d_1",
+			"offset_x": 1400.0,
+			"offset_y": 400.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"3": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				6
+			],
+			"is_choice": true,
+			"line_id": "l_3_choice_1",
+			"offset_x": 2000.0,
+			"offset_y": 200.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"4": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				7
+			],
+			"is_choice": true,
+			"line_id": "l_3_choice_2",
+			"offset_x": 2000.0,
+			"offset_y": 400.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"5": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				8
+			],
+			"is_choice": true,
+			"line_id": "l_3_choice_3",
+			"offset_x": 2000.0,
+			"offset_y": 600.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"6": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				9
+			],
+			"line_id": "l_3_choice_1_ans",
+			"offset_x": 2600.0,
+			"offset_y": 200.0,
+			"speaker_idx": 3,
+			"type": 2
+		},
+		"7": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				10
+			],
+			"line_id": "l_3_choice_2_ans",
+			"offset_x": 2600.0,
+			"offset_y": 400.0,
+			"speaker_idx": 3,
+			"type": 2
+		},
+		"8": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				11
+			],
+			"line_id": "l_3_choice_3_ans",
+			"offset_x": 2600.0,
+			"offset_y": 600.0,
+			"speaker_idx": 3,
+			"type": 2
+		},
+		"9": {
+			"action_type": 0,
+			"arg_name": "plus_step",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				12
+			],
+			"offset_x": 3200.0,
+			"offset_y": 180.0,
+			"type": 5
+		},
+		"10": {
+			"action_type": 0,
+			"arg_name": "no_bonus",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				12
+			],
+			"offset_x": 3200.0,
+			"offset_y": 400.0,
+			"type": 5
+		},
+		"11": {
+			"action_type": 0,
+			"arg_name": "minus_step",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				12
+			],
+			"offset_x": 3200.0,
+			"offset_y": 620.0,
+			"type": 5
+		},
+		"12": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				13
+			],
+			"line_id": "paradise",
+			"offset_x": 3800.0,
+			"offset_y": 400.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"13": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "l_3_in_h_2",
+			"offset_x": 4380.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"14": {
+			"action_type": 0,
+			"arg_name": "play_sound",
+			"arg_value": "\"SMS\"",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"offset_x": 780.0,
+			"offset_y": 400.0,
+			"type": 5
+		}
+	}
+}

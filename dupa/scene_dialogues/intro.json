@@ -1,0 +1,248 @@
+{
+	"CONFIG": {
+		"dupa_version": "1.0 alpha",
+		"max_id": 25,
+		"speakers": [
+			{
+				"path": "res://dupa/speakers/news/speaker_news.tres",
+				"uid": "uid://cw7cyvnwpdkk3"
+			},
+			{
+				"path": "res://dupa/speakers/dudette/speaker_dudette.tres",
+				"uid": "uid://hlh8m0a0rqrq"
+			},
+			{
+				"path": "res://dupa/speakers/bruh/speaker_bruh.tres",
+				"uid": "uid://bngj0j7runba3"
+			},
+			{
+				"path": "res://dupa/speakers/narrator/speaker_narrator.tres",
+				"uid": "uid://c7fdde6dygs5v"
+			}
+		]
+	},
+	"TIMELINE": {
+		"0": {
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				24
+			],
+			"offset_x": -1380.0,
+			"offset_y": 400.0,
+			"source": "",
+			"type": 1
+		},
+		"1": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				22
+			],
+			"line_id": "news_1",
+			"offset_x": -400.0,
+			"offset_y": 400.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"2": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				20
+			],
+			"line_id": "intro_2",
+			"offset_x": 3000.0,
+			"offset_y": 400.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"4": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				7
+			],
+			"is_choice": true,
+			"line_id": "intro_choice_1",
+			"offset_x": 1420.0,
+			"offset_y": 160.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"5": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				9
+			],
+			"is_choice": true,
+			"line_id": "intro_choice_2",
+			"offset_x": 1420.0,
+			"offset_y": 400.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"6": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				10
+			],
+			"is_choice": true,
+			"line_id": "intro_choice_3",
+			"offset_x": 1420.0,
+			"offset_y": 640.0,
+			"speaker_idx": 2,
+			"type": 2
+		},
+		"7": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				17
+			],
+			"line_id": "intro_choice_1_ans",
+			"offset_x": 1960.0,
+			"offset_y": 160.0,
+			"speaker_idx": 3,
+			"type": 2
+		},
+		"9": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				18
+			],
+			"line_id": "intro_choice_2_ans",
+			"offset_x": 1960.0,
+			"offset_y": 400.0,
+			"speaker_idx": 3,
+			"type": 2
+		},
+		"10": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				19
+			],
+			"line_id": "intro_choice_3_ans",
+			"offset_x": 1960.0,
+			"offset_y": 640.0,
+			"speaker_idx": 3,
+			"type": 2
+		},
+		"17": {
+			"action_type": 0,
+			"arg_name": "no_bonus",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"offset_x": 2480.0,
+			"offset_y": 160.0,
+			"type": 5
+		},
+		"18": {
+			"action_type": 0,
+			"arg_name": "plus_step",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"offset_x": 2480.0,
+			"offset_y": 400.0,
+			"type": 5
+		},
+		"19": {
+			"action_type": 0,
+			"arg_name": "minus_step",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2
+			],
+			"offset_x": 2460.0,
+			"offset_y": 680.0,
+			"type": 5
+		},
+		"20": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"line_id": "paradise",
+			"offset_x": 3520.0,
+			"offset_y": 400.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"22": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				25
+			],
+			"line_id": "news_2",
+			"offset_x": -400.0,
+			"offset_y": 600.0,
+			"speaker_idx": 0,
+			"type": 2
+		},
+		"23": {
+			"custom_speaker_name": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				4,
+				5,
+				6
+			],
+			"line_id": "intro_1",
+			"offset_x": 800.0,
+			"offset_y": 400.0,
+			"speaker_idx": 1,
+			"type": 2
+		},
+		"24": {
+			"action_type": 0,
+			"arg_name": "play_sound",
+			"arg_value": "\"NewsBroad\"",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				1
+			],
+			"offset_x": -900.0,
+			"offset_y": 400.0,
+			"type": 5
+		},
+		"25": {
+			"action_type": 0,
+			"arg_name": "ChangeBack",
+			"arg_value": "",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				23
+			],
+			"offset_x": 220.0,
+			"offset_y": 400.0,
+			"type": 5
+		}
+	}
+}
