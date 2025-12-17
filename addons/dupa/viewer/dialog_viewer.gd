@@ -16,6 +16,7 @@ char_name
 signal dialog_started
 signal dialog_ended
 signal line_tags_detected(tags: PackedStringArray)
+signal speaker_changed(speaker: DUPA_SpeakerData)
 
 signal action_set(var_name: StringName, value: Variant)
 signal action_call(func_name: StringName, arg: Variant)
@@ -46,6 +47,7 @@ var _is_dialog_ended := false
 #@export var blueprint: DUPA_Blueprint
 @export_file var blueprint_file: String
 #@export var game_logic_interactor_script: Script
+@export var gamelogic_interactor: DUPA_GameLogicInteractor
 @export var on_dialog_finished := OnDialogFinished.DO_NOTHING
 @export var clear_speaker_panel_on_proceeding := true
 ## Controls the speed at which line is printing.[br]
@@ -80,10 +82,11 @@ var _is_dialog_ended := false
 
 func _ready() -> void:
 	reset_all()
-	#if game_logic_interactor_script:
+	if gamelogic_interactor:
 		#_set_game_logic_interactor_script()
-	#else:
-		#DUPA_Logger.add_msg("The Game Logic Interactor script was not set. Ignore, if it's intended.")
+		pass
+	else:
+		DUPA_Logger.add_msg("The Game Logic Interactor script was not set. Ignore, if it's intended.")
 	%RestartDebug.visible = debug_mode
 	%LabelDebug.visible = debug_mode
 	if debug_mode:
@@ -109,6 +112,7 @@ func get_is_dialog_ended() -> bool:
 
 
 func start_dialog(blueprint_file := blueprint_file) -> void:
+	show()
 	reset_all()
 	# TODO: На основе словаря создавать массив объектов, объявленных ниже в этом скрипте.
 	# Помни, что сначала надо перенести весь имеющийся функционал, а потом уже выпендриваться.
@@ -175,7 +179,7 @@ func reset_all() -> void:
 	choices_controller.clear()
 	speaker_line.text = ""
 	speaker_name.text = ""
-
+	_dialog_speakers.clear()
 
 func _is_printing_line() -> bool:
 	return _visible_characters_tween && _visible_characters_tween.is_running()
@@ -355,8 +359,10 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 			push_error("The ID 'name' was not found in localization! Can't define the speaker's name.")
 			speaker_name.text = speaker_placeholder_name
 		else:
-			speaker_name.text = sp_name_data[&"line"]
+			var add := ":" if !sp_name_data[&"line"].is_empty() else ""
+			speaker_name.text = "[i]%s[/i]" % (sp_name_data[&"line"] + add)
 	
+	speaker_changed.emit(speaker)
 	if localization_master.speakers_localization.has(speaker):
 		#var speaker = _curr_dialog_node.character
 		pass

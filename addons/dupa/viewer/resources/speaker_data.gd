@@ -10,5 +10,5 @@ extends Resource
 #@export var voicelines_type := VoicingType.PRINTING
 @export_dir var voicelines_folder = ""
 @export_dir var char_printing_sounds_folder = ""
-@export_file var localization_file = ""
+@export var localization_file := ""
 @export var name_color := Color.WHITE

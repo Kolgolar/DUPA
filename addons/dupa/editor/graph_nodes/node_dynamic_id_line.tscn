@@ -3,13 +3,13 @@
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/editor/graph_nodes/node_base.tscn" id="1"]
 [ext_resource type="Script" uid="uid://r8ia32vvrer7" path="res://addons/dupa/editor/graph_nodes/node_dynamic_id_line.gd" id="2"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xghn0"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_284d1"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wm7y5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pjbiq"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wm7y5"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_284d1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xghn0"]
 
 [node name="DynamicLineNodeLite" node_paths=PackedStringArray("id_base", "id_from", "id_to", "speakers_container", "random_check_button") instance=ExtResource("1")]
 offset_right = 384.0
@@ -47,10 +47,10 @@ text = "Random"
 [node name="RandomCheckButton" type="CheckButton" parent="VBoxContainer/GridContainer" index="1"]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_xghn0")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_284d1")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_pjbiq")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_wm7y5")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_pjbiq")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_284d1")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_xghn0")
 
 [node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="2"]
 custom_minimum_size = Vector2(120, 32)

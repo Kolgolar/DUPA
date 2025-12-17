@@ -13,7 +13,34 @@ var _enable_plugins : Dictionary = {}
 
 func _ready() -> void:
 	debug = false
+	
+	main_screen_changed.connect(_on_main_screen_changed)
+	resource_saved.connect(_on_resource_saved)
+	scene_closed.connect(_on_scene_closed)
+	scene_changed.connect(_on_scene_changed)
+	scene_saved.connect(_on_scene_saved)
+	
 	_initialize()
+	
+func _on_resource_saved(resource : Resource) -> void:
+	for x : EditorPlugin in _plugins:
+		x.resource_saved.emit(resource)
+	
+func _on_scene_closed(filepath: String) -> void:
+	for x : EditorPlugin in _plugins:
+		x.scene_closed.emit(filepath)
+	
+func _on_scene_changed(scene_root: Node) -> void:
+	for x : EditorPlugin in _plugins:
+		x.scene_changed.emit(scene_root)
+	
+func _on_scene_saved(filepath: String) -> void:
+	for x : EditorPlugin in _plugins:
+		x.scene_saved.emit(filepath)
+	
+func _on_main_screen_changed(screen_name : String) -> void:
+	for x : EditorPlugin in _plugins:
+		x.main_screen_changed.emit(screen_name)
 	
 func _enter_tree() -> void:	
 	set_process(true)
@@ -25,6 +52,10 @@ func _process(_delta: float) -> void:
 	if editor.is_scanning():
 		return
 	set_process(false)
+	
+	#Self-Secure All Loaded
+	_initialize()
+	
 	var base : String = get_script().resource_path.get_base_dir()
 	var path : String = base.path_join("plugins")
 	
@@ -43,6 +74,7 @@ func _init_config(init : int) -> void:
 		if file:
 			file.store_string("IDE CONFIG")
 			file.close()
+			
 	if init == 1:
 		if FileAccess.file_exists(cfg_path):
 			var cfg : ConfigFile = ConfigFile.new()
@@ -55,8 +87,10 @@ func _init_config(init : int) -> void:
 		cfg.set_value("config", "plugin", _enable_plugins)
 		if cfg.save(cfg_path) != OK:
 			push_warning("Can not save plugin changes!")
+			
+	#if Engine.get_version_info().minor > 4:
+		#_enable_plugins["res://addons/_Godot-IDE_/plugins/script_spliter/plugin.gd"] = false
 		
-	
 #region __PRX__
 func _apply_changes() -> void:
 	_callback(&"_apply_changes")
@@ -108,7 +142,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 	var out : bool = false
 	for plugin : EditorPlugin in _plugins:
 		if plugin.has_method(&"_forward_canvas_gui_input"):
-			out = out or plugin.call(&"_forward_canvas_gui_input", event)	
+			out = plugin.call(&"_forward_canvas_gui_input", event) or out	
 	return out
 #endregion
 	
@@ -122,10 +156,29 @@ func _exit_tree() -> void:
 		if is_instance_valid(x):
 			if !x.is_queued_for_deletion():
 				x.queue_free()
+		
 	_plugins.clear()
 	_init_config(0)
 	
+	var editor : EditorSettings = EditorInterface.get_editor_settings()
+	if editor:
+		if editor.settings_changed.is_connected(_on_changes):
+			editor.settings_changed.disconnect(_on_changes)
+			
+	if is_instance_valid(IDE._menu):
+		IDE._menu.queue_free()
+		IDE._menu = null
+	
 func _load_plugins(path : String) -> void:
+	if !is_instance_valid(IDE._menu):
+		var file : MenuButton = get_file_menu_button()
+		if is_instance_valid(file):
+			var root : Node = file.get_parent()
+			IDE._menu = MenuButton.new()
+			IDE._menu.text = "Godot-IDE"
+			root.add_child(_menu)
+			root.move_child(_menu, mini(1, root.get_child_count() - 1))
+			
 	if !DirAccess.dir_exists_absolute(path):
 		path = path.get_base_dir().get_file()
 		if EditorInterface.is_plugin_enabled(path):
@@ -195,11 +248,10 @@ func _load_plugins(path : String) -> void:
 	
 	print("[Godot-IDE Extension]")
 	if authors.size() > 0:
-		print("> Contributors: {0}".format([", ".join(authors)]))
+		print("> Plugin Contributors: {0}".format([", ".join(authors)]))
 	
 		
 func _sugar_godot(dir : String, col : String = "blue") -> void:
-	const config_path : String = "res://project.godot"
 	if !ProjectSettings.has_setting("file_customization/folder_colors"):
 		ProjectSettings.set_setting("file_customization/folder_colors", {dir: col})
 	else:
@@ -215,6 +267,15 @@ func _sugar_godot(dir : String, col : String = "blue") -> void:
 	if editor:
 		editor.scan.call_deferred()
 		
+func _on_changes() -> void:
+	var editor : EditorSettings = EditorInterface.get_editor_settings()
+	if editor:
+		var changes : PackedStringArray = editor.get_changed_settings()
+		if "plugin/gd_override_functions/inheritance/virtual_functions_begins_with" in changes:
+			IDE.VIRTUAL_METHODS = editor.get_setting("plugin/gd_override_functions/inheritance/virtual_functions_begins_with")
+		if "plugin/gd_override_functions/inheritance/private_functions_begins_with" in changes:
+			IDE.PRIVATE_METHODS = editor.get_setting("plugin/gd_override_functions/inheritance/private_functions_begins_with")
+		
 func _initialize() -> void:
 	var dirt : Dictionary = {}
 	var dat : Array[Dictionary] = (get_script() as Script).get_script_method_list()
@@ -228,3 +289,11 @@ func _initialize() -> void:
 				if !dct.has("args") or dct["args"].size() == 0:
 					call(key)
 	
+	var editor : EditorSettings = EditorInterface.get_editor_settings()
+	if editor:
+		if editor.has_setting("plugin/gd_override_functions/inheritance/virtual_functions_begins_with"):
+			IDE.VIRTUAL_METHODS = editor.get_setting("plugin/gd_override_functions/inheritance/virtual_functions_begins_with")
+		if editor.has_setting("plugin/gd_override_functions/inheritance/private_functions_begins_with"):
+			IDE.PRIVATE_METHODS = editor.get_setting("plugin/gd_override_functions/inheritance/private_functions_begins_with")
+		if !editor.settings_changed.is_connected(_on_changes):
+			editor.settings_changed.connect(_on_changes)

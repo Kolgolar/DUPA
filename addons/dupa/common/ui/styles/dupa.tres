@@ -341,6 +341,7 @@ corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
 [resource]
+default_font_size = 18
 Button/colors/font_color = Color(0, 1, 0.976471, 1)
 Button/colors/font_color_disabled = Color(0, 1, 0.976471, 0.266667)
 Button/colors/font_color_focus = Color(0, 1, 0.976471, 1)
@@ -399,6 +400,8 @@ OptionButton/styles/focus = SubResource("16")
 OptionButton/styles/hover = SubResource("17")
 OptionButton/styles/normal = SubResource("16")
 OptionButton/styles/pressed = SubResource("18")
+PopupMenu/font_sizes/font_size = 20
 TextEdit/colors/font_color = Color(1, 1, 1, 1)
 TextEdit/font_sizes/font_size = 20
 TextEdit/styles/normal = SubResource("11")
+VBoxContainer/constants/separation = 10

@@ -26,6 +26,17 @@ var _collapsed : bool = false
 
 func _enter_tree() -> void:
 	_first_time = true
+	
+	var screen : Vector2 = DisplayServer.screen_get_size()
+	var value : Variant = IDE.get_config("fancy_search_class", "size")
+	if value is Vector2 or value is Vector2i:
+		screen = value
+	else:
+		screen = screen * 0.6
+	
+	IDE.clamp_screen_size(screen, 0.3, 1.0)
+	
+	size = screen
 
 func _ready() -> void:
 	update()
@@ -95,6 +106,7 @@ func _on_change(_tab_changed : int) -> void:
 func _exit_tree() -> void:
 	if is_instance_valid(_tree):
 		_tree.clear()
+	IDE.set_config("fancy_search_class", "size", size)
 		
 func close() -> void:
 	hide()
@@ -183,7 +195,6 @@ func update() -> void:
 func _update() -> void:
 	var fs : EditorFileSystem = EditorInterface.get_resource_filesystem()
 	if fs:
-		var texture : Texture2D = _default_tx
 		var fd : EditorFileSystemDirectory = fs.get_filesystem()
 		if fd:
 			for x : int in range(1, _container.get_child_count(), 1):
@@ -270,7 +281,7 @@ func _update_recents() -> void:
 								type = fe.get_file_script_class_extends(f)
 							break
 					if type.is_empty():
-						type = fs.get_file_type(x)	
+						type = fs.get_file_type(x)
 				if !data.has(type):
 					var packed : PackedStringArray = []
 					data[type] = packed

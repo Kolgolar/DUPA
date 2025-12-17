@@ -25,14 +25,14 @@
 			"base": "dynamic_",
 			"custom_speaker_name": [],
 			"desc": "123",
-			"desc_visible": true,
+			"desc_visible": false,
 			"from": 1,
 			"go_to": [
 				17
 			],
 			"is_random": false,
-			"offset_x": 480.0,
-			"offset_y": 240.0,
+			"offset_x": 460.0,
+			"offset_y": 280.0,
 			"speaker_idx": [
 				0
 			],

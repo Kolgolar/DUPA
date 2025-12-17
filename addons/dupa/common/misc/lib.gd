@@ -3,6 +3,7 @@ extends Node
 
 # WARNING: If you want to delete/change a node type, do not use the same value,
 # always increment it, so you don't break compatibility with previous versions of DUPA.
+# TODO: Мб стоит обмозговать, как избежать этой проблемы?
 enum NodeType {
 	BASE = 0,
 	START = 1,
@@ -119,7 +120,7 @@ class DN_Line:
 	
 	func _init(data: Dictionary) -> void:
 		super(data)
-		line_id = data.get(line_id, "")
+		line_id = data.get(&"line_id", "")
 	
 	func get_line_id() -> Variant:
 		return line_id
@@ -166,12 +167,6 @@ class DN_DynamicIdLine:
 		count += 1
 		return full_id
 	
-	
-	#func foo():
-		#pass
-		# TODO: Всякий индивидуальный функционал нод, типа получения по порядку реплик
-		# из 
-
 
 class DN_LineChoice:
 	extends DN_Line
