@@ -13,11 +13,11 @@ enum NodeType {
 	ACTION = 5,
 }
 static var graph_node_paths: Dictionary [NodeType, String] = {
-		NodeType.LINE: "res://addons/dupa/editor/graph_nodes/node_line.tscn",
-		NodeType.DYNAMIC_ID_LINE: "res://addons/dupa/editor/graph_nodes/node_dynamic_id_line.tscn",
-		NodeType.CONDITION: "res://addons/dupa/editor/graph_nodes/node_condition.tscn",
-		NodeType.START: "res://addons/dupa/editor/graph_nodes/node_start.tscn",
-		NodeType.ACTION: "res://addons/dupa/editor/graph_nodes/node_action.tscn",
+	NodeType.LINE: "res://addons/dupa/editor/graph_nodes/node_line.tscn",
+	NodeType.DYNAMIC_ID_LINE: "res://addons/dupa/editor/graph_nodes/node_dynamic_id_line.tscn",
+	NodeType.CONDITION: "res://addons/dupa/editor/graph_nodes/node_condition.tscn",
+	NodeType.START: "res://addons/dupa/editor/graph_nodes/node_start.tscn",
+	NodeType.ACTION: "res://addons/dupa/editor/graph_nodes/node_action.tscn",
 } 
 
 const INPUT_PORT := 0

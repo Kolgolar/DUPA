@@ -89,8 +89,8 @@ func _ready() -> void:
 		DUPA_Logger.add_msg("The Game Logic Interactor script was not set. Ignore, if it's intended.")
 	%RestartDebug.visible = debug_mode
 	%LabelDebug.visible = debug_mode
-	if debug_mode:
-		start_dialog()
+	#if debug_mode:
+		#start_dialog()
 	
 	choices_controller.localization_master = localization_master
 	choices_controller.choice_made.connect(_on_choices_controller_choice_made)
@@ -202,7 +202,13 @@ func _construct_dialog_data(blueprint_data: Dictionary) -> Array[DUPA_Lib.DN_Bas
 					dialog_node = DUPA_Lib.DN_LineChoice.new(blueprint_node_data)
 				else:
 					dialog_node = DUPA_Lib.DN_Line.new(blueprint_node_data)
-				dialog_node.speaker = _dialog_speakers[blueprint_node_data.speaker_idx]
+				var speaker_idx: int = blueprint_node_data.speaker_idx
+				if speaker_idx >= 0:
+					dialog_node.speaker = _dialog_speakers[blueprint_node_data.speaker_idx]
+				else:
+					var custom_speaker = DUPA_SpeakerData.new()
+					custom_speaker.id_name = blueprint_node_data.custom_speaker_name
+					dialog_node.speaker = custom_speaker
 			DUPA_Lib.NodeType.DYNAMIC_ID_LINE:
 				dialog_node = DUPA_Lib.DN_DynamicIdLine.new(blueprint_node_data)
 				var node_speakers = PackedInt32Array(blueprint_node_data.speaker_idx)
@@ -311,7 +317,6 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 	
 	# Getting a line
 	var line_text := ""
-	var speaker: DUPA_SpeakerData
 	# NOTE: Реплика хранится внутри ноды только в случае DN_LineChoice!
 	# Assuming that .line_full and line_choice variables was assigned before
 	if dialog_node is DUPA_Lib.DN_LineChoice:
@@ -320,32 +325,14 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 			line_text = dialog_node.line_choice
 		DUPA_Logger.add_msg("Printing the choice.")
 	elif dialog_node is DUPA_Lib.DN_Line:
-		var line_id = _curr_dialog_node.get_line_id()
-		DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
-		speaker = dialog_node.speaker
-		var speaker_localization: Dictionary = localization_master.speakers_localization[speaker]
-		assert(
-			speaker_localization.has(line_id),
-			"Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id]
-		)
-		line_text = speaker_localization[line_id][&"line"]
+		line_text = _get_localized_line(dialog_node)
 	elif dialog_node is DUPA_Lib.DN_DynamicIdLine:
-		var line_id = _curr_dialog_node.get_line_id()
-		DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
-		var speakers = dialog_node.speakers
-		var speaker_localization: Dictionary
-		for sp in speakers:
-			speaker_localization = localization_master.speakers_localization[sp]
-			if speaker_localization.has(line_id):
-				speaker = sp
-				break
-		if !speaker_localization.has(line_id):
-			push_error("Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id])
-		else:
-			line_text = speaker_localization[line_id][&"line"]
+		line_text = _get_localized_line(dialog_node)
+	else:
+		push_error("Can't handle node type of %s" % dialog_node.type)
 		
 	speaker_line.text = line_text
-	
+	var speaker: DUPA_SpeakerData = dialog_node.speaker
 	# Getting a speaker
 	#var speaker: DUPA_SpeakerData = (_curr_dialog_node as DUPA_Lib.DN_LineBase).speaker
 	if !speaker:
@@ -354,14 +341,17 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 		speaker_name.text = speaker_placeholder_name
 	else:
 		#var sp_name_data: Dictionary = localization_master.speakers_localization[speaker].get(&"name", {})
-		var sp_name_data: Dictionary = localization_master.speakers_localization[speaker].get(&"name", {})
-		if sp_name_data.is_empty():
-			push_error("The ID 'name' was not found in localization! Can't define the speaker's name.")
-			speaker_name.text = speaker_placeholder_name
+		var speaker_localization_data: Dictionary = localization_master.speakers_localization.get(speaker, {})
+		if !speaker_localization_data.is_empty():
+			var sp_name_data: Dictionary = speaker_localization_data.get(&"name", {})
+			if sp_name_data.is_empty():
+				push_error("The ID 'name' was not found in localization! Can't define the speaker's name.")
+				speaker_name.text = speaker_placeholder_name
+			else:
+				var add := ":" if !sp_name_data[&"line"].is_empty() else ""
+				speaker_name.text = "[i]%s[/i]" % (sp_name_data[&"line"] + add)
 		else:
-			var add := ":" if !sp_name_data[&"line"].is_empty() else ""
-			speaker_name.text = "[i]%s[/i]" % (sp_name_data[&"line"] + add)
-	
+			speaker_name.text = "[i]%s[/i]:" % speaker.id_name
 	speaker_changed.emit(speaker)
 	if localization_master.speakers_localization.has(speaker):
 		#var speaker = _curr_dialog_node.character
@@ -385,24 +375,49 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 		call_deferred("_on_all_line_characters_shown")
 
 
+func _get_localized_line(dialog_node: DUPA_Lib.DN_Base) -> String:
+	assert(
+		dialog_node is DUPA_Lib.DN_LineBase,
+		"The dialog node (ID: %s) assigned as a choice node, which is forbidden. Probably there is a problem in the blueprint." % dialog_node.id
+	)
+	var speaker: DUPA_SpeakerData = dialog_node.speaker
+	var line_text := ""
+	var line_id = _curr_dialog_node.get_line_id()
+	
+	DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
+	
+	if dialog_node is DUPA_Lib.DN_DynamicIdLine:
+		var speakers = dialog_node.speakers
+		var speaker_localization: Dictionary
+		for sp in speakers:
+			speaker_localization = localization_master.speakers_localization.get(sp, {})
+			if !speaker.localization.is_empty() && speaker_localization.has(line_id):
+				speaker = sp
+				break
+		if !speaker_localization.has(line_id):
+			push_error("Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id])
+		else:
+			line_text = speaker_localization[line_id][&"line"]
+	elif dialog_node is DUPA_Lib.DN_Line:
+		var speaker_localization: Dictionary = localization_master.speakers_localization.get(speaker, {})
+		if !speaker_localization.is_empty():
+			assert(
+				speaker_localization.has(line_id),
+				"Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id]
+			)
+			line_text = speaker_localization[line_id][&"line"]
+		else:
+			line_text = dialog_node.line_id
+	else:
+		push_error("Can't handle node type of %s" % dialog_node.type)
+	
+	return line_text
+
 
 func _show_choices(dialog_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 	dialog_panel.visible = auto_show_choices
 	for dialog_node in dialog_nodes:
-		assert(
-			dialog_node is DUPA_Lib.DN_LineBase,
-			"The dialog node (ID: %s) assigned as a choice node, which is forbidden. Probably there is a problem in the blueprint." % dialog_node.id
-		)
-		var speaker = dialog_node.speaker
-		var line_id = dialog_node.get_line_id()
-		# TODO: Дублирует аналогичный код в show_choices(), мб заменить общей функцией?
-		var speaker_localization = localization_master.speakers_localization[speaker]
-		assert(
-			speaker_localization.has(line_id),
-			"Blueprint node ID: %s.\nLine '%s' was not found at speaker localization." % [dialog_node.id, line_id]
-		)
-		var line = speaker_localization[line_id][&"line"]
-		dialog_node.line_full = line
+		dialog_node.line_full = _get_localized_line(dialog_node)
 	choices_controller.show_choices(dialog_nodes)
 
 

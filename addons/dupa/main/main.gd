@@ -35,6 +35,7 @@ func _on_editor_viewer_requested(blueprint_file_path: String) -> void:
 	window.add_child(_viewer)
 	window.popup_centered(get_viewport_rect().size * 0.9)
 	window.close_requested.connect(_on_viewer_close_requested)
+	_viewer.start_dialog(blueprint_file_path)
 
 # TODO: Завершать диалог в случае ошибок (или после того, как они были показаны?) И передавать код/текст ошибки.
 func _on_viewer_close_requested() -> void:

@@ -5,7 +5,7 @@ class_name DUPA_GraphNodeLine
 extends DUPA_GraphNodeLineBase
 
 @export var speaker: BoxContainer
-@export var line_id: LineEdit
+@export var line_id: TextEdit
 # TODO: Сделать приватными все поля, указывающие на ноды, т.к. на них не должна быть возможность
 # ссылаться извне.
 #TODO: Добавить подобные поля во все ноды? Или не нужно, пусть это будет только для реально нужных?

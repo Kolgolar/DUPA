@@ -33,10 +33,13 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Text"
 
-[node name="LineID" type="LineEdit" parent="VBoxContainer/GridContainer" index="1"]
-custom_minimum_size = Vector2(250, 32)
+[node name="LineID" type="TextEdit" parent="VBoxContainer/GridContainer" index="1"]
+custom_minimum_size = Vector2(250, 40)
 layout_mode = 2
-placeholder_text = "Line ID or text"
+size_flags_horizontal = 3
+placeholder_text = "Line ID or raw text"
+wrap_mode = 1
+scroll_fit_content_height = true
 
 [node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="2"]
 visible = false

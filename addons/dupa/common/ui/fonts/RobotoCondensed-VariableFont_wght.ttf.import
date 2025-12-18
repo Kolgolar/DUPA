@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://7cawh2qml32b"
-path="res://.godot/imported/Square721-BT-Bold_42076.ttf-3ca21160edf6a475fc39da976423b441.fontdata"
+uid="uid://duev6w4fqvomf"
+path="res://.godot/imported/RobotoCondensed-VariableFont_wght.ttf-bc0e152ad2fffa90ae02552b9170d9e2.fontdata"
 
 [deps]
 
-source_file="res://addons/dupa/common/ui/fonts/Square721-BT-Bold_42076.ttf"
-dest_files=["res://.godot/imported/Square721-BT-Bold_42076.ttf-3ca21160edf6a475fc39da976423b441.fontdata"]
+source_file="res://addons/dupa/common/ui/fonts/RobotoCondensed-VariableFont_wght.ttf"
+dest_files=["res://.godot/imported/RobotoCondensed-VariableFont_wght.ttf-bc0e152ad2fffa90ae02552b9170d9e2.fontdata"]
 
 [params]
 

@@ -1,7 +1,7 @@
 {
 	"CONFIG": {
 		"dupa_version": "1.0 alpha",
-		"max_id": 1,
+		"max_id": 3,
 		"speakers": []
 	},
 	"TIMELINE": {
@@ -11,19 +11,46 @@
 			"go_to": [
 				1
 			],
-			"offset_x": 407.0,
-			"offset_y": 284.0,
+			"offset_x": 486.0,
+			"offset_y": 220.0,
 			"source": "",
 			"type": 1
 		},
 		"1": {
-			"custom_speaker_name": "",
+			"custom_speaker_name": "Kek",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [
+				2,
+				3
+			],
+			"line_id": "Hello my niggah!",
+			"offset_x": 960.0,
+			"offset_y": 220.0,
+			"speaker_idx": -1,
+			"type": 2
+		},
+		"2": {
+			"custom_speaker_name": "Me",
 			"desc": "",
 			"desc_visible": false,
 			"go_to": [],
-			"line_id": "Hello",
-			"offset_x": 900.0,
-			"offset_y": 220.0,
+			"is_choice": true,
+			"line_id": "Hello!",
+			"offset_x": 1460.0,
+			"offset_y": 100.0,
+			"speaker_idx": -1,
+			"type": 2
+		},
+		"3": {
+			"custom_speaker_name": "Me",
+			"desc": "",
+			"desc_visible": false,
+			"go_to": [],
+			"is_choice": true,
+			"line_id": "Fuck you!",
+			"offset_x": 1460.0,
+			"offset_y": 380.0,
 			"speaker_idx": -1,
 			"type": 2
 		}
