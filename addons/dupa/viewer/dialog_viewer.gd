@@ -101,8 +101,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		# TODO: Не переходить далее, если в процессе показа текста
 		if !_is_dialog_ended && _curr_dialog_node is DUPA_Lib.DN_LineBase:
 			if _is_printing_line():
-				_visible_characters_tween.kill()
-				speaker_line.visible_ratio = 1.0
+				_force_show_all_line()
 			elif !choices_controller.is_showing_choices():
 				_check_next_step(_curr_dialog_node.go_to)
 
@@ -182,7 +181,7 @@ func reset_all() -> void:
 	_dialog_speakers.clear()
 
 func _is_printing_line() -> bool:
-	return _visible_characters_tween && _visible_characters_tween.is_running()
+	return _visible_characters_tween && _visible_characters_tween.is_valid()
 
 
 func _construct_dialog_data(blueprint_data: Dictionary) -> Array[DUPA_Lib.DN_Base]:
@@ -252,6 +251,10 @@ func _check_next_step(go_to_nodes: Array[DUPA_Lib.DN_Base]) -> void:
 		_go_to_node(go_to_nodes[0])
 		return
 	elif !(_curr_dialog_node is DUPA_Lib.DN_Condition):
+		#FIXME: Костыльное временное решение
+		if _is_printing_line():
+			_force_show_all_line()
+		#-----------------
 		_show_choices(go_to_nodes)
 		return
 
@@ -375,6 +378,12 @@ func _show_line(dialog_node: DUPA_Lib.DN_LineBase):
 		call_deferred("_on_all_line_characters_shown")
 
 
+func _force_show_all_line() -> void:
+	_visible_characters_tween.kill()
+	speaker_line.visible_ratio = 1.0
+	call_deferred("_on_all_line_characters_shown")
+
+
 func _get_localized_line(dialog_node: DUPA_Lib.DN_Base) -> String:
 	assert(
 		dialog_node is DUPA_Lib.DN_LineBase,
@@ -436,7 +445,8 @@ func _change_visible_characters(value : int) -> void:
 		if time > 0:
 			_visible_characters_tween.pause()
 			await get_tree().create_timer(time).timeout
-			_visible_characters_tween.play()
+			if _visible_characters_tween.is_valid():
+				_visible_characters_tween.play()
 
 
 func _on_choices_controller_choice_made(dialog_node: DUPA_Lib.DN_LineChoice) -> void:
