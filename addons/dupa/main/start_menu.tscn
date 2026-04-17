@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bc20cfsm4d8wj"]
+[gd_scene format=3 uid="uid://bc20cfsm4d8wj"]
 
 [ext_resource type="Texture2D" uid="uid://cvupxw7p3ljqu" path="res://addons/dupa/common/ui/textures/dupa.png" id="1_lpyfo"]
 [ext_resource type="Script" uid="uid://lqi64g30qbg1" path="res://addons/dupa/main/start_menu.gd" id="1_pct73"]
@@ -15,7 +15,7 @@ corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
-[node name="StartMenu" type="PanelContainer"]
+[node name="StartMenu" type="PanelContainer" unique_id=1175706233]
 custom_minimum_size = Vector2(400, 400)
 anchors_preset = 8
 anchor_left = 0.5
@@ -31,67 +31,67 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4rg07")
 script = ExtResource("1_pct73")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1113802717]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=2014435751]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1530771455]
 layout_mode = 2
 size_flags_vertical = 2
 alignment = 1
 
-[node name="Headline" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Headline" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=818936010]
 layout_mode = 2
 theme_override_font_sizes/font_size = 35
 text = "Welcome to DUPA!"
 horizontal_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=430379033]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 texture = ExtResource("1_lpyfo")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Buttons" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2016088033]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 10
 
-[node name="New" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+[node name="New" type="Button" parent="MarginContainer/VBoxContainer/Buttons" unique_id=2145762214]
 layout_mode = 2
 theme_type_variation = &"ButtonStartMenu"
 text = "New"
 
-[node name="Open" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+[node name="Open" type="Button" parent="MarginContainer/VBoxContainer/Buttons" unique_id=944544322]
 layout_mode = 2
 theme_type_variation = &"ButtonStartMenu"
 text = "Open"
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/Buttons"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/Buttons" unique_id=1638607710]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Help" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+[node name="Help" type="Button" parent="MarginContainer/VBoxContainer/Buttons" unique_id=23307879]
 layout_mode = 2
 theme_type_variation = &"ButtonStartMenu"
 text = "Help"
 
-[node name="Exit" type="Button" parent="MarginContainer/VBoxContainer/Buttons"]
+[node name="Exit" type="Button" parent="MarginContainer/VBoxContainer/Buttons" unique_id=1696754365]
 layout_mode = 2
 theme_type_variation = &"ButtonStartMenu"
 text = "Exit"
 
-[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/Buttons"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/Buttons" unique_id=1461699967]
 layout_mode = 2
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Buttons/New" to="." method="_on_new_pressed"]

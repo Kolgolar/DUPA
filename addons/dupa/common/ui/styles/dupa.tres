@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=42 format=3 uid="uid://jknpp178i5kk"]
+[gd_resource type="Theme" format=3 uid="uid://jknpp178i5kk"]
 
 [ext_resource type="Texture2D" uid="uid://bhkor0xepb430" path="res://addons/dupa/common/ui/textures/node_port.png" id="1_7w0sm"]
 [ext_resource type="StyleBox" uid="uid://cqu2m638jayp2" path="res://addons/dupa/common/ui/styles/graph_node_panel_default.tres" id="2_26fas"]

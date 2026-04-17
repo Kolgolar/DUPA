@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dy43nh0u0nnxi"]
+[gd_scene format=3 uid="uid://dy43nh0u0nnxi"]
 
 [ext_resource type="Script" uid="uid://c7k22qfj3vt1x" path="res://addons/dupa/viewer/dialog_viewer.gd" id="1_sqql4"]
 [ext_resource type="Script" uid="uid://d2lp1a2nwjlqe" path="res://addons/dupa/viewer/localization_master.gd" id="2_2ssqh"]
@@ -20,7 +20,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_77qm7"]
 
-[node name="DialogViewer" type="MarginContainer" node_paths=PackedStringArray("dialog_end_label", "localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
+[node name="DialogViewer" type="MarginContainer" unique_id=1093542622 node_paths=PackedStringArray("dialog_end_label", "localization_master", "dialog_panel", "speaker_name", "speaker_line", "choices_controller")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -39,17 +39,17 @@ speaker_name = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxConta
 speaker_line = NodePath("Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer/SpeakerLine")
 choices_controller = NodePath("Frame/GridContainer/ChoicesController")
 
-[node name="GameLogicInteractor" type="Node" parent="."]
+[node name="GameLogicInteractor" type="Node" parent="." unique_id=976405056]
 script = ExtResource("3_gajwf")
 
-[node name="LocalizationMaster" type="Node" parent="."]
+[node name="LocalizationMaster" type="Node" parent="." unique_id=1744694755]
 script = ExtResource("2_2ssqh")
 
-[node name="Frame" type="Control" parent="."]
+[node name="Frame" type="Control" parent="." unique_id=654908104]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="GridContainer" type="GridContainer" parent="Frame"]
+[node name="GridContainer" type="GridContainer" parent="Frame" unique_id=1327898488]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -57,7 +57,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ChoicesController" type="Control" parent="Frame/GridContainer" node_paths=PackedStringArray("choices_container", "choice_full_line_button", "choice_full_line")]
+[node name="ChoicesController" type="Control" parent="Frame/GridContainer" unique_id=2005286473 node_paths=PackedStringArray("choices_container", "choice_full_line_button", "choice_full_line")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -69,7 +69,7 @@ choice_full_line = NodePath("GridContainer/ChoiceFullLineZone/ChoiceFullLine/Mar
 dialog_choice_button = ExtResource("5_hyojp")
 dialog_choice_button_toggle = ExtResource("6_ruihl")
 
-[node name="GridContainer" type="GridContainer" parent="Frame/GridContainer/ChoicesController"]
+[node name="GridContainer" type="GridContainer" parent="Frame/GridContainer/ChoicesController" unique_id=570628210]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -78,18 +78,18 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 2
 
-[node name="ChoicesContainer" type="VBoxContainer" parent="Frame/GridContainer/ChoicesController/GridContainer"]
+[node name="ChoicesContainer" type="VBoxContainer" parent="Frame/GridContainer/ChoicesController/GridContainer" unique_id=1645501610]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="Choice0" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
+[node name="Choice0" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" unique_id=225731977 instance=ExtResource("5_hyojp")]
 layout_mode = 2
 text = "Choice1"
 
-[node name="Choice1" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
+[node name="Choice1" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" unique_id=702384111 instance=ExtResource("5_hyojp")]
 layout_mode = 2
 theme_override_styles/normal = ExtResource("11_at8nk")
 theme_override_styles/pressed = ExtResource("10_xw8o8")
@@ -98,17 +98,17 @@ theme_override_styles/hover_pressed = ExtResource("8_dkh4y")
 theme_override_styles/disabled = ExtResource("7_s7mvp")
 text = "Choice2"
 
-[node name="Choice2" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" instance=ExtResource("5_hyojp")]
+[node name="Choice2" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoicesContainer" unique_id=1241071943 instance=ExtResource("5_hyojp")]
 layout_mode = 2
 text = "Choice2"
 
-[node name="ChoiceFullLineZone" type="Control" parent="Frame/GridContainer/ChoicesController/GridContainer"]
+[node name="ChoiceFullLineZone" type="Control" parent="Frame/GridContainer/ChoicesController/GridContainer" unique_id=642882993]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="ChoiceFullLine" type="Button" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone"]
+[node name="ChoiceFullLine" type="Button" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone" unique_id=1128759892]
 custom_minimum_size = Vector2(700, 160)
 layout_mode = 1
 anchors_preset = 8
@@ -129,7 +129,7 @@ theme_override_styles/hover_pressed = ExtResource("12_s30vo")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_77qm7")
 metadata/_edit_group_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine"]
+[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine" unique_id=1693945083]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -142,7 +142,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 70
 theme_override_constants/margin_bottom = 5
 
-[node name="ChoiceFullLine" type="RichTextLabel" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine/MarginContainer"]
+[node name="ChoiceFullLine" type="RichTextLabel" parent="Frame/GridContainer/ChoicesController/GridContainer/ChoiceFullLineZone/ChoiceFullLine/MarginContainer" unique_id=1206775233]
 layout_mode = 2
 focus_mode = 2
 mouse_filter = 2
@@ -157,7 +157,7 @@ fit_content = true
 scroll_active = false
 selection_enabled = true
 
-[node name="LinePanel" type="PanelContainer" parent="Frame/GridContainer"]
+[node name="LinePanel" type="PanelContainer" parent="Frame/GridContainer" unique_id=240993932]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -165,18 +165,18 @@ size_flags_vertical = 8
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("7_qc6np")
 
-[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/LinePanel"]
+[node name="MarginContainer" type="MarginContainer" parent="Frame/GridContainer/LinePanel" unique_id=1619579287]
 layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Frame/GridContainer/LinePanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Frame/GridContainer/LinePanel/MarginContainer" unique_id=963837163]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SpeakerName" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
+[node name="SpeakerName" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer" unique_id=613873546]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 mouse_filter = 1
@@ -190,7 +190,7 @@ text = "[i][b]Character name:[/b][/i]"
 fit_content = true
 scroll_active = false
 
-[node name="SpeakerLine" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer"]
+[node name="SpeakerLine" type="RichTextLabel" parent="Frame/GridContainer/LinePanel/MarginContainer/VBoxContainer" unique_id=2118350041]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 1
@@ -204,17 +204,17 @@ scroll_active = false
 autowrap_mode = 2
 visible_characters_behavior = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=185069053]
 layout_mode = 2
 size_flags_vertical = 0
 alignment = 1
 
-[node name="Spacer" type="Control" parent="HBoxContainer"]
+[node name="Spacer" type="Control" parent="HBoxContainer" unique_id=2137882702]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="LabelDebug" type="Label" parent="HBoxContainer"]
+[node name="LabelDebug" type="Label" parent="HBoxContainer" unique_id=1609454724]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -225,7 +225,7 @@ theme_override_font_sizes/font_size = 30
 text = "DEBUG MODE"
 horizontal_alignment = 1
 
-[node name="RestartDebug" type="Button" parent="HBoxContainer"]
+[node name="RestartDebug" type="Button" parent="HBoxContainer" unique_id=474277215]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
@@ -234,7 +234,7 @@ icon = ExtResource("8_1l4f4")
 flat = true
 expand_icon = true
 
-[node name="DialogEnded" type="Label" parent="."]
+[node name="DialogEnded" type="Label" parent="." unique_id=549706999]
 visible = false
 layout_mode = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)

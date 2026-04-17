@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://d27yly1pgog0"]
+[gd_scene format=3 uid="uid://d27yly1pgog0"]
 
 [ext_resource type="PackedScene" uid="uid://nytw3aaj0cds" path="res://addons/dupa/editor/graph_nodes/node_base.tscn" id="1"]
 [ext_resource type="Script" uid="uid://ccbkaqk0f6dnt" path="res://addons/dupa/editor/graph_nodes/node_line.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://bimp1ileh7i72" path="res://addons/dupa/editor/graph_nodes/line_speaker.tscn" id="3_s7852"]
 
-[node name="LineNode" node_paths=PackedStringArray("speaker", "line_id") instance=ExtResource("1")]
+[node name="LineNode" unique_id=639212455 node_paths=PackedStringArray("speaker", "line_id") instance=ExtResource("1")]
 offset_right = 384.0
 offset_bottom = 106.0
 title = "Line"
@@ -21,19 +21,19 @@ script = ExtResource("2")
 speaker = NodePath("VBoxContainer/Speaker")
 line_id = NodePath("VBoxContainer/GridContainer/LineID")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." index="5"]
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="5" unique_id=1740759497]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer" index="0"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" index="0" unique_id=1892023345]
 layout_mode = 2
 columns = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="0"]
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer" index="0" unique_id=255358111]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Text"
 
-[node name="LineID" type="TextEdit" parent="VBoxContainer/GridContainer" index="1"]
+[node name="LineID" type="TextEdit" parent="VBoxContainer/GridContainer" index="1" unique_id=244162632]
 custom_minimum_size = Vector2(250, 40)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -41,30 +41,30 @@ placeholder_text = "Line ID or raw text"
 wrap_mode = 1
 scroll_fit_content_height = true
 
-[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="2"]
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer" index="2" unique_id=1884302871]
 visible = false
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Speaker"
 
-[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="3"]
+[node name="Speaker" type="OptionButton" parent="VBoxContainer/GridContainer" index="3" unique_id=236081280]
 visible = false
 layout_mode = 2
 clip_text = true
 fit_to_longest_item = false
 
-[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="4"]
+[node name="CustomSpeakerNameLabel" type="Label" parent="VBoxContainer/GridContainer" index="4" unique_id=1237280465]
 visible = false
 layout_mode = 2
 text = "Name"
 
-[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="5"]
+[node name="CustomSpeakerNameField" type="LineEdit" parent="VBoxContainer/GridContainer" index="5" unique_id=1374399006]
 visible = false
 layout_mode = 2
 placeholder_text = "Custom speaker name"
 
-[node name="Speaker" parent="VBoxContainer" index="1" instance=ExtResource("3_s7852")]
+[node name="Speaker" parent="VBoxContainer" index="1" unique_id=2004517832 instance=ExtResource("3_s7852")]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="VBoxContainer" index="2"]
+[node name="Control" type="Control" parent="VBoxContainer" index="2" unique_id=465502967]
 layout_mode = 2
