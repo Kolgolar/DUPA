@@ -1,7 +1,7 @@
 {
 	"CONFIG": {
 		"dupa_version": "1.0 alpha",
-		"max_id": 5,
+		"max_id": 6,
 		"speakers": [
 			{
 				"path": "res://dupa/speakers/handy/speaker_handy.tres",

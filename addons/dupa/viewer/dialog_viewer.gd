@@ -382,7 +382,7 @@ func _get_localized_line(dialog_node: DUPA_Lib.DN_Base) -> String:
 	)
 	var speaker: DUPA_SpeakerData = dialog_node.speaker
 	var line_text := ""
-	var line_id = _curr_dialog_node.get_line_id()
+	var line_id = dialog_node.get_line_id()
 	
 	DUPA_Logger.add_msg("Printing the line: '%s'." % [line_id])
 	
