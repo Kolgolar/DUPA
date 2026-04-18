@@ -6,4 +6,5 @@ It contains dialog editor and dialog visualizer, supports dialog branches, funct
 
 Currently in alpha state, documentation will be created in the future.
 <img width="1752" height="800" alt="Editor" src="https://github.com/user-attachments/assets/5cffa23a-2865-4254-abf6-e0b9da93f4b5" />
-<img width="1752" height="800" alt="Demo" src="https://github.com/user-attachments/assets/6781ed1f-4554-4642-84d1-09cee1c7db32" />
+<img width="1828" height="800" alt="Editor 2" src="https://github.com/user-attachments/assets/d1414c48-310a-4035-abad-0ef7eb9f5c5c" />
+
