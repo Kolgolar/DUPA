@@ -1,7 +1,7 @@
 ### !!!Work in progress!!!
 
 ## Dialogic Universal Professional Assistant (DUPA)
-DUPA is a plugin for Godot Engine, which is provides a powerful yet easy to use tools to add dialog system to your Godot game project. It's main goal to be as flexible and friendly as possible, so you can always modify it for suting the game you are developing.
+DUPA is a plugin for Godot Engine, which provides a powerful yet easy to use tools to add dialog system to your Godot game project. It's main goal to be as flexible and friendly as possible, so you can always modify it for suting the game you are developing.
 It contains dialog editor and dialog visualizer (which is highly customizable), supports dialog branches, function calls and conditions.
 
 *Currently in alpha state, documentation will be created in the future. I promise.*
